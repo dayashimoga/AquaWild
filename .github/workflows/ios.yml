@@ -1,0 +1,63 @@
+name: iOS CI/CD
+
+on:
+  push:
+    paths:
+      - 'ios/**'
+      - 'lib/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/ios.yml'
+    branches:
+      - main
+      - develop
+  pull_request:
+    paths:
+      - 'ios/**'
+      - 'lib/**'
+      - 'pubspec.yaml'
+      - '.github/workflows/ios.yml'
+    branches:
+      - main
+      - develop
+  workflow_dispatch:
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ios:
+    name: iOS Build & Verification
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Static Analysis
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      - name: Run Tests
+        run: flutter test
+
+      - name: Build iOS Release (Unsigned)
+        run: flutter build ios --release --no-codesign
+
+      - name: Package Payload
+        run: |
+          cd build/ios/iphoneos
+          zip -r ../../../aquawild-standalone-ios.zip Runner.app
+
+      - name: Upload iOS Payload
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-standalone-ios-build
+          path: aquawild-standalone-ios.zip

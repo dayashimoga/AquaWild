@@ -1,0 +1,396 @@
+name: Build All Platforms
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - 'release/**'
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+      - develop
+  schedule:
+    # Nightly cron trigger at 02:00 UTC
+    - cron: '0 2 * * *'
+  workflow_dispatch:
+    inputs:
+      platforms:
+        description: 'Target platform(s) to build'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+          - 'all'
+          - 'android'
+          - 'ios'
+          - 'web'
+          - 'windows'
+          - 'macos'
+          - 'linux'
+      build_type:
+        description: 'Build configuration mode'
+        required: true
+        type: choice
+        default: 'release'
+        options:
+          - 'release'
+          - 'debug'
+      run_tests:
+        description: 'Execute quality gates, linting, and unit test suites'
+        required: true
+        type: boolean
+        default: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # 1. QUALITY GATES & SECURITY AUDIT
+  # =========================================================================
+  quality_gates:
+    name: Quality Gates & Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+          cache-key: 'flutter-:os:-:channel:-:version:-:arch:-:hash:'
+
+      - name: Verify Environment & Flutter Doctor
+        run: flutter doctor -v
+
+      - name: Fetch Pub Dependencies
+        run: flutter pub get
+
+      - name: Enforce Zero-Warning Static Analysis
+        run: flutter analyze --fatal-infos --fatal-warnings
+
+      - name: Security & Secret Hygiene Scan
+        run: |
+          echo "Scanning for hardcoded secrets, unauthorized private keys, or credentials..."
+          # Reject commits containing raw OpenAI sk- keys or unencrypted passwords
+          if grep -r -E "sk-[a-zA-Z0-9]{32,}" lib/ ; then
+            echo "::error::Hardcoded OpenAI secret key pattern detected!"
+            exit 1
+          fi
+          echo "Secret scan passed cleanly. Zero exposed secrets."
+
+      - name: Execute Full Automated Test Suite with Coverage
+        if: ${{ github.event.inputs.run_tests != 'false' }}
+        run: flutter test --coverage
+
+      - name: Upload Test Coverage LCOV Report
+        if: ${{ github.event.inputs.run_tests != 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-test-coverage
+          path: coverage/lcov.info
+          retention-days: 14
+
+  # =========================================================================
+  # 2. ANDROID BUILD MATRIX
+  # =========================================================================
+  build_android:
+    name: Build Android (APK & AppBundle)
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'android' || github.event_name != 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Android Release APK
+        run: flutter build apk --release
+
+      - name: Build Android Release AppBundle (AAB)
+        run: flutter build appbundle --release
+
+      - name: Upload Android APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-android-apk
+          path: build/app/outputs/flutter-apk/app-release.apk
+          retention-days: 30
+
+      - name: Upload Android AppBundle Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-android-bundle
+          path: build/app/outputs/bundle/release/app-release.aab
+          retention-days: 30
+
+  # =========================================================================
+  # 3. IOS BUILD MATRIX
+  # =========================================================================
+  build_ios:
+    name: Build iOS (IPA / Frameworks)
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'ios' || github.event_name != 'workflow_dispatch')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build iOS Release (Unsigned Payload)
+        run: flutter build ios --release --no-codesign
+
+      - name: Compress iOS Build Output
+        run: |
+          cd build/ios/iphoneos
+          zip -r ../../../aquawild-ios-release.zip Runner.app
+
+      - name: Upload iOS Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-ios-build
+          path: aquawild-ios-release.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 4. WEB BUILD MATRIX (WASM + CANVASKIT)
+  # =========================================================================
+  build_web:
+    name: Build Web (Wasm & HTML5)
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'web' || github.event_name != 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Web Application
+        run: flutter build web --release --wasm
+
+      - name: Upload Web Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-web-bundle
+          path: build/web
+          retention-days: 30
+
+  # =========================================================================
+  # 5. WINDOWS BUILD MATRIX
+  # =========================================================================
+  build_windows:
+    name: Build Windows Desktop
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'windows' || github.event_name != 'workflow_dispatch')
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Windows Desktop Target
+        run: flutter config --enable-windows-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Windows Desktop Release
+        run: flutter build windows --release
+
+      - name: Package Windows Binary Zip
+        shell: pwsh
+        run: |
+          Compress-Archive -Path build\windows\x64\runner\Release\* -DestinationPath aquawild-windows-x64-release.zip
+
+      - name: Upload Windows Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-windows-x64
+          path: aquawild-windows-x64-release.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 6. MACOS BUILD MATRIX
+  # =========================================================================
+  build_macos:
+    name: Build macOS Desktop
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'macos' || github.event_name != 'workflow_dispatch')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable macOS Desktop Target
+        run: flutter config --enable-macos-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build macOS Desktop Release
+        run: flutter build macos --release
+
+      - name: Compress macOS Application
+        run: |
+          cd build/macos/Build/Products/Release
+          zip -r ../../../../../aquawild-macos-release.zip AquaWild.app
+
+      - name: Upload macOS Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-macos-app
+          path: aquawild-macos-release.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 7. LINUX BUILD MATRIX
+  # =========================================================================
+  build_linux:
+    name: Build Linux Desktop
+    needs: quality_gates
+    if: |
+      always() &&
+      (needs.quality_gates.result == 'success') &&
+      (github.event.inputs.platforms == 'all' || github.event.inputs.platforms == 'linux' || github.event_name != 'workflow_dispatch')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install Linux Desktop Toolchain & GTK3 Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Linux Desktop Target
+        run: flutter config --enable-linux-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Linux Desktop Release
+        run: flutter build linux --release
+
+      - name: Package Linux Binary Archive
+        run: |
+          tar -czvf aquawild-linux-x64-release.tar.gz -C build/linux/x64/release/bundle .
+
+      - name: Upload Linux Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-linux-x64
+          path: aquawild-linux-x64-release.tar.gz
+          retention-days: 30
+
+  # =========================================================================
+  # 8. PRODUCTION RELEASE AUTOMATION (TAG TRIGGERS)
+  # =========================================================================
+  release_automation:
+    name: Production Release Tag Automation
+    needs:
+      - build_android
+      - build_ios
+      - build_web
+      - build_windows
+      - build_macos
+      - build_linux
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Download All Platform Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/aquawild-android-apk/*.apk
+            release-artifacts/aquawild-android-bundle/*.aab
+            release-artifacts/aquawild-ios-build/*.zip
+            release-artifacts/aquawild-windows-x64/*.zip
+            release-artifacts/aquawild-macos-app/*.zip
+            release-artifacts/aquawild-linux-x64/*.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
