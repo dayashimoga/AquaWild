@@ -19,3 +19,13 @@
   1. Flutter 3.38+ / Dart 3.10+ updated `CardTheme` in `ThemeData` to expect `CardThemeData` and deprecated direct `.value` on `Color` in favor of `toARGB32()`. Updated `AppTheme` and test suites to modern Flutter 3.38+ contracts immediately to maintain zero warnings.
   2. Replaced relative directory navigation with package-qualified canonical imports (`package:aquawild/...`) across presentation screens to eliminate URI resolution ambiguities across platforms.
 - **Sign-Off**: `solution-architect`, `desktop-web-agent`, `mobile-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 003 — 2026-11-22 (Subphase 2.1.1)
+- **Context**: Domain modeling, beverage bioavailability science, and Riverpod 3 state management architecture.
+- **Course-Correction & Observations**:
+  1. Adopted modern Riverpod 3 `Notifier<T>` and `NotifierProvider<Notifier, T>` architecture instead of deprecated `StateNotifier` APIs.
+  2. Protected asynchronous state mutation against post-dispose memory leaks by adding `if (!ref.mounted) return;` across all notifier async methods.
+  3. Implemented realistic fluid density sorting: beverages logged into the active vessel automatically arrange in stratification layers according to physical fluid density ($g/cm^3$), ensuring heavier beverages (e.g., Espresso at 1.04, Protein Shake at 1.045) realistically settle below lighter fluids (Pure Water at 1.00, Sparkling Water at 0.99).
+- **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `qa-agent`, `release-devops-agent`.

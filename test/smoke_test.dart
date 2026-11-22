@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  group('Subphase 1.2.1 Bootstrap Smoke Tests', () {
+  group('AquaWild Smoke & Integration Tests', () {
     test('AppConstants definitions are validated', () {
       expect(AppConstants.appName, equals('AquaWild'));
       expect(AppConstants.defaultDailyGoalMl, equals(2500));
@@ -33,7 +33,8 @@ void main() {
       expect(find.text('Dive In'), findsOneWidget);
     });
 
-    testWidgets('Navigating to HomeScreen displays progress card', (tester) async {
+    testWidgets('Navigating to HomeScreen displays active companion and quick dock',
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: AquaWildApp(),
@@ -47,8 +48,16 @@ void main() {
       await tester.tap(diveInButton);
       await tester.pumpAndSettle();
 
-      expect(find.text('Daily Hydration Progress'), findsOneWidget);
-      expect(find.text('0 / 2500 ml (0%)'), findsOneWidget);
+      expect(find.text('Ruby the Red Panda'), findsOneWidget);
+      expect(find.text('Net Hydration'), findsOneWidget);
+      expect(find.text('Quick Log Beverage'), findsOneWidget);
+
+      // Tap quick log water button
+      final quickLogButton = find.text('+250ml').first;
+      await tester.tap(quickLogButton);
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('250 / 2500 ml'), findsOneWidget);
     });
   });
 }
