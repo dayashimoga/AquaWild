@@ -2,6 +2,27 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.2.0] - 2026-11-22 — Complete 10-Companion Handcrafted Silhouette & Interactive Animation Ecosystem
+### Added
+- **Full 10-Companion Vector Silhouette Suite**: Handcrafted precise, anatomically tailored bezier vector clipping paths for all 10 companions in `AnimalSilhouettePaths`:
+  * `arctic_fox`: Alert seated posture, pointed ears, sweeping curved bushy tail.
+  * `emperor_penguin`: Regal standing profile, hydrodynamic flipper wings, webbed base.
+  * `bottlenose_dolphin`: Dynamic leaping arch, dorsal fin, rostrum snout, tail flukes.
+  * `blue_ringed_octopus`: Bulbous domed mantle with 8 undulating splayed tentacles.
+  * `snow_leopard`: Muscular stalking feline spine, rounded alpine ears, iconic thick counterbalancing tail.
+  * `sea_otter`, `andean_llama`, `axolotl`, `capybara`, `red_panda`.
+- **Species-Specific Interactive Feature Overlays**:
+  * **Ollie the Sea Otter**: Swaying emerald kelp forest strands drifting vertically in water, tilted iridescent scallop shell with glowing pearl on chest, button nose and whisker pads.
+  * **Luna the Andean Llama**: Woven Aztec geometric collar with 4 dangling pompom tassels swaying in rhythm, fluffy ear tufts, long eyelashes.
+  * **Octavia the Blue-Ringed Octopus**: 10 bioluminescent glowing blue rings with deep indigo centers that pulse and flare on tap (`interactionPulse`), horizontal slit pupils.
+  * **Echo the Dolphin**: Concentric acoustic sonar rings expanding upward from melon forehead with fading opacity, catchlight eyes, rostrum smile.
+  * **Freya the Arctic Fox**: Shimmering Aurora Borealis celestial gradient veil across chest, black ear tips and nose.
+  * **Percy the Emperor Penguin**: Radiant golden-yellow auricular neck plumage patches, yellow mandible streak.
+  * **Kira the Snow Leopard**: Scattered alpine charcoal rosettes along flank and tail, soft peach nose, ice-blue eyes.
+- **Full Regression Test Coverage**: Expanded test suite to 82 tests covering all 10 companions and vector paths (100% pass rate, 0 analyzer issues).
+
+---
+
 ## [1.1.0] - 2026-11-22 — Exotic Companions Interactive Animations & Biome Auto-Pairing
 ### Added
 - **Capybara Thermal Onsen Dynamic Experience**: Handcrafted custom floating Yuzu citrus fruits that bob with physics along 64-column liquid surface waves, gentle rising hot spring steam wisps, cozy zen folded head towel with oscillation, and peaceful closed-eye zen expressions.

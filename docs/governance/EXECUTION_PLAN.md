@@ -184,7 +184,16 @@
 
 ---
 
-### Post-Release Enhancement — Exotic Companions Interactive Animations & Biome Auto-Pairing
+### Post-Release Enhancement 2 — Complete 10-Companion Handcrafted Silhouette & Interactive Animation Ecosystem (v1.2.0)
+- **Status**: Completed (100% tests passing, 82/82 tests, 0 analyzer issues)
+- **Deliverables**:
+  - `lib/src/presentation/widgets/animal_fluid/animal_silhouette_paths.dart`: Handcrafted vector silhouette paths for all 10 companions (`red_panda`, `capybara`, `axolotl`, `sea_otter`, `andean_llama`, `arctic_fox`, `emperor_penguin`, `bottlenose_dolphin`, `blue_ringed_octopus`, `snow_leopard`).
+  - `lib/src/presentation/widgets/animal_fluid/animal_fluid_vessel_painter.dart`: Handcrafted interactive species features and physics for all 10 companions (sea otter kelp & pearl shell, llama Aztec collar & tassels, octopus glowing rings, dolphin acoustic sonar, arctic fox aurora veil, penguin golden plumage, snow leopard rosettes).
+  - `test/presentation/animal_fluid_vessel_painter_test.dart`: Complete test suite verifying rendering, reduced-motion accessibility, and vector path validity for all 10 companions.
+
+---
+
+### Post-Release Enhancement 1 — Exotic Companions Interactive Animations & Biome Auto-Pairing (v1.1.0)
 - **Status**: Completed (100% tests passing, 76/76 tests, 0 analyzer issues)
 - **Deliverables**:
   - `lib/src/presentation/widgets/animal_fluid/animal_fluid_vessel_painter.dart`: Custom species overlays for Cappy the Capybara (floating buoyant yuzu citrus fruits, thermal onsen steam wisps, oscillating head towel, zen eyes) and Lottie the Axolotl (6 feathery branching gills with electric cyan/magenta glow, drifting ocean spores, glossy eyes, blush).

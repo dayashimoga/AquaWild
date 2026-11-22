@@ -3,6 +3,7 @@ import 'package:aquawild/src/domain/models/exotic_animal.dart';
 import 'package:aquawild/src/domain/models/fluid_layer.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_vessel_painter.dart';
+import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_silhouette_paths.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/wave_column_solver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -111,6 +112,164 @@ void main() {
         ),
         findsOneWidget,
       );
+    });
+
+    testWidgets('Paints Ollie the Sea Otter with kelp and pearl shell cleanly',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'sea_otter',
+                fillFraction: 0.55,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 1.8,
+                accentColor: const Color(0xFF4DB6AC),
+                interactionPulse: 0.7,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Luna the Andean Llama with festive Aztec collar and tassels',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'andean_llama',
+                fillFraction: 0.7,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 2.1,
+                accentColor: const Color(0xFFFFB74D),
+                interactionPulse: 0.5,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Octavia the Blue-Ringed Octopus with bioluminescent pulsing rings',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'blue_ringed_octopus',
+                fillFraction: 0.6,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 3.4,
+                accentColor: const Color(0xFF00E5FF),
+                interactionPulse: 1.0,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Echo the Dolphin with expanding acoustic sonar rings',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'bottlenose_dolphin',
+                fillFraction: 0.5,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 1.5,
+                accentColor: const Color(0xFF4FC3F7),
+                interactionPulse: 0.6,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Freya the Arctic Fox, Percy the Penguin, and Kira the Snow Leopard without errors',
+        (tester) async {
+      for (final companionId in ['arctic_fox', 'emperor_penguin', 'snow_leopard']) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomPaint(
+                size: const Size(300, 345),
+                painter: AnimalFluidVesselPainter(
+                  animalId: companionId,
+                  fillFraction: 0.45,
+                  stratifiedLayers: stratifiedLayers,
+                  waveSolver: waveSolver,
+                  time: 2.0,
+                  accentColor: Colors.cyan,
+                  interactionPulse: 0.4,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+          ),
+          findsOneWidget,
+        );
+      }
+    });
+
+    test('All 10 companions have valid non-empty silhouette vector paths', () {
+      const testSize = Size(320, 368);
+      for (final animal in ExoticAnimal.allAnimals) {
+        final path = AnimalSilhouettePaths.getSilhouettePath(animal.id, testSize);
+        expect(path, isNotNull);
+        expect(path.getBounds().isEmpty, isFalse);
+        expect(path.getBounds().width, greaterThan(0));
+        expect(path.getBounds().height, greaterThan(0));
+      }
     });
 
     testWidgets('Supports reduced-motion accessibility mode without throwing',

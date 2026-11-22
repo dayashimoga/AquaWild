@@ -111,11 +111,15 @@ class AnimalFluidVesselPainter extends CustomPainter {
 
       _drawStratifiedFluid(canvas, size, surfacePoints);
 
-      // Interior species accents (Yuzu fruits inside Capybara pool, glowing spores in Axolotl)
+      // Interior species accents
       if (animalId == 'capybara') {
         _drawCapybaraInteriorYuzus(canvas, size, surfacePoints);
       } else if (animalId == 'axolotl') {
         _drawAxolotlInteriorSpores(canvas, size);
+      } else if (animalId == 'sea_otter') {
+        _drawSeaOtterInteriorKelp(canvas, size);
+      } else if (animalId == 'blue_ringed_octopus') {
+        _drawOctopusInteriorRings(canvas, size);
       }
 
       canvas.restore();
@@ -551,6 +555,480 @@ class AnimalFluidVesselPainter extends CustomPainter {
     canvas.drawPath(whiskerPath, _faceFeaturePaint..strokeWidth = 1.2);
   }
 
+  // =========================================================================
+  // SEA OTTER KELP LAGOON & PEARL SHELL ACCENTS
+  // =========================================================================
+
+  void _drawSeaOtterInteriorKelp(Canvas canvas, Size size) {
+    if (reducedMotion) return;
+    final w = size.width;
+    final h = size.height;
+
+    final kelpPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3.5
+      ..strokeCap = StrokeCap.round
+      ..color = const Color(0x882E7D32);
+
+    final kelpColumns = [w * 0.30, w * 0.50, w * 0.70];
+    for (int k = 0; k < kelpColumns.length; k++) {
+      final double baseX = kelpColumns[k];
+      final Path kelpPath = Path();
+      kelpPath.moveTo(baseX, h * 0.95);
+
+      for (double y = h * 0.95; y >= h * 0.35; y -= 20.0) {
+        final double sway = math.sin(time * 2.5 + (y * 0.03) + k) *
+            (4.0 + interactionPulse * 6.0);
+        kelpPath.lineTo(baseX + sway, y);
+      }
+      canvas.drawPath(kelpPath, kelpPaint);
+    }
+  }
+
+  void _drawSeaOtterExteriorDetails(
+    Canvas canvas,
+    Size size,
+    List<Offset> surfacePoints,
+  ) {
+    final w = size.width;
+    final h = size.height;
+
+    // 1. Iridescent Scallop Pearl Shell on Tummy
+    final double shellX = w * 0.50;
+    final double shellY = h * 0.58;
+    final double shellTilt =
+        reducedMotion ? 0.0 : math.sin(time * 2.5) * 0.08;
+
+    canvas.save();
+    canvas.translate(shellX, shellY);
+    canvas.rotate(shellTilt);
+
+    final Paint shellPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = const RadialGradient(
+        colors: [Color(0xFFFFF9C4), Color(0xFFFFD54F), Color(0xFFFFB300)],
+      ).createShader(Rect.fromCircle(center: Offset.zero, radius: w * 0.08));
+
+    final Path shellPath = Path();
+    shellPath.moveTo(-w * 0.07, 0);
+    shellPath.quadraticBezierTo(0, -w * 0.06, w * 0.07, 0);
+    shellPath.quadraticBezierTo(w * 0.05, w * 0.07, 0, w * 0.08);
+    shellPath.quadraticBezierTo(-w * 0.05, w * 0.07, -w * 0.07, 0);
+    canvas.drawPath(shellPath, shellPaint);
+
+    // Glowing Pearl in center of shell
+    final Paint pearlPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xFFFFFFFF);
+    final Paint pearlGlow = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0x8800E5FF)
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0);
+    canvas.drawCircle(Offset.zero, w * 0.025, pearlGlow);
+    canvas.drawCircle(Offset.zero, w * 0.018, pearlPaint);
+
+    canvas.restore();
+
+    // 2. Otter Nose & Whiskers
+    final Offset nosePos = Offset(w * 0.50, h * 0.24);
+    canvas.drawCircle(
+      nosePos,
+      3.0,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF212121),
+    );
+    // Whiskers
+    canvas.drawLine(
+      Offset(w * 0.45, h * 0.25),
+      Offset(w * 0.36, h * 0.26),
+      _faceFeaturePaint..strokeWidth = 1.0,
+    );
+    canvas.drawLine(
+      Offset(w * 0.55, h * 0.25),
+      Offset(w * 0.64, h * 0.26),
+      _faceFeaturePaint..strokeWidth = 1.0,
+    );
+  }
+
+  // =========================================================================
+  // ANDEAN LLAMA WOVEN COLLAR ACCENTS
+  // =========================================================================
+
+  void _drawLlamaExteriorDetails(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // 1. Andean Aztec Geometric Collar
+    final double collarTopY = h * 0.30;
+    final double collarH = h * 0.045;
+    final Rect collarRect =
+        Rect.fromLTRB(w * 0.28, collarTopY, w * 0.52, collarTopY + collarH);
+
+    final Paint collarPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = const LinearGradient(
+        colors: [Color(0xFFFF5252), Color(0xFFFFD54F), Color(0xFF00E5FF)],
+      ).createShader(collarRect);
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(collarRect, const Radius.circular(4)),
+      collarPaint,
+    );
+
+    // Dangling Colorful Wool Pompoms / Tassels
+    final tasselColors = [
+      const Color(0xFFFF5252),
+      const Color(0xFFFFD54F),
+      const Color(0xFF00E5FF),
+      const Color(0xFF69F0AE),
+    ];
+    for (int t = 0; t < 4; t++) {
+      final double tx = w * (0.31 + t * 0.06);
+      final double sway = reducedMotion
+          ? 0.0
+          : math.sin(time * 3.0 + t) * (2.5 + interactionPulse * 4.0);
+      final double ty = collarTopY + collarH + 10.0;
+
+      canvas.drawLine(
+        Offset(tx, collarTopY + collarH),
+        Offset(tx + sway, ty),
+        _faceFeaturePaint..strokeWidth = 1.2,
+      );
+      canvas.drawCircle(
+        Offset(tx + sway, ty),
+        3.2,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = tasselColors[t],
+      );
+    }
+
+    // 2. Cute Llama Eye with Eyelashes & Ear Tuft
+    final Offset eye = Offset(w * 0.33, h * 0.13);
+    canvas.drawCircle(
+      eye,
+      2.5,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF212121),
+    );
+    // Eyelashes
+    canvas.drawLine(
+      Offset(eye.dx - 1, eye.dy - 2),
+      Offset(eye.dx - 4, eye.dy - 5),
+      _faceFeaturePaint..strokeWidth = 1.0,
+    );
+
+    // Fluffy ear tufts
+    final Paint woolPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xEEFFFFFF);
+    canvas.drawCircle(Offset(w * 0.42, h * 0.06), 4.0, woolPaint);
+    canvas.drawCircle(Offset(w * 0.46, h * 0.06), 4.0, woolPaint);
+  }
+
+  // =========================================================================
+  // BLUE-RINGED OCTOPUS BIOLUMINESCENT RINGS
+  // =========================================================================
+
+  void _drawOctopusInteriorRings(Canvas canvas, Size size) {
+    _drawOctopusRingNetwork(canvas, size, isInterior: true);
+  }
+
+  void _drawOctopusExteriorDetails(Canvas canvas, Size size) {
+    _drawOctopusRingNetwork(canvas, size, isInterior: false);
+
+    final w = size.width;
+    final h = size.height;
+
+    // Horizontal slit pupils
+    final Paint eyePaint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xFFFFD54F);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(w * 0.38, h * 0.36),
+        width: 7.0,
+        height: 4.5,
+      ),
+      eyePaint,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(w * 0.62, h * 0.36),
+        width: 7.0,
+        height: 4.5,
+      ),
+      eyePaint,
+    );
+    // Black slit pupil
+    canvas.drawLine(
+      Offset(w * 0.35, h * 0.36),
+      Offset(w * 0.41, h * 0.36),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..color = Colors.black,
+    );
+    canvas.drawLine(
+      Offset(w * 0.59, h * 0.36),
+      Offset(w * 0.65, h * 0.36),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.8
+        ..color = Colors.black,
+    );
+  }
+
+  void _drawOctopusRingNetwork(
+    Canvas canvas,
+    Size size, {
+    required bool isInterior,
+  }) {
+    final w = size.width;
+    final h = size.height;
+
+    final ringCenters = [
+      Offset(w * 0.40, h * 0.18),
+      Offset(w * 0.60, h * 0.18),
+      Offset(w * 0.50, h * 0.28),
+      Offset(w * 0.28, h * 0.45),
+      Offset(w * 0.72, h * 0.45),
+      Offset(w * 0.18, h * 0.68),
+      Offset(w * 0.82, h * 0.68),
+      Offset(w * 0.36, h * 0.78),
+      Offset(w * 0.64, h * 0.78),
+      Offset(w * 0.50, h * 0.86),
+    ];
+
+    for (int r = 0; r < ringCenters.length; r++) {
+      if (isInterior && r < 4) continue;
+      if (!isInterior && r >= 4) continue;
+
+      final center = ringCenters[r];
+      final double pulse = reducedMotion
+          ? 0.7
+          : (0.4 + 0.6 * math.sin(time * 3.5 + r))
+              .clamp(0.0, 1.0);
+      final double totalPulse =
+          (pulse * 0.6 + interactionPulse * 0.4).clamp(0.0, 1.0);
+      final double radius =
+          (w * 0.032) * (1.0 + interactionPulse * 0.5);
+
+      final Paint ringGlow = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4.0 + interactionPulse * 5.0
+        ..color = const Color(0xFF00E5FF).withValues(alpha: totalPulse * 0.85)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5.0);
+
+      final Paint ringCore = Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2
+        ..color = const Color(0xFF18FFFF).withValues(alpha: totalPulse * 0.95);
+
+      final Paint centerDisc = Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF0D47A1).withValues(alpha: 0.6);
+
+      canvas.drawCircle(center, radius * 0.65, centerDisc);
+      canvas.drawCircle(center, radius, ringGlow);
+      canvas.drawCircle(center, radius, ringCore);
+    }
+  }
+
+  // =========================================================================
+  // BOTTLENOSE DOLPHIN SONAR & ROSTRUM ACCENTS
+  // =========================================================================
+
+  void _drawDolphinExteriorDetails(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Expanding Acoustic Sonar Bubble Rings from Melon
+    if (!reducedMotion) {
+      final Offset melon = Offset(w * 0.54, h * 0.14);
+      for (int s = 0; s < 3; s++) {
+        final double cycle = (time * 0.8 + (s * 0.33)) % 1.0;
+        final double ringRadius = 12.0 + (cycle * (w * 0.16));
+        final double alpha =
+            ((1.0 - cycle) * 0.6 + (interactionPulse * 0.4)).clamp(0.0, 1.0);
+
+        final Paint sonarPaint = Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.8
+          ..color = const Color(0xFF80DEEA).withValues(alpha: alpha);
+
+        canvas.drawArc(
+          Rect.fromCircle(center: melon, radius: ringRadius),
+          -math.pi * 0.6,
+          math.pi * 0.7,
+          false,
+          sonarPaint,
+        );
+      }
+    }
+
+    // Playful Catchlight Eye
+    final Offset eye = Offset(w * 0.48, h * 0.18);
+    canvas.drawCircle(
+      eye,
+      2.5,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF1A237E),
+    );
+    canvas.drawCircle(
+      Offset(eye.dx - 1, eye.dy - 1),
+      1.0,
+      _bubblePaint,
+    );
+
+    // Rostrum Smile line
+    final Path rostrumSmile = Path();
+    rostrumSmile.moveTo(w * 0.42, h * 0.14);
+    rostrumSmile.quadraticBezierTo(w * 0.46, h * 0.19, w * 0.50, h * 0.20);
+    canvas.drawPath(rostrumSmile, _faceFeaturePaint..strokeWidth = 1.2);
+  }
+
+  // =========================================================================
+  // ARCTIC FOX AURORA VEIL & ALERT EARS
+  // =========================================================================
+
+  void _drawArcticFoxExteriorDetails(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Aurora Borealis Shimmer Veil across chest
+    if (!reducedMotion) {
+      final double shimmerPhase = (time * 0.4) % 1.0;
+      final Rect shimmerRect =
+          Rect.fromLTRB(w * 0.24, h * 0.30, w * 0.60, h * 0.55);
+
+      final Paint auroraPaint = Paint()
+        ..style = PaintingStyle.fill
+        ..shader = LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            const Color(0x3369F0AE),
+            const Color(0x33B388FF),
+            const Color(0x3300E5FF),
+          ],
+          stops: [
+            (shimmerPhase * 0.5).clamp(0.0, 1.0),
+            shimmerPhase,
+            ((shimmerPhase + 0.5) % 1.0),
+          ],
+        ).createShader(shimmerRect);
+
+      canvas.drawOval(shimmerRect, auroraPaint);
+    }
+
+    // Black Ear Tips
+    final Paint earTipPaint = Paint()
+      ..style = PaintingStyle.fill
+      ..color = const Color(0xFF263238);
+    canvas.drawCircle(Offset(w * 0.28, h * 0.05), 3.5, earTipPaint);
+    canvas.drawCircle(Offset(w * 0.48, h * 0.05), 3.5, earTipPaint);
+
+    // Black Nose & Almond Eye
+    canvas.drawCircle(
+      Offset(w * 0.13, h * 0.24),
+      2.5,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF212121),
+    );
+    canvas.drawCircle(
+      Offset(w * 0.24, h * 0.20),
+      2.0,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFF212121),
+    );
+  }
+
+  // =========================================================================
+  // EMPEROR PENGUIN GOLDEN AURICULAR PLUMAGE
+  // =========================================================================
+
+  void _drawPenguinExteriorDetails(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    // Golden Auricular Neck Plumage Patches
+    final Paint plumagePaint = Paint()
+      ..style = PaintingStyle.fill
+      ..shader = const LinearGradient(
+        colors: [Color(0xFFFF6F00), Color(0xFFFFD54F)],
+      ).createShader(
+        Rect.fromLTRB(w * 0.40, h * 0.12, w * 0.65, h * 0.24),
+      );
+
+    final Path plumagePath = Path();
+    plumagePath.moveTo(w * 0.52, h * 0.13);
+    plumagePath.quadraticBezierTo(w * 0.62, h * 0.16, w * 0.58, h * 0.24);
+    plumagePath.quadraticBezierTo(w * 0.48, h * 0.20, w * 0.52, h * 0.13);
+    canvas.drawPath(plumagePath, plumagePaint);
+
+    // Pointed Beak with Yellow Mandible Stripe
+    canvas.drawLine(
+      Offset(w * 0.32, h * 0.18),
+      Offset(w * 0.18, h * 0.19),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0
+        ..color = const Color(0xFFFFB300),
+    );
+  }
+
+  // =========================================================================
+  // SNOW LEOPARD ALPINE ROSETTES & WHISKERS
+  // =========================================================================
+
+  void _drawSnowLeopardExteriorDetails(Canvas canvas, Size size) {
+    final w = size.width;
+    final h = size.height;
+
+    final Paint rosettePaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.8
+      ..color = const Color(0x66455A64);
+
+    // Alpine Rosettes along flank
+    final rosettes = [
+      Offset(w * 0.45, h * 0.42),
+      Offset(w * 0.60, h * 0.45),
+      Offset(w * 0.52, h * 0.58),
+      Offset(w * 0.68, h * 0.60),
+      Offset(w * 0.85, h * 0.75),
+    ];
+    for (final r in rosettes) {
+      canvas.drawCircle(r, 4.0, rosettePaint);
+      canvas.drawCircle(r, 1.0, Paint()..color = const Color(0x66455A64));
+    }
+
+    // Soft Pink Nose & Whiskers
+    canvas.drawCircle(
+      Offset(w * 0.20, h * 0.32),
+      2.8,
+      Paint()
+        ..style = PaintingStyle.fill
+        ..color = const Color(0xFFFFAB91),
+    );
+    canvas.drawLine(
+      Offset(w * 0.22, h * 0.32),
+      Offset(w * 0.32, h * 0.30),
+      _faceFeaturePaint..strokeWidth = 1.0,
+    );
+    canvas.drawLine(
+      Offset(w * 0.22, h * 0.34),
+      Offset(w * 0.32, h * 0.36),
+      _faceFeaturePaint..strokeWidth = 1.0,
+    );
+  }
+
   void _drawSpeciesExteriorDetails(
     Canvas canvas,
     Size size,
@@ -562,6 +1040,27 @@ class AnimalFluidVesselPainter extends CustomPainter {
         break;
       case 'axolotl':
         _drawAxolotlExteriorDetails(canvas, size);
+        break;
+      case 'sea_otter':
+        _drawSeaOtterExteriorDetails(canvas, size, surfacePoints);
+        break;
+      case 'andean_llama':
+        _drawLlamaExteriorDetails(canvas, size);
+        break;
+      case 'blue_ringed_octopus':
+        _drawOctopusExteriorDetails(canvas, size);
+        break;
+      case 'bottlenose_dolphin':
+        _drawDolphinExteriorDetails(canvas, size);
+        break;
+      case 'arctic_fox':
+        _drawArcticFoxExteriorDetails(canvas, size);
+        break;
+      case 'emperor_penguin':
+        _drawPenguinExteriorDetails(canvas, size);
+        break;
+      case 'snow_leopard':
+        _drawSnowLeopardExteriorDetails(canvas, size);
         break;
       case 'red_panda':
       default:
