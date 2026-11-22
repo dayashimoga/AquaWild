@@ -30,6 +30,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
   late final WaveColumnSolver _waveSolver;
   double _timeSeconds = 0.0;
   int _lastEntryCount = 0;
+  double _interactionPulse = 0.0;
 
   @override
   void initState() {
@@ -121,6 +122,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
             _timeSeconds += 0.016;
             if (!reducedMotion) {
               _waveSolver.step(dt: 1.0);
+              _interactionPulse = math.max(0.0, _interactionPulse - 0.04);
             }
 
             return Column(
@@ -132,6 +134,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                         .floor()
                         .clamp(0, 63);
                     _triggerSplash(progressFraction, col);
+                    _interactionPulse = 1.0;
                   },
                   child: Semantics(
                     label:
@@ -150,6 +153,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                           time: _timeSeconds,
                           accentColor: activeAnimal.accentColor,
                           reducedMotion: reducedMotion,
+                          interactionPulse: _interactionPulse,
                         ),
                       ),
                     ),

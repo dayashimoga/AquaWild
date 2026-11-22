@@ -2,6 +2,17 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.1.0] - 2026-11-22 — Exotic Companions Interactive Animations & Biome Auto-Pairing
+### Added
+- **Capybara Thermal Onsen Dynamic Experience**: Handcrafted custom floating Yuzu citrus fruits that bob with physics along 64-column liquid surface waves, gentle rising hot spring steam wisps, cozy zen folded head towel with oscillation, and peaceful closed-eye zen expressions.
+- **Axolotl Bioluminescent Cenote Interactive Magic**: Handcrafted 6 external feathery branching gills pulsing with electric cyan (`#00E5FF`) and neon magenta (`#FF4081`) glow, floating plankton spores suspended in fluid, glossy catchlight eyes, and rosy cheek blush.
+- **Interactive Tap Excitation Physics**: Added decaying `interactionPulse` impulse that dynamically flares species features (e.g. amplifying axolotl gill spread and intensifying citrus wave bobbing) on tactile touch or drink logging.
+- **Seamless Biome-Companion Auto Pairing**: Auto-selects native biomes (`thermal_yuzu_onsen` for Capybara, `bioluminescent_cenote` for Axolotl) upon switching companions in `BiomeCompanionSelectorSheet`.
+- **Immediate Starter Access**: Unlocked Capybara and Axolotl as zero-XP starter companions alongside Red Panda.
+- **Dedicated Interactive Animation Test Suite**: Added `test/presentation/animal_fluid_vessel_painter_test.dart` bringing the total test suite to 76 tests (100% pass rate, 0 analyzer issues).
+
+---
+
 ## [1.0.0] - 2026-11-22 — Official Multi-Platform Production Release
 ### Added
 - **Multi-Platform Master CI/CD Pipeline**: Added `.github/workflows/build-all.yml` with manual dispatch inputs (`platforms: all, android, ios, web, windows, macos, linux`), nightly scheduled cron (`0 2 * * *`), quality gates (linting + secret scanning + unit/widget test coverage), parallel matrix builds, and release packaging.

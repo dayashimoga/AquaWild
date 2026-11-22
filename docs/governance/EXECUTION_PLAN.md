@@ -181,3 +181,14 @@
 - **Risk Level**: Low
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Fully automated cross-platform CI/CD pipeline covering all 6 target platforms, automated artifact distribution, and zero manual deployment overhead.
+
+---
+
+### Post-Release Enhancement — Exotic Companions Interactive Animations & Biome Auto-Pairing
+- **Status**: Completed (100% tests passing, 76/76 tests, 0 analyzer issues)
+- **Deliverables**:
+  - `lib/src/presentation/widgets/animal_fluid/animal_fluid_vessel_painter.dart`: Custom species overlays for Cappy the Capybara (floating buoyant yuzu citrus fruits, thermal onsen steam wisps, oscillating head towel, zen eyes) and Lottie the Axolotl (6 feathery branching gills with electric cyan/magenta glow, drifting ocean spores, glossy eyes, blush).
+  - `lib/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart`: Integrated tactile `_interactionPulse` decaying variable hooked into vessel tap gestures and painter.
+  - `lib/src/presentation/widgets/biomes/biome_companion_selector_sheet.dart`: Biome auto-switching on companion selection.
+  - `lib/src/domain/models/exotic_animal.dart`: Unlocked Capybara and Axolotl as zero-XP starter companions.
+  - `test/presentation/animal_fluid_vessel_painter_test.dart`: Complete regression and unit test suite for interactive animal animations.

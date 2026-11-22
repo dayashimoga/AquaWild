@@ -79,7 +79,7 @@ class ExoticAnimal {
       scientificName: 'Hydrochoerus hydrochaeris',
       lore: 'The undisputed zen master of hot springs, radiating tranquility and balanced hydration.',
       habitatBiomeId: 'thermal_yuzu_onsen',
-      unlockXp: 300,
+      unlockXp: 0, // Unlocked starter companion for onsen zen
       accentColor: Color(0xFF8D6E63),
       defaultCapacityMl: 2600,
       evolutionStages: AnimalEvolutionStage.defaultStages,
@@ -91,7 +91,7 @@ class ExoticAnimal {
       scientificName: 'Ambystoma mexicanum',
       lore: 'Mystic ancient water spirit whose feathery gills shimmer with bioluminescence.',
       habitatBiomeId: 'bioluminescent_cenote',
-      unlockXp: 750,
+      unlockXp: 0, // Unlocked starter companion for bioluminescent magic
       accentColor: Color(0xFFF48FB1),
       defaultCapacityMl: 2400,
       evolutionStages: AnimalEvolutionStage.defaultStages,

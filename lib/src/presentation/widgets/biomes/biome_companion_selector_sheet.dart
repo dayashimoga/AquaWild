@@ -207,6 +207,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
                           onPressed: () {
                             AudioHapticsService.playTap();
                             ref.read(animalHabitatProvider.notifier).selectAnimal(animal.id);
+                            ref.read(biomeProvider.notifier).selectBiome(animal.habitatBiomeId);
                           },
                           child: const Text('Select', style: TextStyle(fontSize: 11)),
                         )
