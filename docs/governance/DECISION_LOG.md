@@ -136,3 +136,22 @@
   3. **ADR-008 (Universal Monetization Entitlement Engine & Dual-Path Unlocks)**: Established deterministic unlock hierarchy (`AdminGodMode > ProSubscription > PurchasedPack > EarnedXP`), defined standard SKUs (`aquawild_pro_monthly/annual/lifetime`, IAP packs, theme/FX packs, seasonal passes), and specified cross-platform store simulation with offline grace validation.
   4. **ADR-009 (Out-of-App Telemetry, Rich Notifications, Lock-Screen Widgets & Unified Admin Portal `/admin`)**: Designed canonical out-of-app telemetry snapshots (water consumed, remaining goal, hydration/caffeine/electrolyte budgets left, streak & freeze counters), actionable background notification handlers, in-app Home/Lock-Screen Widget Center, and enterprise `/admin` management portal with God-Mode master toggle and immutable security audit logging.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `animation-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 012 — 2026-11-22 (Stage 1: Subphase 1.2.2 — Database Schema & Domain Contracts Specification)
+- **Context**: Specification and implementation of Supabase database migrations, Row-Level Security policies, and immutable Dart domain models for Subscriptions, IAPs, Entitlements, Out-of-App Telemetry, Remote Config, and Admin Audit Logging.
+- **Artifacts Created & Decisions Codified**:
+  1. **PostgreSQL Migration (`20261122000001_create_monetization_admin_schema.sql`)**:
+     * `user_subscriptions`: Stores user subscription tier (`free`, `pro_monthly`, `pro_annual`, `pro_lifetime`), status (`active`, `expired`, `grace_period`, `cancelled`), store origin, transaction ID, receipt hash, expiration, and renewal flags.
+     * `user_entitlements`: Tracks permanent one-time unlocks with SKU, kind (`animal_pack`, `theme_pack`, `animation_pack`, `seasonal_pass`), and grant source.
+     * `remote_config_flags`: Dynamic feature flags table seeded with runtime defaults (`enable_high_precision_waves`, `ai_coach_v2_prompt`, `monetization_store_live`, `out_of_app_telemetry_interval_mins`).
+     * `admin_audit_logs`: Immutable append-only audit trail logging administrative mutations with actor, action, resource, diff details, environment, and IP address.
+     * **Strict Zero-Trust RLS Policies**: Enforced `auth.uid() = user_id` on subscriptions and entitlements, public read on active remote config, and strict admin/service-role isolation on audit logs and configuration updates.
+  2. **Domain Model Contracts**:
+     * `monetization_models.dart`: `SubscriptionTier`, `SubscriptionStatus`, `UserSubscription`, `EntitlementKind`, `UserEntitlement`, and `ProductSKU` with default catalog.
+     * `out_of_app_telemetry.dart`: `HydrationBudgetSummary` and `OutOfAppTelemetrySnapshot` computing net water remaining, 400mg safe caffeine budget remaining, electrolyte score, and actionable notification payloads.
+     * `admin_models.dart`: `RemoteConfigFlag`, `AdminAuditEntry`, and `AdminEnvironment` (`DEV`, `STAGING`, `PROD`).
+  3. **Automated Unit Testing**:
+     * `test/domain/monetization_admin_models_test.dart` added covering all serialization, expiration calculations, catalog lookups, budget metrics, and environment switching.
+- **Sign-Off**: `solution-architect`, `backend-agent`, `product-agent`, `security-agent`, `qa-agent`, `release-devops-agent`.
