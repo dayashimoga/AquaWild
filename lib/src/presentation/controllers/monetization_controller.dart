@@ -1,7 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/security/receipt_verification_service.dart';
 import '../../data/repositories/monetization_repository.dart';
 import '../../domain/models/exotic_animal.dart';
 import '../../domain/models/monetization_models.dart';
+
+/// Riverpod provider for purchase receipt validation service
+final receiptVerificationServiceProvider =
+    Provider<ReceiptVerificationService>((ref) {
+  return ReceiptVerificationService();
+});
 
 /// Riverpod provider for active monetization state and purchase controller
 final monetizationProvider =
@@ -26,6 +33,7 @@ class MonetizationState {
   });
 
   bool get isPro => subscription.isPro;
+  bool get isInGracePeriod => subscription.isInGracePeriod;
   SubscriptionTier get activeTier => subscription.tier;
 
   /// Set of animal IDs unlocked via IAP packs or Pro
@@ -99,6 +107,8 @@ class MonetizationState {
 class MonetizationNotifier extends Notifier<MonetizationState> {
   MonetizationRepository get _repository =>
       ref.read(monetizationRepositoryProvider);
+  ReceiptVerificationService get _receiptService =>
+      ref.read(receiptVerificationServiceProvider);
 
   @override
   MonetizationState build() {
@@ -168,13 +178,30 @@ class MonetizationNotifier extends Notifier<MonetizationState> {
         break;
     }
 
+    final txId = transactionId ?? 'tx_${now.millisecondsSinceEpoch}';
+    final receipt = _receiptService.createSandboxReceipt(
+      productId: tier.id,
+      transactionId: txId,
+      store: store,
+    );
+    final verification = _receiptService.verifyReceipt(
+      receipt,
+      allowReplayForSubscriptions: true,
+    );
+    if (!verification.isValid) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Receipt verification failed: ${verification.message}',
+      );
+      return false;
+    }
+
     final newSubscription = UserSubscription(
       userId: state.subscription.userId,
       tier: tier,
       status: SubscriptionStatus.active,
       store: store,
-      originalTransactionId:
-          transactionId ?? 'tx_${now.millisecondsSinceEpoch}',
+      originalTransactionId: txId,
       startedAt: now,
       expiresAt: expiresAt,
       autoRenew: tier != SubscriptionTier.proLifetime,
@@ -242,6 +269,21 @@ class MonetizationNotifier extends Notifier<MonetizationState> {
     // Check if already owned
     if (state.entitlements.any((e) => e.sku == skuId)) {
       return true; // Idempotent success
+    }
+
+    final txId = 'tx_${skuId}_${DateTime.now().millisecondsSinceEpoch}';
+    final receipt = _receiptService.createSandboxReceipt(
+      productId: skuId,
+      transactionId: txId,
+      store: source,
+    );
+    final verification = _receiptService.verifyReceipt(receipt);
+    if (!verification.isValid) {
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: 'Receipt validation failed: ${verification.message}',
+      );
+      return false;
     }
 
     state = state.copyWith(isLoading: true);

@@ -101,7 +101,43 @@ class UserSubscription {
     this.autoRenew = true,
   });
 
-  bool get isPro => tier.isPro && status.hasAccess;
+  static const Duration defaultGracePeriod = Duration(hours: 72);
+
+  bool get isInGracePeriod {
+    if (expiresAt == null) return false;
+    final now = DateTime.now();
+    return now.isAfter(expiresAt!) &&
+        now.isBefore(expiresAt!.add(defaultGracePeriod));
+  }
+
+  bool get isPastGracePeriod {
+    if (expiresAt == null) return false;
+    final now = DateTime.now();
+    return now.isAfter(expiresAt!.add(defaultGracePeriod));
+  }
+
+  /// Calculates effective subscription status factoring in expiration and offline grace period
+  SubscriptionStatus get effectiveStatus {
+    if (tier == SubscriptionTier.free) return SubscriptionStatus.active;
+    if (tier == SubscriptionTier.proLifetime) return SubscriptionStatus.active;
+    if (expiresAt == null) return status;
+
+    final now = DateTime.now();
+    if (now.isBefore(expiresAt!)) {
+      return status;
+    } else if (isInGracePeriod) {
+      return SubscriptionStatus.gracePeriod;
+    } else {
+      return SubscriptionStatus.expired;
+    }
+  }
+
+  bool get isPro =>
+      tier.isPro &&
+      (effectiveStatus.hasAccess ||
+          (effectiveStatus == SubscriptionStatus.cancelled &&
+              expiresAt != null &&
+              DateTime.now().isBefore(expiresAt!)));
 
   int? get daysRemaining {
     if (expiresAt == null) return null;

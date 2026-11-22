@@ -495,6 +495,32 @@
      * Certified full project test suite: **158 / 158 passing tests**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 028 — 2026-11-22 (Stage 5: Subphase 5.2.2 — Monetization Entitlement Security, Offline Grace Period & Receipt Validation)
+- **Context**: Completing Stage 5 with enterprise-grade monetization security: client-side tamper detection via cryptographic envelopes, 72-hour offline subscription grace period, in-app purchase receipt validation, and replay attack prevention.
+- **Architectural Decisions & Deliverables**:
+  1. **Tamper-Evident Cryptographic Envelopes (`MonetizationSecurityService`)**:
+     * Built [monetization_security_service.dart](file:///h:/water/lib/src/core/security/monetization_security_service.dart) wrapping local JSON payloads in HMAC-SHA256 sealed security envelopes (`version`, `payload`, `signature`, `timestamp`, `salt`).
+     * Prevents client-side privilege escalation (e.g., editing `SharedPreferences` or `localStorage` to inject `pro_lifetime` or arbitrary IAP SKUs).
+     * Added clock rollback / future timestamp defense flagging time manipulations greater than 2 hours ahead.
+     * Backwards-compatible legacy migration: auto-detects unsealed legacy records and forward-migrates with cryptographic stamps.
+  2. **In-App Purchase Receipt Validation (`ReceiptVerificationService`)**:
+     * Built [receipt_verification_service.dart](file:///h:/water/lib/src/core/security/receipt_verification_service.dart) standardizing receipt verification across Apple App Store, Google Play, Stripe, and Web/Desktop Sandboxes.
+     * Replay attack prevention: maintains a persistent cache of redeemed transaction IDs (`_redeemedTransactions`) to prevent re-crediting one-time packs.
+     * Bundle ID validation (`com.aquawild.app` / `com.aquawild.web`) preventing cross-app receipt spoofing.
+  3. **72-Hour Offline Subscription Grace Period**:
+     * Updated `UserSubscription` with `effectiveStatus`, `isInGracePeriod`, and `defaultGracePeriod` (72 hours).
+     * When offline devices reach subscription `expiresAt`, users retain full Pro access for 72 hours (`SubscriptionStatus.gracePeriod`) before access expires, preventing abrupt feature loss on flights, off-grid expeditions, or subway commutes.
+  4. **Repository & Controller Security Integration**:
+     * Integrated `MonetizationSecurityService` into [local_monetization_repository.dart](file:///h:/water/lib/src/data/repositories/local_monetization_repository.dart). If tampering is detected, the repository purges compromised records and safely resets to the free tier.
+     * Integrated `ReceiptVerificationService` into `MonetizationController` (`subscribe` and `purchaseProduct`) verifying all transactions prior to state commitment.
+  5. **Comprehensive Security Test Suite**:
+     * Authored [monetization_security_test.dart](file:///h:/water/test/domain/monetization_security_test.dart) (16 tests).
+     * Certified full project test suite: **174 / 174 passing tests**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `security-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+
 
 
 

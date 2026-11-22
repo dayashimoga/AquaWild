@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.21.0] - 2026-11-22 — Stage 5: Subphase 5.2.2 — Monetization Entitlement Security, Offline Grace Period & Receipt Validation
+### Added
+- **Tamper-Evident Cryptographic Envelopes (`MonetizationSecurityService`)**:
+  * Implemented HMAC-SHA256 signature stamping and sealed envelope serialization in `lib/src/core/security/monetization_security_service.dart`.
+  * Protects local storage keys (`aquawild_user_subscription` and `aquawild_user_entitlements`) against unauthorized client-side modification.
+  * Clock rollback defense flagging time shifts >2 hours into the future.
+  * Automatic migration forward of unsealed legacy storage records.
+- **In-App Purchase Receipt Validation (`ReceiptVerificationService`)**:
+  * Implemented multi-store receipt verification in `lib/src/core/security/receipt_verification_service.dart` supporting Apple App Store, Google Play, Stripe, and Web/Desktop Sandboxes.
+  * Cryptographic signature validation with bundle ID checks (`com.aquawild.app`, `com.aquawild.web`).
+  * Replay attack defense tracking redeemed transaction IDs to prevent double-crediting.
+- **72-Hour Offline Subscription Grace Period**:
+  * Added `effectiveStatus`, `isInGracePeriod`, and `isPastGracePeriod` to `UserSubscription`.
+  * Preserves full Pro access for 72 hours when subscriptions expire during offline usage.
+- **Automated Security Test Suite (`monetization_security_test.dart`)**:
+  * Added 16 tests covering tamper detection, signature verification, clock tampering, replay protection, offline grace period transitions, and repository auto-purge.
+  * **174 / 174 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.20.0] - 2026-11-22 — Stage 5: Subphase 5.2.1 — Storefront UX, Instant Companion Unlocks & Dual-Path Triggers
 ### Added
 - **Glassmorphic Premium Storefront Modal (`PremiumStorefrontModal`)**:

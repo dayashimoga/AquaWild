@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../core/security/monetization_security_service.dart';
 import '../../domain/models/monetization_models.dart';
 import 'monetization_repository.dart';
 
 /// Production-grade local offline-first repository for subscriptions and IAP entitlements
+/// with cryptographic tamper-detection and 72-hour offline grace period enforcement
 class LocalMonetizationRepository implements MonetizationRepository {
   final SharedPreferences? _prefs;
+  final MonetizationSecurityService _securityService;
 
   // In-memory cache for zero-latency synchronous access and unit test execution
   UserSubscription? _cachedSubscription;
@@ -14,7 +18,10 @@ class LocalMonetizationRepository implements MonetizationRepository {
   static const String _subscriptionKey = 'aquawild_user_subscription';
   static const String _entitlementsKey = 'aquawild_user_entitlements';
 
-  LocalMonetizationRepository([this._prefs]);
+  LocalMonetizationRepository([
+    this._prefs,
+    MonetizationSecurityService? securityService,
+  ]) : _securityService = securityService ?? MonetizationSecurityService();
 
   @override
   Future<UserSubscription> getSubscription() async {
@@ -43,18 +50,37 @@ class LocalMonetizationRepository implements MonetizationRepository {
       return _cachedSubscription!;
     }
 
-    try {
-      final map = jsonDecode(raw) as Map<String, dynamic>;
-      _cachedSubscription = UserSubscription.fromJson(map);
-      return _cachedSubscription!;
-    } catch (_) {
-      _cachedSubscription = UserSubscription(
-        userId: 'local_user',
-        tier: SubscriptionTier.free,
-        status: SubscriptionStatus.active,
-        startedAt: DateTime.now(),
-      );
-      return _cachedSubscription!;
+    final verification = _securityService.verifyAndExtract<UserSubscription>(
+      raw,
+      (map) => UserSubscription.fromJson(map),
+    );
+
+    switch (verification.status) {
+      case SecurityValidationResult.valid:
+        _cachedSubscription = verification.data;
+        return _cachedSubscription!;
+
+      case SecurityValidationResult.legacyUnsigned:
+        // Forward migrate legacy unsealed subscription with a signature
+        _cachedSubscription = verification.data;
+        if (_cachedSubscription != null) {
+          unawaited(saveSubscription(_cachedSubscription!));
+        }
+        return _cachedSubscription!;
+
+      case SecurityValidationResult.tampered:
+      case SecurityValidationResult.clockRollbackDetected:
+      case SecurityValidationResult.corrupted:
+        // Local tampering detected or invalid data: reset safely to free tier
+        final cleanFree = UserSubscription(
+          userId: 'local_user',
+          tier: SubscriptionTier.free,
+          status: SubscriptionStatus.active,
+          startedAt: DateTime.now(),
+        );
+        _cachedSubscription = cleanFree;
+        unawaited(saveSubscription(cleanFree));
+        return cleanFree;
     }
   }
 
@@ -62,8 +88,9 @@ class LocalMonetizationRepository implements MonetizationRepository {
   Future<void> saveSubscription(UserSubscription subscription) async {
     _cachedSubscription = subscription;
     if (_prefs != null) {
-      final raw = jsonEncode(subscription.toJson());
-      await _prefs.setString(_subscriptionKey, raw);
+      final payload = jsonEncode(subscription.toJson());
+      final sealedEnvelope = _securityService.signPayload(payload);
+      await _prefs.setString(_subscriptionKey, sealedEnvelope);
     }
   }
 
@@ -78,16 +105,33 @@ class LocalMonetizationRepository implements MonetizationRepository {
       return List.unmodifiable(_cachedEntitlements);
     }
 
-    try {
-      final List<dynamic> list = jsonDecode(raw) as List<dynamic>;
-      _cachedEntitlements
-        ..clear()
-        ..addAll(
-          list.map((item) => UserEntitlement.fromJson(item as Map<String, dynamic>)),
-        );
-      return List.unmodifiable(_cachedEntitlements);
-    } catch (_) {
-      return List.unmodifiable(_cachedEntitlements);
+    final verification =
+        _securityService.verifyAndExtractList<UserEntitlement>(
+      raw,
+      (item) => UserEntitlement.fromJson(item),
+    );
+
+    switch (verification.status) {
+      case SecurityValidationResult.valid:
+        _cachedEntitlements
+          ..clear()
+          ..addAll(verification.data ?? []);
+        return List.unmodifiable(_cachedEntitlements);
+
+      case SecurityValidationResult.legacyUnsigned:
+        _cachedEntitlements
+          ..clear()
+          ..addAll(verification.data ?? []);
+        unawaited(saveEntitlements(_cachedEntitlements));
+        return List.unmodifiable(_cachedEntitlements);
+
+      case SecurityValidationResult.tampered:
+      case SecurityValidationResult.clockRollbackDetected:
+      case SecurityValidationResult.corrupted:
+        // Local tampering detected on entitlements: purge compromised list
+        _cachedEntitlements.clear();
+        unawaited(saveEntitlements(_cachedEntitlements));
+        return List.unmodifiable(_cachedEntitlements);
     }
   }
 
@@ -99,7 +143,9 @@ class LocalMonetizationRepository implements MonetizationRepository {
 
     if (_prefs != null) {
       final list = entitlements.map((e) => e.toJson()).toList();
-      await _prefs.setString(_entitlementsKey, jsonEncode(list));
+      final payload = jsonEncode(list);
+      final sealedEnvelope = _securityService.signPayload(payload);
+      await _prefs.setString(_entitlementsKey, sealedEnvelope);
     }
   }
 
