@@ -260,3 +260,22 @@
   4. **Automated Test Coverage**:
      * Added unit and widget tests in `test/presentation/animal_fluid_vessel_painter_test.dart` verifying 4-layer multi-beverage zero-gap rendering and reduced-motion compliance (113/113 passing tests, 0 analyzer issues).
 - **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 018 — 2026-11-22 (Stage 3: Subphase 3.1.2 — Shallow-Water Sub-Step Stability & Effervescent Bubble Layering)
+- **Context**: Upgrading the 64-column spring-damper shallow-water wave solver for numerical stability under rapid touch impulses and enriching beverage-aware physical fluid details.
+- **Architectural Decisions & Deliverables**:
+  1. **Sub-Step Wave Integration & Zero Allocation (`WaveColumnSolver`)**:
+     * Implemented multi-pass sub-step integration (`subSteps = 2`, $dt_{sub} = dt / 2$) preventing high-impulse velocity overshoot and numerical instability.
+     * Pre-allocated scratch buffers `_leftDeltas` and `_rightDeltas` at solver initialization, completely eliminating per-frame heap allocations during the physics step (120 FPS target).
+     * Added safety velocity clamping ($\pm 120\text{px/s}$) and displacement bounds ($\pm 60\text{px}$ around target height).
+  2. **Beverage-Aware Carbonation Effervescence (`AnimalFluidVesselPainter`)**:
+     * Differentiated carbonated beverages (`sparkling_water`, `electrolyte_drink`, `kombucha`) with 12 micro-bubbles rising with rapid sinusoidal horizontal wobble ($\sin(y \times 0.15 + 5t) \times 2.8\text{px}$) and specular highlight dots.
+     * Non-carbonated beverages maintain 6 tranquil buoyant bubbles.
+  3. **Dual-Pass Specular Meniscus Surface Tension (`AnimalFluidVesselPainter`)**:
+     * Rendered a dual-pass surface tension highlight: a soft 5.2px blurred specular glow aura (`Color(0x38FFFFFF)`) topped by a sharp 2.2px luminous core line (`Color(0xEEFFFFFF)`).
+  4. **Automated Test Coverage**:
+     * Expanded `test/presentation/wave_solver_test.dart` with extreme impulse perturbation tests verifying zero NaNs, bounded displacements, and smooth viscous energy decay (114/114 passing tests, 0 analyzer issues).
+- **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.

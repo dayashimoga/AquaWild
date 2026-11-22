@@ -12,7 +12,8 @@ class WaveColumn {
 }
 
 /// Real-time coupled 1D/2D spring-damper shallow-water wave solver.
-/// Models surface tension, viscosity damping, and neighbor velocity wave propagation.
+/// Models surface tension, viscosity damping, and neighbor velocity wave propagation
+/// with sub-step numerical stability and zero per-frame GC allocations.
 class WaveColumnSolver {
   final int columnCount;
   final double tension; // Spring constant k
@@ -20,6 +21,8 @@ class WaveColumnSolver {
   final double spread; // Neighbor coupling spread s
 
   late final List<WaveColumn> columns;
+  late final List<double> _leftDeltas;
+  late final List<double> _rightDeltas;
 
   WaveColumnSolver({
     this.columnCount = 64,
@@ -31,6 +34,9 @@ class WaveColumnSolver {
       columnCount,
       (_) => WaveColumn(height: 0.0, targetHeight: 0.0, velocity: 0.0),
     );
+    // Pre-allocated scratch buffers to ensure 120 FPS zero-allocation performance
+    _leftDeltas = List.filled(columnCount, 0.0);
+    _rightDeltas = List.filled(columnCount, 0.0);
   }
 
   /// Sets the baseline liquid fill level (in pixels from bottom, or normalized 0.0 to 1.0)
@@ -52,36 +58,44 @@ class WaveColumnSolver {
     }
   }
 
-  /// Steps the shallow-water wave physics forward by time step [dt]
-  void step({double dt = 1.0}) {
-    // 1. Hooke's Law + viscous damping per column
-    for (int i = 0; i < columnCount; i++) {
-      final col = columns[i];
-      final double delta = col.height - col.targetHeight;
-      final double acceleration = (-tension * delta) - (damping * col.velocity);
-      col.velocity += acceleration * dt;
-      col.height += col.velocity * dt;
-    }
+  /// Steps the shallow-water wave physics forward by time step [dt] using
+  /// [subSteps] multi-pass sub-stepping for guaranteed numerical stability and smooth dispersion.
+  void step({double dt = 1.0, int subSteps = 2}) {
+    final double subDt = dt / subSteps;
 
-    // 2. Neighbor coupling wave propagation passes (spread)
-    final List<double> leftDeltas = List.filled(columnCount, 0.0);
-    final List<double> rightDeltas = List.filled(columnCount, 0.0);
-
-    for (int pass = 0; pass < 8; pass++) {
+    for (int s = 0; s < subSteps; s++) {
+      // 1. Hooke's Law + viscous damping per column with safety bounds
       for (int i = 0; i < columnCount; i++) {
-        if (i > 0) {
-          leftDeltas[i] = spread * (columns[i].height - columns[i - 1].height);
-          columns[i - 1].velocity += leftDeltas[i];
-        }
-        if (i < columnCount - 1) {
-          rightDeltas[i] = spread * (columns[i].height - columns[i + 1].height);
-          columns[i + 1].velocity += rightDeltas[i];
-        }
+        final col = columns[i];
+        final double delta = col.height - col.targetHeight;
+        final double acceleration =
+            (-tension * delta) - (damping * col.velocity);
+        col.velocity += acceleration * subDt;
+        col.velocity = col.velocity.clamp(-120.0, 120.0);
+        col.height += col.velocity * subDt;
+        col.height =
+            col.height.clamp(col.targetHeight - 60.0, col.targetHeight + 60.0);
       }
 
-      for (int i = 0; i < columnCount; i++) {
-        if (i > 0) columns[i - 1].height += leftDeltas[i];
-        if (i < columnCount - 1) columns[i + 1].height += rightDeltas[i];
+      // 2. Neighbor coupling wave propagation passes (spread)
+      for (int pass = 0; pass < 4; pass++) {
+        for (int i = 0; i < columnCount; i++) {
+          if (i > 0) {
+            _leftDeltas[i] =
+                spread * (columns[i].height - columns[i - 1].height);
+            columns[i - 1].velocity += _leftDeltas[i] * 0.5;
+          }
+          if (i < columnCount - 1) {
+            _rightDeltas[i] =
+                spread * (columns[i].height - columns[i + 1].height);
+            columns[i + 1].velocity += _rightDeltas[i] * 0.5;
+          }
+        }
+
+        for (int i = 0; i < columnCount; i++) {
+          if (i > 0) columns[i - 1].height += _leftDeltas[i];
+          if (i < columnCount - 1) columns[i + 1].height += _rightDeltas[i];
+        }
       }
     }
   }

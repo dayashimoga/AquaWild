@@ -36,10 +36,17 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..style = PaintingStyle.fill
     ..color = const Color(0x15FFFFFF);
 
+  final Paint _meniscusGlowPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 5.2
+    ..color = const Color(0x38FFFFFF)
+    ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.5);
+
   final Paint _meniscusHighlight = Paint()
     ..style = PaintingStyle.stroke
-    ..strokeWidth = 2.8
-    ..color = const Color(0xCCFFFFFF);
+    ..strokeWidth = 2.2
+    ..strokeCap = StrokeCap.round
+    ..color = const Color(0xEEFFFFFF);
 
   final Paint _interfacialMeniscusPaint = Paint()
     ..style = PaintingStyle.stroke
@@ -280,7 +287,7 @@ class AnimalFluidVesselPainter extends CustomPainter {
       }
     }
 
-    // 5. Free surface specular meniscus highlight on top stratum
+    // 5. Free surface specular meniscus highlight on top stratum (dual-pass glow + core)
     if (!reducedMotion && surfacePoints.isNotEmpty) {
       final Path meniscusPath = Path();
       for (int i = 0; i < surfacePoints.length; i++) {
@@ -294,6 +301,7 @@ class AnimalFluidVesselPainter extends CustomPainter {
           meniscusPath.quadraticBezierTo(prev.dx, prev.dy, midX, midY);
         }
       }
+      canvas.drawPath(meniscusPath, _meniscusGlowPaint);
       canvas.drawPath(meniscusPath, _meniscusHighlight);
     }
   }
@@ -306,18 +314,43 @@ class AnimalFluidVesselPainter extends CustomPainter {
     int layerIndex,
   ) {
     final double layerH = bottomY - topY;
-    if (layerH < 15) return;
+    if (layerH < 12) return;
 
-    for (int b = 0; b < 6; b++) {
-      final double seed = (b * 17.0) + (layerIndex * 31.0);
-      final double x = (size.width * 0.2) +
-          (math.sin(seed) * 0.5 + 0.5) * (size.width * 0.6);
+    final layer = stratifiedLayers[layerIndex];
+    final isEffervescent = layer.beverage.id == 'sparkling_water' ||
+        layer.beverage.id == 'electrolyte_drink' ||
+        layer.beverage.id == 'kombucha';
 
-      final double cycle = (time * 0.4 + (seed * 0.1)) % 1.0;
+    final int bubbleCount = isEffervescent ? 12 : 6;
+    final double speedMultiplier = isEffervescent ? 0.70 : 0.35;
+
+    for (int b = 0; b < bubbleCount; b++) {
+      final double seed = (b * 19.0) + (layerIndex * 37.0);
+      final double baseX = (size.width * 0.18) +
+          (math.sin(seed * 1.3) * 0.5 + 0.5) * (size.width * 0.64);
+
+      final double cycle = (time * speedMultiplier + (seed * 0.08)) % 1.0;
       final double y = bottomY - (cycle * layerH);
 
-      final double radius = 1.5 + (math.cos(seed) * 0.5 + 0.5) * 2.2;
+      // Organic horizontal sinusoidal wobble as bubbles ascend
+      final double wobble = isEffervescent
+          ? math.sin(y * 0.15 + (time * 5.0) + seed) * 2.8
+          : math.sin(y * 0.08 + (time * 2.5) + seed) * 1.2;
+      final double x = baseX + wobble;
+
+      final double baseRadius = isEffervescent ? 1.0 : 1.5;
+      final double radius = baseRadius + (math.cos(seed) * 0.5 + 0.5) * 2.0;
+
       canvas.drawCircle(Offset(x, y), radius, _bubblePaint);
+
+      // Delicate specular highlight dot on larger bubbles
+      if (radius > 2.2) {
+        canvas.drawCircle(
+          Offset(x - radius * 0.3, y - radius * 0.3),
+          radius * 0.3,
+          _meniscusHighlight,
+        );
+      }
     }
   }
 

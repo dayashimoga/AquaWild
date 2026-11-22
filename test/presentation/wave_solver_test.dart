@@ -30,6 +30,27 @@ void main() {
       expect(solver.totalKineticEnergy, greaterThan(0.0));
     });
 
+    test('WaveColumnSolver maintains numerical stability under extreme impulse', () {
+      final solver = WaveColumnSolver(columnCount: 64);
+      // Extreme splash impulse
+      solver.splash(32, 200.0);
+      solver.splash(16, -180.0);
+
+      // Advance physics across 100 sub-stepped iterations
+      for (int i = 0; i < 100; i++) {
+        solver.step(dt: 1.0, subSteps: 2);
+        for (final col in solver.columns) {
+          expect(col.height.isNaN, isFalse);
+          expect(col.velocity.isNaN, isFalse);
+          expect(col.height, lessThanOrEqualTo(60.0));
+          expect(col.height, greaterThanOrEqualTo(-60.0));
+        }
+      }
+
+      // Over 100 steps, viscous damping should reduce kinetic energy significantly
+      expect(solver.totalKineticEnergy, lessThan(100.0));
+    });
+
     test('AnimalSilhouettePaths generates non-empty paths for all animals', () {
       const size = Size(300, 350);
       final animals = [

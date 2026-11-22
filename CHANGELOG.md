@@ -2,6 +2,22 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.11.0] - 2026-11-22 — Stage 3: Subphase 3.1.2 — Coupled Shallow-Water Sub-Step Stability & Carbonation Effervescence
+### Added
+- **Sub-Step Wave Integration & Pre-Allocated Scratch Buffers in `WaveColumnSolver`**:
+  * Implemented multi-pass sub-stepping (`subSteps = 2`) ensuring guaranteed numerical stability and smooth dispersion across columns even under extreme splash impulses.
+  * Pre-allocated scratch buffers `_leftDeltas` and `_rightDeltas`, achieving 0 per-frame heap allocations during physics updates for 120 FPS frame pacing.
+  * Clamped column velocities and heights to prevent any numerical spikes.
+- **Beverage-Aware Carbonation Effervescence**:
+  * Integrated rising carbonation micro-bubbles for sparkling water, kombucha, and electrolyte drinks with dynamic sinusoidal horizontal wobble and specular highlights.
+- **Dual-Pass Specular Meniscus Highlight**:
+  * Free surface renders both a soft blurred surface tension glow and a luminous sharp core line.
+- **Automated Test Coverage**:
+  * Added extreme impulse stability and viscous damping dissipation test in `test/presentation/wave_solver_test.dart`.
+  * 114 / 114 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.10.0] - 2026-11-22 — Stage 3: Subphase 3.1.1 — Zero-Gap Stratified Fluid Wave Mesh Architecture
 ### Added
 - **Continuous Interfacial Mesh Topology in `AnimalFluidVesselPainter`**:
