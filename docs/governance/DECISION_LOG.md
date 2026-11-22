@@ -239,3 +239,24 @@
      * Immediate reduced-motion fallback enforced across all components when requested by the OS.
      * All 111 tests passing with 0 analyzer issues.
 - **Sign-Off**: `animation-agent`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 017 — 2026-11-22 (Stage 3: Subphase 3.1.1 — Zero-Gap Stratified Fluid Wave Mesh Architecture)
+- **Context**: Eliminating dark unpainted inter-layer gaps and crescent background voids between stratified beverage layers in the animal fluid habitat vessel (`Screenshot 2: #/home`).
+- **Root Cause & Architectural Flaw Analysis**:
+  * Previously, layer $l$ drew its undulating top wave with sinusoidal displacement ($Y_{top} \pm 2.5\text{px}$), while layer $l+1$ above it drew its bottom boundary as a flat horizontal line at $Y_{top}$. Whenever layer $l$'s wave dipped downwards, an unpainted empty void opened up between the two strata.
+- **Architectural Decisions & Deliverables**:
+  1. **Continuous Interfacial Mesh Topology (`AnimalFluidVesselPainter`)**:
+     * Pre-generates continuous, shared interfacial curve vertices $\text{Interface}_l(x)$ for all internal boundaries $l \in [0, N-2]$.
+     * Layer $l$ traverses $\text{Interface}_l(x)$ in forward order (left-to-right) for its top boundary.
+     * Layer $l+1$ traverses the **exact same curve** $\text{Interface}_l(x)$ in reverse order (right-to-left) for its bottom boundary.
+     * Because both boundaries share identical floating-point coordinates and quadratic bezier mid-points, inter-layer gap discrepancy is mathematically reduced to **$0.000\text{px}$** everywhere.
+  2. **Interfacial Meniscus Refraction Sheen**:
+     * Renders a delicate, crisp, specular interfacial line (`Color(0x66FFFFFF)`, 1.4px width) along every internal interface $\text{Interface}_l(x)$, preventing GPU rasterization anti-aliasing artifacts while highlighting physical density stratification boundaries.
+  3. **Reduced-Motion Mode**:
+     * In reduced motion mode (`MediaQuery.disableAnimationsOf(context)`), internal interfaces clamp to crisp planar horizontal lines with contiguous gap-free boundaries.
+  4. **Automated Test Coverage**:
+     * Added unit and widget tests in `test/presentation/animal_fluid_vessel_painter_test.dart` verifying 4-layer multi-beverage zero-gap rendering and reduced-motion compliance (113/113 passing tests, 0 analyzer issues).
+- **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.

@@ -41,6 +41,11 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..strokeWidth = 2.8
     ..color = const Color(0xCCFFFFFF);
 
+  final Paint _interfacialMeniscusPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.4
+    ..color = const Color(0x66FFFFFF);
+
   final Paint _bubblePaint = Paint()
     ..style = PaintingStyle.fill
     ..color = const Color(0x99FFFFFF);
@@ -151,48 +156,93 @@ class AnimalFluidVesselPainter extends CustomPainter {
     Size size,
     List<Offset> surfacePoints,
   ) {
+    if (stratifiedLayers.isEmpty || surfacePoints.isEmpty) return;
+
     final double clampedFill = fillFraction.clamp(0.0, 1.0);
     final double totalFluidHeight = size.height * clampedFill;
-    double currentBaseY = size.height;
+    final int numLayers = stratifiedLayers.length;
 
-    for (int l = 0; l < stratifiedLayers.length; l++) {
+    // 1. Calculate nominal top boundary heights for each stratum
+    final List<double> nominalTops = List.filled(numLayers, 0.0);
+    double currentBaseY = size.height;
+    for (int l = 0; l < numLayers; l++) {
       final layer = stratifiedLayers[l];
       final double layerHeight = totalFluidHeight * layer.fractionOfTotal;
-      final double layerTopY = currentBaseY - layerHeight;
+      nominalTops[l] = currentBaseY - layerHeight;
+      currentBaseY = nominalTops[l];
+    }
+
+    // 2. Pre-generate continuous interfacial boundary vertices for all internal interfaces (l = 0 .. numLayers - 2)
+    // Using identical vertex sample density ensuring 0.0px gap between layer l and layer l+1
+    final List<List<Offset>> internalInterfaces = [];
+    const int sampleSteps = 32;
+    final double stepX = size.width / sampleSteps;
+
+    for (int l = 0; l < numLayers - 1; l++) {
+      final double nominalY = nominalTops[l];
+      final List<Offset> points = [];
+      for (int s = 0; s <= sampleSteps; s++) {
+        final double x = s * stepX;
+        double y = nominalY;
+        if (!reducedMotion) {
+          final double wave1 =
+              math.sin((x / 36.0) + (time * 1.8) + (l * 1.3)) * 2.2;
+          final double wave2 =
+              math.cos((x / 68.0) - (time * 1.1) + l) * 1.2;
+          final double edgeDamping = (x / 24.0).clamp(0.0, 1.0) *
+              ((size.width - x) / 24.0).clamp(0.0, 1.0);
+          y += (wave1 + wave2) * edgeDamping;
+        }
+        points.add(Offset(x, y));
+      }
+      internalInterfaces.add(points);
+    }
+
+    // 3. Draw each stratum with locked, gap-free polygonal boundaries
+    for (int l = 0; l < numLayers; l++) {
+      final layer = stratifiedLayers[l];
+      final List<Offset> topPoints = (l == numLayers - 1)
+          ? surfacePoints
+          : internalInterfaces[l];
 
       final Path layerPath = Path();
-      layerPath.moveTo(0, currentBaseY);
+      layerPath.moveTo(topPoints.first.dx, topPoints.first.dy);
 
-      if (l == stratifiedLayers.length - 1) {
-        // Topmost fluid layer uses the dynamic wave column surface
-        for (int i = 0; i < surfacePoints.length; i++) {
-          if (i == 0) {
-            layerPath.lineTo(surfacePoints[i].dx, surfacePoints[i].dy);
-          } else {
-            final prev = surfacePoints[i - 1];
-            final curr = surfacePoints[i];
-            final midX = (prev.dx + curr.dx) / 2;
-            final midY = (prev.dy + curr.dy) / 2;
-            layerPath.quadraticBezierTo(prev.dx, prev.dy, midX, midY);
-          }
-        }
-        layerPath.lineTo(size.width, surfacePoints.last.dy);
+      // Forward pass across top boundary
+      for (int i = 1; i < topPoints.length; i++) {
+        final prev = topPoints[i - 1];
+        final curr = topPoints[i];
+        final midX = (prev.dx + curr.dx) / 2;
+        final midY = (prev.dy + curr.dy) / 2;
+        layerPath.quadraticBezierTo(prev.dx, prev.dy, midX, midY);
+      }
+      layerPath.lineTo(topPoints.last.dx, topPoints.last.dy);
+
+      // Reverse pass across bottom boundary (strictly locked to stratum below)
+      if (l == 0) {
+        layerPath.lineTo(size.width, size.height);
+        layerPath.lineTo(0, size.height);
       } else {
-        // Subsurface interfacial layer wave
-        layerPath.lineTo(0, layerTopY);
-        for (double x = 0; x <= size.width; x += 16.0) {
-          final double sway = reducedMotion
-              ? 0.0
-              : math.sin((x / 30.0) + (time * 2.0) + l) * 2.5;
-          layerPath.lineTo(x, layerTopY + sway);
+        final bottomPoints = internalInterfaces[l - 1];
+        layerPath.lineTo(bottomPoints.last.dx, bottomPoints.last.dy);
+        for (int i = bottomPoints.length - 1; i > 0; i--) {
+          final curr = bottomPoints[i];
+          final prev = bottomPoints[i - 1];
+          final midX = (curr.dx + prev.dx) / 2;
+          final midY = (curr.dy + prev.dy) / 2;
+          layerPath.quadraticBezierTo(curr.dx, curr.dy, midX, midY);
         }
-        layerPath.lineTo(size.width, layerTopY);
+        layerPath.lineTo(bottomPoints.first.dx, bottomPoints.first.dy);
       }
 
-      layerPath.lineTo(size.width, currentBaseY);
       layerPath.close();
 
       // Stratum gradient
+      final double stratumTop = topPoints.map((p) => p.dy).reduce(math.min);
+      final double stratumBottom = (l == 0)
+          ? size.height
+          : internalInterfaces[l - 1].map((p) => p.dy).reduce(math.max);
+
       final Paint stratumPaint = Paint()
         ..shader = LinearGradient(
           begin: Alignment.bottomCenter,
@@ -202,19 +252,35 @@ class AnimalFluidVesselPainter extends CustomPainter {
             layer.beverage.primaryColor,
           ],
         ).createShader(
-          Rect.fromLTRB(0, layerTopY, size.width, currentBaseY),
+          Rect.fromLTRB(0, stratumTop, size.width, stratumBottom),
         );
 
       canvas.drawPath(layerPath, stratumPaint);
 
       if (!reducedMotion) {
-        _drawLayerBubbles(canvas, size, layerTopY, currentBaseY, l);
+        _drawLayerBubbles(canvas, size, stratumTop, stratumBottom, l);
       }
-
-      currentBaseY = layerTopY;
     }
 
-    // Specular meniscus surface highlight
+    // 4. Draw crisp specular interfacial meniscus separation lines
+    if (!reducedMotion) {
+      for (int l = 0; l < internalInterfaces.length; l++) {
+        final ifacePoints = internalInterfaces[l];
+        final Path meniscusPath = Path();
+        meniscusPath.moveTo(ifacePoints.first.dx, ifacePoints.first.dy);
+        for (int i = 1; i < ifacePoints.length; i++) {
+          final prev = ifacePoints[i - 1];
+          final curr = ifacePoints[i];
+          final midX = (prev.dx + curr.dx) / 2;
+          final midY = (prev.dy + curr.dy) / 2;
+          meniscusPath.quadraticBezierTo(prev.dx, prev.dy, midX, midY);
+        }
+        meniscusPath.lineTo(ifacePoints.last.dx, ifacePoints.last.dy);
+        canvas.drawPath(meniscusPath, _interfacialMeniscusPaint);
+      }
+    }
+
+    // 5. Free surface specular meniscus highlight on top stratum
     if (!reducedMotion && surfacePoints.isNotEmpty) {
       final Path meniscusPath = Path();
       for (int i = 0; i < surfacePoints.length; i++) {

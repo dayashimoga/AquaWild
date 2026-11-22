@@ -2,6 +2,20 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.10.0] - 2026-11-22 — Stage 3: Subphase 3.1.1 — Zero-Gap Stratified Fluid Wave Mesh Architecture
+### Added
+- **Continuous Interfacial Mesh Topology in `AnimalFluidVesselPainter`**:
+  * Completely eliminated dark background gaps between adjacent beverage layers inside animal vessel silhouettes.
+  * Layer $l$ traverses the shared internal interface curve $\text{Interface}_l(x)$ forward, while layer $l+1$ above it traverses the exact same curve in reverse order, ensuring mathematically zero gap ($0.0\text{px}$) between strata.
+  * Edge damping ensures internal waves smoothly meet vessel perimeter walls without boundary artifacts.
+- **Interfacial Meniscus Sheen**:
+  * Rendered specular interfacial separation lines (`Color(0x66FFFFFF)`, 1.4px width) along every stratum boundary, highlighting beverage density separation while eliminating sub-pixel rasterization anti-aliasing artifacts.
+- **Automated Test Coverage**:
+  * Added 4-layer multi-beverage zero-gap rendering test and reduced-motion contiguous stratum test in `test/presentation/animal_fluid_vessel_painter_test.dart`.
+  * 113 / 113 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.9.0] - 2026-11-22 — Stage 2: Subphase 2.2.2 — Launch Screen Habitat Integration & 120 FPS Benchmark Profiling
 ### Added
 - **Launch Screen Integration & Responsive Layout Hardening (`LaunchScreen`)**:

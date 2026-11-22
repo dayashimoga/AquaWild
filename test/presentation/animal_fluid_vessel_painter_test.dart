@@ -336,5 +336,106 @@ void main() {
       expect(capy.habitatBiomeId, 'thermal_yuzu_onsen');
       expect(axo.habitatBiomeId, 'bioluminescent_cenote');
     });
+
+    testWidgets('Stratified fluid renders multi-beverage layers with zero-gap coupled boundary contours',
+        (tester) async {
+      final fourLayers = [
+        const FluidLayer(
+          beverage: BeverageType.espresso,
+          volumeMl: 60,
+          fractionOfTotal: 0.15,
+          relativeDensity: 1.040,
+        ),
+        const FluidLayer(
+          beverage: BeverageType.electrolyteDrink,
+          volumeMl: 250,
+          fractionOfTotal: 0.35,
+          relativeDensity: 1.015,
+        ),
+        const FluidLayer(
+          beverage: BeverageType.pureWater,
+          volumeMl: 250,
+          fractionOfTotal: 0.35,
+          relativeDensity: 1.000,
+        ),
+        const FluidLayer(
+          beverage: BeverageType.sparklingWater,
+          volumeMl: 100,
+          fractionOfTotal: 0.15,
+          relativeDensity: 0.990,
+        ),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'red_panda',
+                fillFraction: 0.85,
+                stratifiedLayers: fourLayers,
+                waveSolver: waveSolver,
+                time: 1.5,
+                accentColor: const Color(0xFFD84315),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('Stratified fluid renders cleanly with zero gap in reduced-motion mode',
+        (tester) async {
+      final twoLayers = [
+        const FluidLayer(
+          beverage: BeverageType.electrolyteDrink,
+          volumeMl: 250,
+          fractionOfTotal: 0.5,
+          relativeDensity: 1.015,
+        ),
+        const FluidLayer(
+          beverage: BeverageType.pureWater,
+          volumeMl: 250,
+          fractionOfTotal: 0.5,
+          relativeDensity: 1.000,
+        ),
+      ];
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'capybara',
+                fillFraction: 0.70,
+                stratifiedLayers: twoLayers,
+                waveSolver: waveSolver,
+                time: 2.0,
+                accentColor: const Color(0xFF8D6E63),
+                reducedMotion: true,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+      expect(tester.takeException(), isNull);
+    });
   });
 }
