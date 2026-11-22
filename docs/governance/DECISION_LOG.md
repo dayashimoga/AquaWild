@@ -355,3 +355,27 @@
   4. **Automated Test Coverage**:
      * Expanded `test/presentation/animal_fluid_vessel_painter_test.dart` with dedicated blinking, interactive reaction, and reduced-motion tests for all 4 companions (121/121 passing tests, 0 analyzer issues).
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 023 — 2026-11-22 (Stage 4: Subphase 4.2.1 — Apex Exotic Companions Vector Silhouettes & Anatomical Details Upgrade)
+- **Context**: Upgrading the 5 Apex Exotic companions (Arctic Fox, Emperor Penguin, Bottlenose Dolphin, Blue-Ringed Octopus, Snow Leopard) with smooth continuous bezier silhouettes, species-specific idle blinking/pulsing clocks, layered facial & fur details, and interactive reactions.
+- **Architectural Decisions & Deliverables**:
+  1. **Continuous Anatomical Vector Silhouette Optimization (`AnimalSilhouettePaths`)**:
+     * **Arctic Fox (`_buildArcticFoxPath`)**: Replaced rigid polygon cuts with smooth continuous beziers for pointed alert ears, slender muzzle, arched neck, elegant torso, curled paws, and magnificent bushy tail wrapping around the flank.
+     * **Emperor Penguin (`_buildPenguinPath`)**: Continuous hydrodynamic beziers modeling the domed head, slender pointed beak, thick insulated neck, torpedo body, tapered flipper wings, and tail feather wedge.
+     * **Bottlenose Dolphin (`_buildDolphinPath`)**: Dynamic hydrodynamic swimming posture with rounded melon, defined rostrum beak, arched dorsal fin, sleek cetacean body, pectoral flippers, and broad horizontal fluke.
+     * **Blue-Ringed Octopus (`_buildOctopusPath`)**: Saccular bulbous mantle dome, distinct constriction neck, and 8 undulating organic curved arms with curling tentacle tips.
+     * **Snow Leopard (`_buildSnowLeopardPath`)**: Powerful high-altitude feline silhouette with rounded ears, sloping cranial brow, muscular chest and flanks, sturdy paws, and a long, thick, balanced tail.
+  2. **Layered Facial, Eye, Fur & Interactive Feature Engine (`AnimalFluidVesselPainter`)**:
+     * **Blue-Ringed Octopus**: Golden cephalopod iris ovals with characteristic horizontal slit pupils, involuntary cephalopod blinking/squint clock (~4.2s cycle, 220ms blink), and interactive cyan bioluminescent brow dots (`interactionPulse`).
+     * **Bottlenose Dolphin**: Playful oceanic sapphire and electric turquoise eyes with involuntary blinking (~3.9s cycle, 200ms blink), dual catchlights, cheerful rostrum smile crease, blowhole gleam, and expanding acoustic sonar bubble rings emitting from the melon (`interactionPulse`).
+     * **Arctic Fox**: Aurora Borealis shimmer veil across chest/flank with multi-phase chromatic gradient, velvety black ear tips with soft pink inner accents, almond glacial ice-blue eyes with dark eyeliner rim, involuntary blinking (~3.7s cycle, 200ms blink), pure white muzzle mask, black button nose with bridge gleam, swept-back whiskers, and fluffy white tail tip.
+     * **Emperor Penguin**: Golden mandarin-to-amber auricular neck plumage patches, white tuxedo bib contour, expressive ruby/amber eyes with involuntary blinking (~4.1s cycle, 200ms blink), sharp beak with vibrant yellow and pink mandible stripes, and flipper wing contour lines.
+     * **Snow Leopard**: Scattered open alpine rosettes with dark slate centers along flank and tail, rounded ears with white inner fur tufts, piercing sage-green / icy jade eyes with vertical slit pupils, involuntary blinking (~3.6s cycle, 200ms blink), white whisker pads with soft pink inverted triangle nose, and 6 swept-back silver whiskers.
+  3. **Zero Heap Allocation Architecture**:
+     * Added pre-allocated paints (`_apexEyeBasePaint`, `_apexEyePupilPaint`, `_apexDarkNosePaint`, `_apexSoftPinkPaint`, `_apexMuzzlePaint`, `_apexSonarPaint`, `_apexRosettePaint`) on `AnimalFluidVesselPainter` guaranteeing 0 heap allocations during `paint()` at 60/120 FPS.
+  4. **Automated Test Coverage**:
+     * Expanded `test/presentation/animal_fluid_vessel_painter_test.dart` with dedicated blinking, interactive reaction, and reduced-motion tests for all 5 Apex companions (123/123 passing tests, 0 analyzer issues).
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+

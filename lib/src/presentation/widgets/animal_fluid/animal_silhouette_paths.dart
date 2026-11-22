@@ -279,81 +279,123 @@ class AnimalSilhouettePaths {
     return path;
   }
 
-  /// Freya the Arctic Fox silhouette (Alert seated posture with tall pointed ears and bushy curled tail)
+  /// Freya the Arctic Fox silhouette (Alert seated posture with tall pointed ears,
+  /// sleek arched back, and giant fluffy curled tail)
   static Path _buildArcticFoxPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.30, h * 0.95); // Front paws
-    path.lineTo(w * 0.28, h * 0.72); // Front legs
-    path.lineTo(w * 0.24, h * 0.50); // Chest
-    path.lineTo(w * 0.22, h * 0.34); // Throat
-    path.lineTo(w * 0.12, h * 0.24); // Sharp fox snout tip
-    path.lineTo(w * 0.26, h * 0.18); // Forehead
-    path.lineTo(w * 0.28, h * 0.05); // Left tall pointed ear tip
-    path.lineTo(w * 0.40, h * 0.14); // Ear notch
-    path.lineTo(w * 0.48, h * 0.05); // Right pointed ear tip
-    path.lineTo(w * 0.54, h * 0.18); // Neck nape
-    path.cubicTo(w * 0.62, h * 0.32, w * 0.70, h * 0.48, w * 0.72, h * 0.65); // Sleek arched back
+    // Front paws at base
+    path.moveTo(w * 0.30, h * 0.95);
+
+    // Front leg rising to chest
+    path.cubicTo(w * 0.30, h * 0.82, w * 0.28, h * 0.65, w * 0.26, h * 0.50);
+
+    // Throat ascending to sharp fox snout tip
+    path.cubicTo(w * 0.24, h * 0.38, w * 0.20, h * 0.28, w * 0.12, h * 0.24);
+
+    // Snout bridge to forehead
+    path.cubicTo(w * 0.18, h * 0.21, w * 0.24, h * 0.18, w * 0.26, h * 0.15);
+
+    // Left tall pointed ear
+    path.cubicTo(w * 0.25, h * 0.10, w * 0.26, h * 0.05, w * 0.28, h * 0.04);
+    path.cubicTo(w * 0.34, h * 0.07, w * 0.38, h * 0.11, w * 0.40, h * 0.14);
+
+    // Crown between ears
+    path.quadraticBezierTo(w * 0.44, h * 0.11, w * 0.48, h * 0.04);
+
+    // Right pointed ear
+    path.cubicTo(w * 0.50, h * 0.07, w * 0.52, h * 0.12, w * 0.54, h * 0.16);
+
+    // Sleek arched canine back
+    path.cubicTo(w * 0.62, h * 0.30, w * 0.70, h * 0.46, w * 0.72, h * 0.64);
+
     // Big fluffy curled tail sweeping outward and up
-    path.cubicTo(w * 0.88, h * 0.62, w * 0.98, h * 0.75, w * 0.90, h * 0.92); // Outer tail curve
-    path.lineTo(w * 0.75, h * 0.95); // Tail tip at ground
-    path.lineTo(w * 0.62, h * 0.95); // Rear hind paw
+    path.cubicTo(w * 0.88, h * 0.60, w * 0.98, h * 0.74, w * 0.90, h * 0.90);
+    path.cubicTo(w * 0.82, h * 0.96, w * 0.70, h * 0.96, w * 0.62, h * 0.95);
+
+    // Underbelly
     path.quadraticBezierTo(w * 0.45, h * 0.92, w * 0.30, h * 0.95);
     path.close();
 
     return path;
   }
 
-  /// Percy the Emperor Penguin silhouette (Regal standing posture with flipper wings and hydrodynamic belly)
+  /// Percy the Emperor Penguin silhouette (Hydrodynamic torpedo standing posture with
+  /// flipper wings, slender pointed beak, and webbed feet)
   static Path _buildPenguinPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.35, h * 0.96); // Left webbed foot
-    path.lineTo(w * 0.28, h * 0.85); // Lower body
-    path.cubicTo(w * 0.15, h * 0.75, w * 0.12, h * 0.55, w * 0.20, h * 0.42); // Left wing flipper
-    path.lineTo(w * 0.30, h * 0.30); // Left shoulder
-    path.lineTo(w * 0.34, h * 0.18); // Throat
-    path.lineTo(w * 0.18, h * 0.19); // Slender pointed beak tip
-    path.lineTo(w * 0.36, h * 0.12); // Beak top & crown
-    path.quadraticBezierTo(w * 0.50, h * 0.07, w * 0.64, h * 0.12); // Rounded head crown
-    path.lineTo(w * 0.68, h * 0.24); // Nape
-    path.cubicTo(w * 0.78, h * 0.40, w * 0.88, h * 0.58, w * 0.82, h * 0.75); // Right wing flipper
-    path.cubicTo(w * 0.78, h * 0.85, w * 0.72, h * 0.92, w * 0.65, h * 0.96); // Right webbed foot
+    // Left webbed foot
+    path.moveTo(w * 0.35, h * 0.96);
+
+    // Left flipper wing contour
+    path.cubicTo(w * 0.26, h * 0.85, w * 0.14, h * 0.68, w * 0.18, h * 0.44);
+
+    // Left shoulder to throat
+    path.cubicTo(w * 0.22, h * 0.32, w * 0.28, h * 0.24, w * 0.34, h * 0.18);
+
+    // Slender pointed beak tip
+    path.cubicTo(w * 0.28, h * 0.18, w * 0.20, h * 0.19, w * 0.16, h * 0.19);
+    path.cubicTo(w * 0.24, h * 0.15, w * 0.30, h * 0.13, w * 0.36, h * 0.12);
+
+    // Rounded crown
+    path.quadraticBezierTo(w * 0.50, h * 0.07, w * 0.64, h * 0.12);
+
+    // Nape to right flipper wing
+    path.cubicTo(w * 0.72, h * 0.25, w * 0.86, h * 0.50, w * 0.82, h * 0.75);
+
+    // Right webbed foot
+    path.cubicTo(w * 0.78, h * 0.86, w * 0.72, h * 0.94, w * 0.65, h * 0.96);
+
+    // Base between feet
     path.quadraticBezierTo(w * 0.50, h * 0.94, w * 0.35, h * 0.96);
     path.close();
 
     return path;
   }
 
-  /// Echo the Dolphin silhouette (Dynamic leaping arch with dorsal fin, rostrum snout, and tail flukes)
+  /// Echo the Dolphin silhouette (Hydrodynamic leaping curve with rostrum, melon forehead,
+  /// falcate dorsal fin, and caudal flukes)
   static Path _buildDolphinPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.15, h * 0.92); // Left fluke tip
-    path.lineTo(w * 0.22, h * 0.84); // Fluke center notch
-    path.lineTo(w * 0.30, h * 0.92); // Right fluke tip
-    path.lineTo(w * 0.26, h * 0.78); // Caudal peduncle
-    path.cubicTo(w * 0.22, h * 0.62, w * 0.25, h * 0.48, w * 0.32, h * 0.35); // Underbelly
-    path.lineTo(w * 0.22, h * 0.40); // Pectoral fin
-    path.lineTo(w * 0.35, h * 0.28); // Throat
-    path.lineTo(w * 0.42, h * 0.12); // Rostrum snout tip
-    path.quadraticBezierTo(w * 0.52, h * 0.10, w * 0.60, h * 0.16); // Rounded melon forehead
-    path.lineTo(w * 0.64, h * 0.28); // Back leading to dorsal fin
-    path.lineTo(w * 0.82, h * 0.20); // Dorsal fin tip
-    path.lineTo(w * 0.72, h * 0.42); // Dorsal fin trailing edge
-    path.cubicTo(w * 0.65, h * 0.60, w * 0.45, h * 0.75, w * 0.26, h * 0.78); // Muscular tail stock
+    // Left fluke tip
+    path.moveTo(w * 0.15, h * 0.92);
+
+    // Fluke center notch and right fluke tip
+    path.cubicTo(w * 0.18, h * 0.88, w * 0.22, h * 0.86, w * 0.24, h * 0.85);
+    path.cubicTo(w * 0.26, h * 0.88, w * 0.28, h * 0.90, w * 0.30, h * 0.92);
+
+    // Caudal peduncle to underbelly
+    path.cubicTo(w * 0.26, h * 0.78, w * 0.22, h * 0.60, w * 0.30, h * 0.42);
+
+    // Pectoral fin
+    path.cubicTo(w * 0.22, h * 0.44, w * 0.18, h * 0.42, w * 0.22, h * 0.38);
+
+    // Throat to rostrum snout tip
+    path.cubicTo(w * 0.28, h * 0.28, w * 0.34, h * 0.18, w * 0.42, h * 0.12);
+
+    // Rounded melon forehead
+    path.quadraticBezierTo(w * 0.52, h * 0.09, w * 0.60, h * 0.14);
+
+    // Back to falcate dorsal fin
+    path.cubicTo(w * 0.64, h * 0.20, w * 0.70, h * 0.20, w * 0.78, h * 0.16);
+    path.cubicTo(w * 0.76, h * 0.26, w * 0.72, h * 0.36, w * 0.70, h * 0.44);
+
+    // Back curve down to caudal peduncle
+    path.cubicTo(w * 0.65, h * 0.60, w * 0.45, h * 0.75, w * 0.26, h * 0.78);
     path.close();
 
     return path;
   }
 
-  /// Octavia the Octopus silhouette (Bulbous mantle with 8 undulating coiled tentacles)
+  /// Octavia the Octopus silhouette (Bulbous cephalopod mantle with 8 undulating coiled tentacles)
   static Path _buildOctopusPath(Size size) {
     final Path path = Path();
     final double w = size.width;
@@ -361,47 +403,67 @@ class AnimalSilhouettePaths {
 
     // Center base
     path.moveTo(w * 0.50, h * 0.95);
+
     // Left undulating coiled tentacles
-    path.cubicTo(w * 0.35, h * 0.96, w * 0.20, h * 0.90, w * 0.12, h * 0.80);
-    path.lineTo(w * 0.05, h * 0.68); // Far left tentacle curl
-    path.lineTo(w * 0.14, h * 0.62);
-    path.lineTo(w * 0.22, h * 0.50); // Left tentacle base
+    path.cubicTo(w * 0.36, h * 0.96, w * 0.20, h * 0.90, w * 0.12, h * 0.80);
+    path.cubicTo(w * 0.04, h * 0.74, w * 0.04, h * 0.64, w * 0.12, h * 0.58);
+    path.cubicTo(w * 0.18, h * 0.54, w * 0.24, h * 0.48, w * 0.26, h * 0.44);
+
     // Left mantle dome
-    path.cubicTo(w * 0.18, h * 0.35, w * 0.26, h * 0.18, w * 0.38, h * 0.12);
-    path.quadraticBezierTo(w * 0.50, h * 0.07, w * 0.62, h * 0.12); // Mantle crown
+    path.cubicTo(w * 0.20, h * 0.32, w * 0.28, h * 0.16, w * 0.38, h * 0.12);
+
+    // Mantle crown
+    path.quadraticBezierTo(w * 0.50, h * 0.07, w * 0.62, h * 0.12);
+
     // Right mantle dome
-    path.cubicTo(w * 0.74, h * 0.18, w * 0.82, h * 0.35, w * 0.78, h * 0.50);
+    path.cubicTo(w * 0.72, h * 0.16, w * 0.80, h * 0.32, w * 0.74, h * 0.44);
+
     // Right undulating coiled tentacles
-    path.lineTo(w * 0.86, h * 0.62);
-    path.lineTo(w * 0.95, h * 0.68); // Far right tentacle curl
-    path.lineTo(w * 0.88, h * 0.80);
-    path.cubicTo(w * 0.80, h * 0.90, w * 0.65, h * 0.96, w * 0.50, h * 0.95);
+    path.cubicTo(w * 0.76, h * 0.48, w * 0.82, h * 0.54, w * 0.88, h * 0.58);
+    path.cubicTo(w * 0.96, h * 0.64, w * 0.96, h * 0.74, w * 0.88, h * 0.80);
+    path.cubicTo(w * 0.80, h * 0.90, w * 0.64, h * 0.96, w * 0.50, h * 0.95);
     path.close();
 
     return path;
   }
 
-  /// Kira the Snow Leopard silhouette (Muscular stalking alpine feline with iconic long thick tail)
+  /// Kira the Snow Leopard silhouette (Muscular stalking alpine feline with rounded ears
+  /// and iconic thick counterbalancing tail)
   static Path _buildSnowLeopardPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.25, h * 0.95); // Front paw
-    path.lineTo(w * 0.24, h * 0.68); // Muscular front leg
-    path.lineTo(w * 0.20, h * 0.48); // Broad chest
-    path.lineTo(w * 0.18, h * 0.32); // Chin & muzzle
-    path.lineTo(w * 0.24, h * 0.22); // Forehead
-    path.lineTo(w * 0.28, h * 0.12); // Left rounded ear tip
-    path.lineTo(w * 0.38, h * 0.18); // Ear notch
-    path.lineTo(w * 0.48, h * 0.12); // Right rounded ear tip
-    path.lineTo(w * 0.54, h * 0.20); // Nape
-    path.cubicTo(w * 0.65, h * 0.28, w * 0.75, h * 0.38, w * 0.78, h * 0.55); // Muscular back
-    // Iconic thick counterbalancing tail arching out and curling
-    path.cubicTo(w * 0.92, h * 0.58, w * 0.98, h * 0.72, w * 0.94, h * 0.88); // Outer tail
-    path.lineTo(w * 0.82, h * 0.95); // Rear hind paw
-    path.lineTo(w * 0.65, h * 0.78); // Underbelly
-    path.quadraticBezierTo(w * 0.45, h * 0.82, w * 0.25, h * 0.95);
+    // Front paw
+    path.moveTo(w * 0.26, h * 0.95);
+
+    // Muscular foreleg to broad chest
+    path.cubicTo(w * 0.25, h * 0.82, w * 0.22, h * 0.64, w * 0.20, h * 0.48);
+
+    // Chin to muzzle
+    path.cubicTo(w * 0.18, h * 0.38, w * 0.16, h * 0.28, w * 0.22, h * 0.22);
+
+    // Forehead to left rounded ear
+    path.cubicTo(w * 0.24, h * 0.16, w * 0.26, h * 0.10, w * 0.30, h * 0.10);
+
+    // Crown dome between ears
+    path.quadraticBezierTo(w * 0.40, h * 0.13, w * 0.50, h * 0.10);
+
+    // Right rounded ear
+    path.cubicTo(w * 0.54, h * 0.10, w * 0.56, h * 0.16, w * 0.58, h * 0.22);
+
+    // Muscular alpine back
+    path.cubicTo(w * 0.66, h * 0.30, w * 0.76, h * 0.42, w * 0.78, h * 0.56);
+
+    // Thick curling tail
+    path.cubicTo(w * 0.90, h * 0.58, w * 0.98, h * 0.70, w * 0.94, h * 0.86);
+    path.cubicTo(w * 0.90, h * 0.96, w * 0.82, h * 0.96, w * 0.76, h * 0.95);
+
+    // Underbelly
+    path.cubicTo(w * 0.66, h * 0.82, w * 0.44, h * 0.82, w * 0.38, h * 0.95);
+
+    // Front paws meeting base
+    path.quadraticBezierTo(w * 0.32, h * 0.96, w * 0.26, h * 0.95);
     path.close();
 
     return path;

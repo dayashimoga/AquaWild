@@ -289,80 +289,22 @@ void main() {
       );
     });
 
-    testWidgets('Paints Octavia the Blue-Ringed Octopus with bioluminescent pulsing rings',
+    testWidgets('Paints Octavia the Blue-Ringed Octopus during involuntary blinking and open states',
         (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: CustomPaint(
-              size: const Size(300, 345),
-              painter: AnimalFluidVesselPainter(
-                animalId: 'blue_ringed_octopus',
-                fillFraction: 0.6,
-                stratifiedLayers: stratifiedLayers,
-                waveSolver: waveSolver,
-                time: 3.4,
-                accentColor: const Color(0xFF00E5FF),
-                interactionPulse: 1.0,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      expect(
-        find.byWidgetPredicate(
-          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('Paints Echo the Dolphin with expanding acoustic sonar rings',
-        (tester) async {
-      await tester.pumpWidget(
-        MaterialApp(
-          home: Scaffold(
-            body: CustomPaint(
-              size: const Size(300, 345),
-              painter: AnimalFluidVesselPainter(
-                animalId: 'bottlenose_dolphin',
-                fillFraction: 0.5,
-                stratifiedLayers: stratifiedLayers,
-                waveSolver: waveSolver,
-                time: 1.5,
-                accentColor: const Color(0xFF4FC3F7),
-                interactionPulse: 0.6,
-              ),
-            ),
-          ),
-        ),
-      );
-
-      expect(
-        find.byWidgetPredicate(
-          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
-        ),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('Paints Freya the Arctic Fox, Percy the Penguin, and Kira the Snow Leopard without errors',
-        (tester) async {
-      for (final companionId in ['arctic_fox', 'emperor_penguin', 'snow_leopard']) {
+      for (final testTime in [0.05, 3.4]) {
         await tester.pumpWidget(
           MaterialApp(
             home: Scaffold(
               body: CustomPaint(
                 size: const Size(300, 345),
                 painter: AnimalFluidVesselPainter(
-                  animalId: companionId,
-                  fillFraction: 0.45,
+                  animalId: 'blue_ringed_octopus',
+                  fillFraction: 0.6,
                   stratifiedLayers: stratifiedLayers,
                   waveSolver: waveSolver,
-                  time: 2.0,
-                  accentColor: Colors.cyan,
-                  interactionPulse: 0.4,
+                  time: testTime,
+                  accentColor: const Color(0xFF00E5FF),
+                  interactionPulse: 1.0,
                 ),
               ),
             ),
@@ -375,6 +317,135 @@ void main() {
           ),
           findsOneWidget,
         );
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets('Paints Echo the Dolphin with expanding acoustic sonar rings and blinking',
+        (tester) async {
+      for (final testTime in [0.05, 1.5]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomPaint(
+                size: const Size(300, 345),
+                painter: AnimalFluidVesselPainter(
+                  animalId: 'bottlenose_dolphin',
+                  fillFraction: 0.5,
+                  stratifiedLayers: stratifiedLayers,
+                  waveSolver: waveSolver,
+                  time: testTime,
+                  accentColor: const Color(0xFF4FC3F7),
+                  interactionPulse: 0.8,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets('Paints Freya the Arctic Fox with aurora shimmer veil, almond eyes, and blinking',
+        (tester) async {
+      for (final testTime in [0.05, 2.0]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomPaint(
+                size: const Size(300, 345),
+                painter: AnimalFluidVesselPainter(
+                  animalId: 'arctic_fox',
+                  fillFraction: 0.45,
+                  stratifiedLayers: stratifiedLayers,
+                  waveSolver: waveSolver,
+                  time: testTime,
+                  accentColor: const Color(0xFF80D8FF),
+                  interactionPulse: 0.7,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets('Paints Percy the Emperor Penguin with golden auricular plumage, tuxedo bib, and blinking',
+        (tester) async {
+      for (final testTime in [0.05, 2.0]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomPaint(
+                size: const Size(300, 345),
+                painter: AnimalFluidVesselPainter(
+                  animalId: 'emperor_penguin',
+                  fillFraction: 0.5,
+                  stratifiedLayers: stratifiedLayers,
+                  waveSolver: waveSolver,
+                  time: testTime,
+                  accentColor: const Color(0xFFFFB300),
+                  interactionPulse: 0.6,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
+      }
+    });
+
+    testWidgets('Paints Kira the Snow Leopard with alpine rosettes, piercing sage eyes, and blinking',
+        (tester) async {
+      for (final testTime in [0.05, 2.0]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            home: Scaffold(
+              body: CustomPaint(
+                size: const Size(300, 345),
+                painter: AnimalFluidVesselPainter(
+                  animalId: 'snow_leopard',
+                  fillFraction: 0.55,
+                  stratifiedLayers: stratifiedLayers,
+                  waveSolver: waveSolver,
+                  time: testTime,
+                  accentColor: const Color(0xFF80CBC4),
+                  interactionPulse: 0.9,
+                ),
+              ),
+            ),
+          ),
+        );
+
+        expect(
+          find.byWidgetPredicate(
+            (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+          ),
+          findsOneWidget,
+        );
+        expect(tester.takeException(), isNull);
       }
     });
 

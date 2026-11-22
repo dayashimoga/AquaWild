@@ -2,6 +2,23 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.16.0] - 2026-11-22 — Stage 4: Subphase 4.2.1 — Apex Exotic Companions Vector Silhouettes & Anatomical Details Upgrade
+### Added
+- **Continuous Anatomical Silhouette Vectorization (`AnimalSilhouettePaths`)**:
+  * Upgraded all 5 Apex Exotic companions with authentic, organic continuous bezier paths: Arctic Fox (pointed ears, slender muzzle, bushy wrapped tail), Emperor Penguin (hydrodynamic dome, beak, tapered flippers), Bottlenose Dolphin (melon, rostrum beak, dorsal fin, flukes), Blue-Ringed Octopus (bulbous mantle, undulating curved arms), and Snow Leopard (cranial brow, muscular body, thick tail).
+- **Expressive Facial & Interactive Feature Engine (`AnimalFluidVesselPainter`)**:
+  * Cephalopod golden iris with horizontal slit pupils and blinking for Blue-Ringed Octopus.
+  * Oceanic sapphire/turquoise catchlight eyes, rostrum smile, blowhole gleam, and acoustic sonar rings for Bottlenose Dolphin.
+  * Glacial ice-blue almond eyes, velvet ear tips, button nose, whiskers, and Aurora Borealis shimmer veil for Arctic Fox.
+  * Flame-to-amber auricular plumage, white tuxedo bib, ruby/amber eye, and yellow/pink mandible stripe for Emperor Penguin.
+  * Sage jade eyes with vertical slit pupils, alpine rosettes, white whisker pads, and soft pink nose for Snow Leopard.
+  * Zero heap allocations during paint loop via pre-allocated feature paints.
+- **Automated Test Coverage**:
+  * Added dedicated blinking, reaction, and reduced-motion widget tests for all 5 Apex companions.
+  * 123 / 123 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.15.0] - 2026-11-22 — Stage 4: Subphase 4.1.2 — Capybara, Axolotl, Sea Otter & Andean Llama Starter Vessels Upgrade
 ### Added
 - **Continuous Anatomical Silhouette Vectorization (`AnimalSilhouettePaths`)**:

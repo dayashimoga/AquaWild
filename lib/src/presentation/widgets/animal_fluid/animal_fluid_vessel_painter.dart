@@ -139,6 +139,29 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..strokeCap = StrokeCap.round
     ..color = const Color(0x44FFFFFF);
 
+  // Pre-allocated Apex Exotic Companion anatomical paints
+  final Paint _apexEyeBasePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF102027);
+  final Paint _apexEyePupilPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = Colors.black;
+  final Paint _apexDarkNosePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF212121);
+  final Paint _apexSoftPinkPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFFFFAB91);
+  final Paint _apexMuzzlePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xEEFFFFFF);
+  final Paint _apexSonarPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+  final Paint _apexRosettePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+
   AnimalFluidVesselPainter({
     required this.animalId,
     required this.fillFraction,
@@ -1477,43 +1500,69 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
 
-    // Horizontal slit pupils
-    final Paint eyePaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0xFFFFD54F);
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(w * 0.38, h * 0.36),
-        width: 7.0,
-        height: 4.5,
-      ),
-      eyePaint,
-    );
-    canvas.drawOval(
-      Rect.fromCenter(
-        center: Offset(w * 0.62, h * 0.36),
-        width: 7.0,
-        height: 4.5,
-      ),
-      eyePaint,
-    );
-    // Black slit pupil
-    canvas.drawLine(
-      Offset(w * 0.35, h * 0.36),
-      Offset(w * 0.41, h * 0.36),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.8
-        ..color = Colors.black,
-    );
-    canvas.drawLine(
-      Offset(w * 0.59, h * 0.36),
-      Offset(w * 0.65, h * 0.36),
-      Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.8
-        ..color = Colors.black,
-    );
+    final Offset leftEye = Offset(w * 0.38, h * 0.36);
+    final Offset rightEye = Offset(w * 0.62, h * 0.36);
+    final double eyeWidth = w * 0.048;
+    final double eyeHeight = h * 0.024;
+
+    // Involuntary cephalopod blink / squint clock (~4.2s cycle, 220ms blink)
+    final double blinkCycle = (time * 0.50) % 4.2;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.22;
+
+    if (isBlinking) {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        final Path lid = Path()
+          ..moveTo(eyeCenter.dx - eyeWidth * 0.6, eyeCenter.dy)
+          ..quadraticBezierTo(
+            eyeCenter.dx,
+            eyeCenter.dy + eyeHeight * 0.5,
+            eyeCenter.dx + eyeWidth * 0.6,
+            eyeCenter.dy,
+          );
+        canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 2.0);
+      }
+    } else {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        // Golden cephalopod iris oval
+        final Rect eyeRect = Rect.fromCenter(
+          center: eyeCenter,
+          width: eyeWidth,
+          height: eyeHeight,
+        );
+        final Paint eyePaint = Paint()
+          ..style = PaintingStyle.fill
+          ..color = const Color(0xFFFFD54F);
+        canvas.drawOval(eyeRect, eyePaint);
+
+        // Thin dark outer rim
+        canvas.drawOval(
+          eyeRect,
+          Paint()
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 1.0
+            ..color = const Color(0xFF5D4037),
+        );
+
+        // Horizontal slit pupil (characteristic cephalopod slit shape)
+        canvas.drawLine(
+          Offset(eyeCenter.dx - eyeWidth * 0.38, eyeCenter.dy),
+          Offset(eyeCenter.dx + eyeWidth * 0.38, eyeCenter.dy),
+          _apexEyePupilPaint
+            ..strokeWidth = 2.0
+            ..style = PaintingStyle.stroke,
+        );
+
+        // Bioluminescent brow dot pulsing with interactionPulse
+        final double browAlpha = (0.5 + interactionPulse * 0.5).clamp(0.0, 1.0);
+        canvas.drawCircle(
+          Offset(eyeCenter.dx, eyeCenter.dy - eyeHeight * 0.8),
+          1.2,
+          Paint()
+            ..style = PaintingStyle.fill
+            ..color = const Color(0xFF18FFFF).withValues(alpha: browAlpha),
+        );
+      }
+    }
   }
 
   void _drawOctopusRingNetwork(
@@ -1573,72 +1622,109 @@ class AnimalFluidVesselPainter extends CustomPainter {
   }
 
   // =========================================================================
-  // BOTTLENOSE DOLPHIN SONAR & ROSTRUM ACCENTS
+  // BOTTLENOSE DOLPHIN SONAR, CATCHLIGHT EYE & ROSTRUM ACCENTS
   // =========================================================================
 
   void _drawDolphinExteriorDetails(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
 
-    // Expanding Acoustic Sonar Bubble Rings from Melon
+    // 1. Expanding Acoustic Sonar Bubble Rings from Melon
     if (!reducedMotion) {
-      final Offset melon = Offset(w * 0.54, h * 0.14);
+      final Offset melon = Offset(w * 0.52, h * 0.14);
       for (int s = 0; s < 3; s++) {
         final double cycle = (time * 0.8 + (s * 0.33)) % 1.0;
-        final double ringRadius = 12.0 + (cycle * (w * 0.16));
+        final double ringRadius = 10.0 + (cycle * (w * 0.18));
         final double alpha =
             ((1.0 - cycle) * 0.6 + (interactionPulse * 0.4)).clamp(0.0, 1.0);
 
-        final Paint sonarPaint = Paint()
-          ..style = PaintingStyle.stroke
+        _apexSonarPaint
           ..strokeWidth = 1.8
           ..color = const Color(0xFF80DEEA).withValues(alpha: alpha);
 
         canvas.drawArc(
           Rect.fromCircle(center: melon, radius: ringRadius),
-          -math.pi * 0.6,
-          math.pi * 0.7,
+          -math.pi * 0.65,
+          math.pi * 0.75,
           false,
-          sonarPaint,
+          _apexSonarPaint,
         );
       }
     }
 
-    // Playful Catchlight Eye
-    final Offset eye = Offset(w * 0.48, h * 0.18);
-    canvas.drawCircle(
-      eye,
-      2.5,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF1A237E),
-    );
-    canvas.drawCircle(
-      Offset(eye.dx - 1, eye.dy - 1),
-      1.0,
-      _bubblePaint,
-    );
+    // 2. Playful Cetacean Eye with Involuntary Blinking (~3.9s cycle, 200ms blink)
+    final Offset eye = Offset(w * 0.46, h * 0.20);
+    final double blinkCycle = (time * 0.55) % 3.9;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
 
-    // Rostrum Smile line
-    final Path rostrumSmile = Path();
-    rostrumSmile.moveTo(w * 0.42, h * 0.14);
-    rostrumSmile.quadraticBezierTo(w * 0.46, h * 0.19, w * 0.50, h * 0.20);
-    canvas.drawPath(rostrumSmile, _faceFeaturePaint..strokeWidth = 1.2);
+    if (isBlinking) {
+      final Path lid = Path()
+        ..moveTo(eye.dx - 4.0, eye.dy)
+        ..quadraticBezierTo(eye.dx, eye.dy - 2.5, eye.dx + 4.0, eye.dy);
+      canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 1.8);
+    } else {
+      // Oceanic sapphire outer base
+      canvas.drawCircle(eye, 3.8, _apexEyeBasePaint);
+
+      // Electric turquoise iris
+      canvas.drawCircle(
+        eye,
+        2.8,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = const Color(0xFF00E5FF),
+      );
+
+      // Jet black pupil
+      canvas.drawCircle(
+        eye,
+        1.8,
+        _apexEyePupilPaint..style = PaintingStyle.fill,
+      );
+
+      // Dual sparkle catchlight gleams
+      canvas.drawCircle(
+        Offset(eye.dx - 1.0, eye.dy - 1.0),
+        1.1,
+        _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+      );
+      canvas.drawCircle(
+        Offset(eye.dx + 0.9, eye.dy + 0.7),
+        0.5,
+        _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+      );
+    }
+
+    // 3. Playful Rostrum Smile line
+    final Path rostrumSmile = Path()
+      ..moveTo(w * 0.38, h * 0.16)
+      ..quadraticBezierTo(w * 0.44, h * 0.21, w * 0.50, h * 0.22);
+    canvas.drawPath(rostrumSmile, _faceFeaturePaint..strokeWidth = 1.4);
+
+    // 4. Blowhole highlight gleam
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(w * 0.56, h * 0.11),
+        width: 3.5,
+        height: 1.8,
+      ),
+      _companionWhiteFurPaint..color = const Color(0x66FFFFFF),
+    );
   }
 
   // =========================================================================
-  // ARCTIC FOX AURORA VEIL & ALERT EARS
+  // ARCTIC FOX AURORA VEIL, GLACIAL EYES & VELVET EAR TIPS
   // =========================================================================
 
   void _drawArcticFoxExteriorDetails(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
 
-    // Aurora Borealis Shimmer Veil across chest
+    // 1. Aurora Borealis Shimmer Veil across chest/flank
     if (!reducedMotion) {
       final double shimmerPhase = (time * 0.4) % 1.0;
       final Rect shimmerRect =
-          Rect.fromLTRB(w * 0.24, h * 0.30, w * 0.60, h * 0.55);
+          Rect.fromLTRB(w * 0.24, h * 0.30, w * 0.62, h * 0.55);
 
       final Paint auroraPaint = Paint()
         ..style = PaintingStyle.fill
@@ -1660,108 +1746,292 @@ class AnimalFluidVesselPainter extends CustomPainter {
       canvas.drawOval(shimmerRect, auroraPaint);
     }
 
-    // Black Ear Tips
-    final Paint earTipPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0xFF263238);
-    canvas.drawCircle(Offset(w * 0.28, h * 0.05), 3.5, earTipPaint);
-    canvas.drawCircle(Offset(w * 0.48, h * 0.05), 3.5, earTipPaint);
+    // 2. Velvety Black Ear Tips & Soft Pink Inner Accents
+    canvas.drawCircle(Offset(w * 0.28, h * 0.05), 3.8, _apexDarkNosePaint);
+    canvas.drawCircle(Offset(w * 0.48, h * 0.05), 3.8, _apexDarkNosePaint);
+    canvas.drawCircle(Offset(w * 0.28, h * 0.08), 2.0, _apexSoftPinkPaint);
+    canvas.drawCircle(Offset(w * 0.47, h * 0.08), 2.0, _apexSoftPinkPaint);
 
-    // Black Nose & Almond Eye
-    canvas.drawCircle(
-      Offset(w * 0.13, h * 0.24),
-      2.5,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF212121),
+    // 3. Almond Glacial Ice-Blue Eye with Involuntary Blinking (~3.7s cycle, 200ms blink)
+    final Offset eye = Offset(w * 0.25, h * 0.20);
+    final double blinkCycle = (time * 0.60) % 3.7;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      final Path lid = Path()
+        ..moveTo(eye.dx - 4.5, eye.dy)
+        ..quadraticBezierTo(eye.dx, eye.dy + 2.5, eye.dx + 4.5, eye.dy);
+      canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 1.8);
+    } else {
+      // Dark eyeliner frame
+      canvas.drawOval(
+        Rect.fromCenter(center: eye, width: 8.0, height: 6.0),
+        _apexDarkNosePaint,
+      );
+      // Glacial cyan iris
+      canvas.drawOval(
+        Rect.fromCenter(center: eye, width: 6.5, height: 4.8),
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = const Color(0xFF80D8FF),
+      );
+      // Black pupil
+      canvas.drawCircle(eye, 1.8, _apexEyePupilPaint..style = PaintingStyle.fill);
+      // Sparkling white catchlight
+      canvas.drawCircle(
+        Offset(eye.dx - 1.2, eye.dy - 1.0),
+        1.1,
+        _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+      );
+    }
+
+    // 4. Pure White Muzzle Mask & Button Nose
+    final Offset snout = Offset(w * 0.12, h * 0.24);
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(snout.dx + 4.0, snout.dy), width: 12.0, height: 7.0),
+      _apexMuzzlePaint,
     );
+    canvas.drawCircle(snout, 2.8, _apexDarkNosePaint);
     canvas.drawCircle(
-      Offset(w * 0.24, h * 0.20),
-      2.0,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF212121),
+      Offset(snout.dx - 0.7, snout.dy - 0.7),
+      0.8,
+      _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+    );
+
+    // 5. Delicate Swept-Back Whiskers
+    final whiskers = [
+      (Offset(snout.dx + 3.0, snout.dy - 1.0), Offset(snout.dx + 13.0, snout.dy - 4.0)),
+      (Offset(snout.dx + 3.0, snout.dy + 1.0), Offset(snout.dx + 14.0, snout.dy + 3.0)),
+    ];
+    for (final (start, end) in whiskers) {
+      canvas.drawLine(start, end, _faceFeaturePaint..strokeWidth = 1.0);
+    }
+
+    // 6. Fluffy White Bushy Tail Tip Accent
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(w * 0.88, h * 0.62), width: 14.0, height: 9.0),
+      _companionWhiteFurPaint..color = const Color(0x44FFFFFF),
     );
   }
 
   // =========================================================================
-  // EMPEROR PENGUIN GOLDEN AURICULAR PLUMAGE
+  // EMPEROR PENGUIN GOLDEN AURICULAR PLUMAGE, TUXEDO BIB & MANDIBLE STRIPE
   // =========================================================================
 
   void _drawPenguinExteriorDetails(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
 
-    // Golden Auricular Neck Plumage Patches
+    // 1. Golden Auricular Neck Plumage Patches (Mandarin to Amber Gradient)
     final Paint plumagePaint = Paint()
       ..style = PaintingStyle.fill
       ..shader = const LinearGradient(
         colors: [Color(0xFFFF6F00), Color(0xFFFFD54F)],
       ).createShader(
-        Rect.fromLTRB(w * 0.40, h * 0.12, w * 0.65, h * 0.24),
+        Rect.fromLTRB(w * 0.40, h * 0.12, w * 0.65, h * 0.26),
       );
 
-    final Path plumagePath = Path();
-    plumagePath.moveTo(w * 0.52, h * 0.13);
-    plumagePath.quadraticBezierTo(w * 0.62, h * 0.16, w * 0.58, h * 0.24);
-    plumagePath.quadraticBezierTo(w * 0.48, h * 0.20, w * 0.52, h * 0.13);
+    final Path plumagePath = Path()
+      ..moveTo(w * 0.50, h * 0.13)
+      ..quadraticBezierTo(w * 0.62, h * 0.16, w * 0.58, h * 0.25)
+      ..quadraticBezierTo(w * 0.46, h * 0.20, w * 0.50, h * 0.13);
     canvas.drawPath(plumagePath, plumagePaint);
 
-    // Pointed Beak with Yellow Mandible Stripe
+    // 2. Immaculate White Tuxedo Bib Contour
+    final Path bibPath = Path()
+      ..moveTo(w * 0.38, h * 0.22)
+      ..quadraticBezierTo(w * 0.32, h * 0.38, w * 0.36, h * 0.55)
+      ..quadraticBezierTo(w * 0.48, h * 0.52, w * 0.48, h * 0.30)
+      ..close();
+    canvas.drawPath(
+      bibPath,
+      _companionWhiteFurPaint..color = const Color(0x33FFFFFF),
+    );
+
+    // 3. Playful Penguin Eye with Involuntary Blinking (~4.1s cycle, 200ms blink)
+    final Offset eye = Offset(w * 0.36, h * 0.16);
+    final double blinkCycle = (time * 0.52) % 4.1;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      final Path lid = Path()
+        ..moveTo(eye.dx - 3.5, eye.dy)
+        ..quadraticBezierTo(eye.dx, eye.dy + 2.0, eye.dx + 3.5, eye.dy);
+      canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 1.8);
+    } else {
+      // Dark base
+      canvas.drawCircle(eye, 3.2, _apexEyeBasePaint);
+      // Rich amber/ruby ring
+      canvas.drawCircle(
+        eye,
+        2.4,
+        Paint()
+          ..style = PaintingStyle.fill
+          ..color = const Color(0xFFFFB300),
+      );
+      // Black pupil
+      canvas.drawCircle(eye, 1.4, _apexEyePupilPaint..style = PaintingStyle.fill);
+      // Crisp catchlight
+      canvas.drawCircle(
+        Offset(eye.dx - 0.9, eye.dy - 0.8),
+        0.8,
+        _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+      );
+    }
+
+    // 4. Pointed Beak with Vivid Yellow/Pink Mandible Stripe
+    final Path beakPath = Path()
+      ..moveTo(w * 0.32, h * 0.17)
+      ..lineTo(w * 0.16, h * 0.19)
+      ..lineTo(w * 0.30, h * 0.21)
+      ..close();
+    canvas.drawPath(beakPath, _apexDarkNosePaint);
+
+    // Mandible stripe
     canvas.drawLine(
-      Offset(w * 0.32, h * 0.18),
-      Offset(w * 0.18, h * 0.19),
+      Offset(w * 0.31, h * 0.20),
+      Offset(w * 0.18, h * 0.192),
       Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0
-        ..color = const Color(0xFFFFB300),
+        ..strokeCap = StrokeCap.round
+        ..color = const Color(0xFFFF80AB),
+    );
+    canvas.drawLine(
+      Offset(w * 0.30, h * 0.20),
+      Offset(w * 0.22, h * 0.195),
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.0
+        ..strokeCap = StrokeCap.round
+        ..color = const Color(0xFFFFD54F),
+    );
+
+    // 5. Flipper Wing Contour Line
+    final Path flipper = Path()
+      ..moveTo(w * 0.58, h * 0.32)
+      ..quadraticBezierTo(w * 0.72, h * 0.46, w * 0.68, h * 0.60);
+    canvas.drawPath(
+      flipper,
+      _faceFeaturePaint
+        ..strokeWidth = 1.5
+        ..color = const Color(0x44FFFFFF),
     );
   }
 
   // =========================================================================
-  // SNOW LEOPARD ALPINE ROSETTES & WHISKERS
+  // SNOW LEOPARD ALPINE ROSETTES, SAGE EYES & WHISKER PADS
   // =========================================================================
 
   void _drawSnowLeopardExteriorDetails(Canvas canvas, Size size) {
     final w = size.width;
     final h = size.height;
 
-    final Paint rosettePaint = Paint()
-      ..style = PaintingStyle.stroke
+    // 1. Alpine Rosettes along Flank and Thick Tail
+    _apexRosettePaint
       ..strokeWidth = 1.8
-      ..color = const Color(0x66455A64);
+      ..color = const Color(0x77455A64);
 
-    // Alpine Rosettes along flank
     final rosettes = [
       Offset(w * 0.45, h * 0.42),
       Offset(w * 0.60, h * 0.45),
       Offset(w * 0.52, h * 0.58),
       Offset(w * 0.68, h * 0.60),
-      Offset(w * 0.85, h * 0.75),
+      Offset(w * 0.84, h * 0.74),
+      Offset(w * 0.90, h * 0.62),
     ];
     for (final r in rosettes) {
-      canvas.drawCircle(r, 4.0, rosettePaint);
-      canvas.drawCircle(r, 1.0, Paint()..color = const Color(0x66455A64));
+      canvas.drawCircle(r, 4.2, _apexRosettePaint);
+      canvas.drawCircle(r, 1.2, _apexDarkNosePaint);
     }
 
-    // Soft Pink Nose & Whiskers
+    // 2. Rounded Ears with Soft White Inner Tufts
     canvas.drawCircle(
-      Offset(w * 0.20, h * 0.32),
-      2.8,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFFFFAB91),
+      Offset(w * 0.25, h * 0.15),
+      3.0,
+      _companionWhiteFurPaint..color = const Color(0x88FFFFFF),
     );
-    canvas.drawLine(
-      Offset(w * 0.22, h * 0.32),
-      Offset(w * 0.32, h * 0.30),
-      _faceFeaturePaint..strokeWidth = 1.0,
+    canvas.drawCircle(
+      Offset(w * 0.45, h * 0.13),
+      3.0,
+      _companionWhiteFurPaint..color = const Color(0x88FFFFFF),
     );
-    canvas.drawLine(
-      Offset(w * 0.22, h * 0.34),
-      Offset(w * 0.32, h * 0.36),
-      _faceFeaturePaint..strokeWidth = 1.0,
+
+    // 3. Piercing Sage-Green / Jade Eyes with Involuntary Blinking (~3.6s cycle, 200ms blink)
+    final Offset leftEye = Offset(w * 0.26, h * 0.28);
+    final Offset rightEye = Offset(w * 0.42, h * 0.26);
+    final double blinkCycle = (time * 0.58) % 3.6;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        final Path lid = Path()
+          ..moveTo(eyeCenter.dx - 4.5, eyeCenter.dy)
+          ..quadraticBezierTo(eyeCenter.dx, eyeCenter.dy + 2.5, eyeCenter.dx + 4.5, eyeCenter.dy);
+        canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 1.8);
+      }
+    } else {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        // Dark feline eyeliner border
+        canvas.drawOval(
+          Rect.fromCenter(center: eyeCenter, width: 8.5, height: 6.5),
+          _apexDarkNosePaint,
+        );
+
+        // Piercing sage jade iris
+        canvas.drawOval(
+          Rect.fromCenter(center: eyeCenter, width: 7.0, height: 5.2),
+          Paint()
+            ..style = PaintingStyle.fill
+            ..color = const Color(0xFF80CBC4),
+        );
+
+        // Slender vertical slit pupil
+        canvas.drawRRect(
+          RRect.fromRectAndRadius(
+            Rect.fromCenter(center: eyeCenter, width: 2.0, height: 4.6),
+            const Radius.circular(1.0),
+          ),
+          _apexEyePupilPaint..style = PaintingStyle.fill,
+        );
+
+        // Crisp white gleam
+        canvas.drawCircle(
+          Offset(eyeCenter.dx - 1.2, eyeCenter.dy - 1.1),
+          1.0,
+          _companionWhiteFurPaint..color = const Color(0xEEFFFFFF),
+        );
+      }
+    }
+
+    // 4. White Whisker Pads & Soft Pink Inverted Triangle Nose
+    final Offset nosePos = Offset(w * 0.20, h * 0.32);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(nosePos.dx + 3.0, nosePos.dy + 1.0),
+        width: 14.0,
+        height: 8.0,
+      ),
+      _apexMuzzlePaint,
     );
+
+    // Inverted triangle pink nose
+    final Path nose = Path()
+      ..moveTo(nosePos.dx - 3.2, nosePos.dy - 2.0)
+      ..lineTo(nosePos.dx + 3.2, nosePos.dy - 2.0)
+      ..lineTo(nosePos.dx, nosePos.dy + 2.5)
+      ..close();
+    canvas.drawPath(nose, _apexSoftPinkPaint);
+
+    // 5. Six Swept-Back Whiskers
+    final whiskers = [
+      (Offset(nosePos.dx + 2.0, nosePos.dy - 1.0), Offset(nosePos.dx + 14.0, nosePos.dy - 4.0)),
+      (Offset(nosePos.dx + 2.0, nosePos.dy + 1.0), Offset(nosePos.dx + 15.0, nosePos.dy + 1.0)),
+      (Offset(nosePos.dx + 2.0, nosePos.dy + 3.0), Offset(nosePos.dx + 13.0, nosePos.dy + 5.0)),
+    ];
+    for (final (start, end) in whiskers) {
+      canvas.drawLine(start, end, _faceFeaturePaint..strokeWidth = 1.0);
+    }
   }
 
   void _drawSpeciesExteriorDetails(
