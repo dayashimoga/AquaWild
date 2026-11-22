@@ -520,6 +520,37 @@
      * Certified full project test suite: **174 / 174 passing tests**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `security-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
 
+---
+
+## Entry 029 — 2026-11-22 (Stage 6: Subphase 6.1.1 — Out-of-App Hydration & Budget Telemetry Service)
+- **Context**: Enabling out-of-app user engagement for home screen widgets, lock screens, and actionable notifications by engineering a unified telemetry and budget engine that computes hydration balance, multi-nutrient safety tiers (caffeine, electrolytes, sugar), circadian pacing, companion progression, and persistent local snapshots.
+- **Architectural Decisions & Deliverables**:
+  1. **Enriched Telemetry & Budget Domain Contract (`OutOfAppTelemetrySnapshot`)**:
+     * Built comprehensive domain model in `lib/src/domain/models/out_of_app_telemetry.dart`.
+     * Added `HydrationBudgetSummary` supporting:
+       - Net hydration progress, remaining volume, percentage clamped to 150%, and target achievement flag.
+       - Caffeine budget tracking against standard 400mg threshold with 4 clinical safety tiers (`safe`, `moderate`, `caution`, `exceeded`).
+       - Electrolyte score and balance status (`depleted` <60%, `optimal` 60–140%, `surplus` >140%).
+       - Added sugar daily tracking against 50g WHO reference budget with excess alert flag.
+  2. **Circadian Pacing & Sip Scheduling (`CircadianContext`)**:
+     * Added time-of-day pace evaluation comparing actual intake against expected progression from wake time (07:00) to sleep time (22:00).
+     * Categorizes circadian pacing into 4 states: `aheadOfPace` (>+10%), `onTrack` (±10%), `behindPace` (<-10%), and `criticalDeficit` (<-30%).
+     * Calculates recommended next sip amount (typically 250ml) and dynamic schedule time (intervals of 45, 60, or 90 minutes).
+  3. **Companion Evolution & Unlock Progression (`NextUnlockProgression`)**:
+     * Dynamically resolves the user's nearest locked companion by XP threshold, calculating exact remaining XP and visual progress percentage (0.0 to 1.0).
+     * Provides fallback milestone rewards when all 10 companions are unlocked.
+  4. **Widget & Notification Telemetry Service (`WidgetNotificationTelemetryService`)**:
+     * Built `lib/src/core/services/widget_notification_telemetry_service.dart` orchestrating hydration state, active companion, streak data, and achievements into atomic snapshots.
+     * Implements persistent snapshot storage (`aquawild_widget_telemetry_snapshot`) in `SharedPreferences` for fast, non-blocking out-of-app consumption by native widget providers and notification triggers.
+     * Emits reactive broadcast stream (`telemetryStream`) on every intake mutation.
+  5. **Riverpod Telemetry Integration (`telemetryControllerProvider`)**:
+     * Created `telemetry_controller.dart` exposing `telemetrySnapshotProvider` and auto-sync hooks to trigger background widget update broadcasts.
+  6. **Comprehensive Automated Test Coverage**:
+     * Authored `test/domain/widget_notification_telemetry_test.dart` (12 tests) verifying nutrient budgets, circadian pacing, companion unlock math, JSON serialization, and snapshot persistence.
+     * Certified full project test suite: **186 / 186 passing tests**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
 
 
 

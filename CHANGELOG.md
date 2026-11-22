@@ -2,6 +2,25 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.22.0] - 2026-11-22 — Stage 6: Subphase 6.1.1 — Out-of-App Hydration & Budget Telemetry Service
+### Added
+- **Out-of-App Hydration & Multi-Nutrient Budget Engine**:
+  * Implemented `OutOfAppTelemetrySnapshot` and `HydrationBudgetSummary` in `lib/src/domain/models/out_of_app_telemetry.dart`.
+  * Multi-nutrient budgets: 400mg daily caffeine safety tiers (`safe`, `moderate`, `caution`, `exceeded`), electrolyte balance status (`depleted`, `optimal`, `surplus`), and 50g added sugar tracking.
+- **Circadian Pacing & Dynamic Sip Scheduling**:
+  * Added `CircadianContext` and `CircadianPaceStatus` computing real-time day pace (`aheadOfPace`, `onTrack`, `behindPace`, `criticalDeficit`).
+  * Suggests tailored next sip volume and target time based on day fraction and deficit severity.
+- **Next Companion Unlock Progression**:
+  * Added `NextUnlockProgression` calculating remaining XP and fraction toward unlocking the next companion in the animal ecosystem.
+- **Widget & Notification Telemetry Service (`WidgetNotificationTelemetryService`)**:
+  * Built `lib/src/core/services/widget_notification_telemetry_service.dart` computing atomic telemetry snapshots and persisting to `aquawild_widget_telemetry_snapshot`.
+  * Created `telemetrySnapshotProvider` in `lib/src/presentation/controllers/telemetry_controller.dart`.
+- **Automated Telemetry Test Suite (`widget_notification_telemetry_test.dart`)**:
+  * Added 12 tests covering nutrient limits, circadian pacing, unlock progression, and serialization.
+  * **186 / 186 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.21.0] - 2026-11-22 — Stage 5: Subphase 5.2.2 — Monetization Entitlement Security, Offline Grace Period & Receipt Validation
 ### Added
 - **Tamper-Evident Cryptographic Envelopes (`MonetizationSecurityService`)**:
