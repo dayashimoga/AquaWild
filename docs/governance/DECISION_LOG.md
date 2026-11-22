@@ -98,3 +98,15 @@
   4. **Dynamic Theme Engine & WCAG 2.2 AAA Mode**: Created `ThemeModeNotifier` managing flagship `hydroGlassTheme` (neon cyan bioluminescence and frosted borders), OLED `darkTheme`, Day `lightTheme`, and an ultra-legible `highContrastTheme` designed specifically for low-vision accessibility with high-contrast yellow/white accents (>7:1 contrast ratio).
   5. **Flex Layout Overflow Defense**: Replaced rigid horizontal rows with responsive `Wrap` widgets and `Expanded` titles across card headers, button bars, and entry lists, completely eliminating RenderFlex overflows on screens from 320px up to 4K displays.
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 009 — 2026-11-22 (Subphase 4.2.1)
+- **Context**: Production multi-platform GitHub Actions CI/CD workflows, selective platform dispatch, automated quality/security gates, and release packaging automation.
+- **Course-Correction & Observations**:
+  1. **Selective Platform Matrix Optimization**: Cross-platform Flutter builds across 6 targets can be compute-intensive and slow if every small commit triggers all desktop/mobile/web runners. We introduced `workflow_dispatch` input filtering in `build-all.yml` enabling developers to selectively build specific targets (`all`, `android`, `ios`, `web`, `windows`, `macos`, `linux`) while maintaining a mandatory shared `quality_gates` prerequisite.
+  2. **Automated Secret & Key Security Scan**: Integrated automated pre-build secret scanning directly in the CI quality gate, checking source trees for leaked API keys, tokens, or raw credentials before building any platform binaries.
+  3. **Release Tag Packaging Pipeline**: Configured release automation triggered on tag pushes (`v*.*.*`) that aggregates build outputs across all runners (Android APK/AAB, iOS zipped archive, Windows executable zip, macOS zipped .app, Linux tarball, and Web Wasm bundle) and attaches them directly to a generated GitHub release with automated notes.
+  4. **Repository Governance Assets**: Added `.github/dependabot.yml` for automated dependency updates, `.github/PULL_REQUEST_TEMPLATE.md` enforcing the 12-step governance protocol, and standardized issue templates for bug tracking and feature proposals.
+- **Sign-Off**: `solution-architect`, `release-devops-agent`, `security-agent`, `qa-agent`, `mobile-agent`, `desktop-web-agent`.

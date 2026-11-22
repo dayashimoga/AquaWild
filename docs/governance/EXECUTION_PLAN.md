@@ -156,3 +156,28 @@
 - **Risk Level**: Low
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Seamless 3-breakpoint adaptive layouts, instant theme transitions, natural language voice parsing, and fully keyboard-traversable navigation.
+
+
+---
+
+### Subphase 4.2.1 — Production GitHub Actions Multi-Platform CI/CD & Final Verification Suite
+- **Complexity**: Medium
+- **Dependencies**: Subphase 4.1.1, Subphase 1.2.1
+- **Deliverables**:
+  - `.github/workflows/build-all.yml`: Master CI/CD orchestrator with `workflow_dispatch` selective platform inputs (`all`, `android`, `ios`, `web`, `windows`, `macos`, `linux`), nightly scheduled cron (`0 2 * * *`), quality gates (linting + secret scanning + test coverage), parallel matrix platform builds, artifact uploads, and GitHub release packaging.
+  - `.github/workflows/android.yml`: Targeted Android CI building APK and release AppBundle with automated testing.
+  - `.github/workflows/ios.yml`: Targeted iOS CI running on macOS runner generating unsigned release payload.
+  - `.github/workflows/web.yml`: Targeted Web CI building WebAssembly (Wasm) and HTML5 CanvasKit bundles.
+  - `.github/workflows/windows.yml`: Targeted Windows CI running on `windows-latest` packaging release x64 zip archives.
+  - `.github/workflows/macos.yml`: Targeted macOS CI running on `macos-latest` packaging `AquaWild.app` application archives.
+  - `.github/workflows/linux.yml`: Targeted Linux CI on `ubuntu-latest` with GTK3 toolchain packaging release tarballs.
+  - `.github/dependabot.yml`: Automated weekly dependency audits for GitHub Actions and Pub packages.
+  - `.github/PULL_REQUEST_TEMPLATE.md`: Production pull request template enforcing multi-agent role ownership and the 12-step governance protocol.
+  - `.github/ISSUE_TEMPLATE/bug_report.md` & `feature_request.md`: Structured issue templates for community engagement and bug triage.
+  - Git flow branches (`main`, `develop`, `feature/*`, `release/*`, `hotfix/*`) and release tag `v1.0.0` synchronized.
+  - Full project test suite passing with 100% success (70/70 tests) and zero static analysis warnings.
+- **Validation Criteria**: Valid workflow YAML syntax; 100% test pass rate; zero analyzer warnings; comprehensive build matrix and packaging artifacts.
+- **Maximum Execution Time**: 30 minutes
+- **Risk Level**: Low
+- **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
+- **Success Metrics**: Fully automated cross-platform CI/CD pipeline covering all 6 target platforms, automated artifact distribution, and zero manual deployment overhead.
