@@ -1,12 +1,12 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../../../core/services/audio_haptics_service.dart';
 import '../../../domain/models/animal_evolution_stage.dart';
 import '../../../domain/models/exotic_animal.dart';
+import 'companion_avatar_renderer.dart';
 
 /// Interactive celebration modal displayed when an exotic animal evolves
 /// to a new evolution stage (Hatchling -> Explorer -> Guardian -> Mythic Spirit).
-class CompanionEvolutionModal extends StatefulWidget {
+class CompanionEvolutionModal extends StatelessWidget {
   final ExoticAnimal animal;
   final AnimalEvolutionStage stage;
   final int totalXp;
@@ -37,33 +37,8 @@ class CompanionEvolutionModal extends StatefulWidget {
   }
 
   @override
-  State<CompanionEvolutionModal> createState() =>
-      _CompanionEvolutionModalState();
-}
-
-class _CompanionEvolutionModalState extends State<CompanionEvolutionModal>
-    with SingleTickerProviderStateMixin {
-  late final AnimationController _spinController;
-
-  @override
-  void initState() {
-    super.initState();
-    _spinController = AnimationController(
-      vsync: this,
-      duration: const Duration(seconds: 12),
-    )..repeat();
-  }
-
-  @override
-  void dispose() {
-    _spinController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final reducedMotion = MediaQuery.disableAnimationsOf(context);
-    final accent = widget.animal.accentColor;
+    final accent = animal.accentColor;
 
     return Dialog(
       backgroundColor: Colors.transparent,
@@ -88,56 +63,18 @@ class _CompanionEvolutionModalState extends State<CompanionEvolutionModal>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Rotating Sunburst Aura behind Avatar
-            Stack(
-              alignment: Alignment.center,
-              children: [
-                if (!reducedMotion)
-                  AnimatedBuilder(
-                    animation: _spinController,
-                    builder: (context, child) {
-                      return Transform.rotate(
-                        angle: _spinController.value * 2 * math.pi,
-                        child: Container(
-                          width: 140,
-                          height: 140,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            gradient: SweepGradient(
-                              colors: [
-                                accent.withValues(alpha: 0.0),
-                                accent.withValues(alpha: 0.4),
-                                Colors.white.withValues(alpha: 0.6),
-                                accent.withValues(alpha: 0.0),
-                              ],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                Container(
-                  width: 100,
-                  height: 100,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: const Color(0xFF162947),
-                    border: Border.all(color: accent, width: 3),
-                    boxShadow: [
-                      BoxShadow(
-                        color: accent.withValues(alpha: 0.5),
-                        blurRadius: 16,
-                      ),
-                    ],
-                  ),
-                  child: Center(
-                    child: Text(
-                      widget.animal.avatarEmoji,
-                      style: const TextStyle(fontSize: 48),
-                    ),
-                  ),
-                ),
-              ],
+            // High-Detail Vector Avatar with Rotating Celestial Aura
+            CompanionAvatarRenderer(
+              animal: animal,
+              stage: stage,
+              size: 110,
+              isUnlocked: true,
+              isSelected: true,
+              showAura: true,
+              showBadge: true,
+              fillFraction: 0.85,
+              interactionPulse: 1.0,
+              animate: true,
             ),
             const SizedBox(height: 20),
 
@@ -153,7 +90,7 @@ class _CompanionEvolutionModalState extends State<CompanionEvolutionModal>
             ),
             const SizedBox(height: 6),
             Text(
-              widget.stage.title,
+              stage.title,
               textAlign: TextAlign.center,
               style: const TextStyle(
                 color: Colors.white,
@@ -163,7 +100,7 @@ class _CompanionEvolutionModalState extends State<CompanionEvolutionModal>
             ),
             const SizedBox(height: 4),
             Text(
-              'Stage ${widget.stage.stageNumber} • ${widget.animal.name}',
+              'Stage ${stage.stageNumber} • ${animal.name}',
               style: const TextStyle(color: Colors.white70, fontSize: 13),
             ),
             const SizedBox(height: 16),
@@ -198,7 +135,7 @@ class _CompanionEvolutionModalState extends State<CompanionEvolutionModal>
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          widget.stage.cosmeticPerk,
+                          stage.cosmeticPerk,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 13,

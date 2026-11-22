@@ -379,3 +379,32 @@
      * Expanded `test/presentation/animal_fluid_vessel_painter_test.dart` with dedicated blinking, interactive reaction, and reduced-motion tests for all 5 Apex companions (123/123 passing tests, 0 analyzer issues).
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 024 — 2026-11-22 (Stage 4: Subphase 4.2.2 — High-Detail Companion Avatar Renderer, Evolution Auras & Stage 4 Sign-Off)
+- **Context**: Upgrading companion cards in `BiomeCompanionSelectorSheet` and celebration visuals in `CompanionEvolutionModal` from primitive text emoji placeholders to production-grade high-detail vector avatar renderers with 4-stage dynamic evolution auras, species badges, and comprehensive 10-animal ecosystem regression testing.
+- **Architectural Decisions & Deliverables**:
+  1. **High-Detail Companion Avatar Renderer (`CompanionAvatarRenderer`)**:
+     * Built reusable vector avatar component [companion_avatar_renderer.dart](file:///h:/water/lib/src/presentation/widgets/biomes/companion_avatar_renderer.dart).
+     * Renders miniature living hydro-glass companion vessel via `AnimalFluidVesselPainter` and `AnimalSilhouettePaths` with static 16-column wave solver `_staticWaveSolver` (0 memory allocation during preview).
+     * Glassmorphic circular backdrop with radial gradient (`0xFF1B2C4B` -> `0xFF0B172B`) and accent color elevation border.
+     * Species emoji badge pill in lower-right corner displaying authentic unicode emoji (`🦊`, `🦫`, `🦎`, `🦦`, `🦙`, `🐺`, `🐧`, `🐬`, `🐙`, `🐆`).
+     * Frosted glass padlock overlay (`Color(0xAA08101E)`) for locked companions.
+     * Full screen-reader accessibility semantics (`Semantics`) announcing name, species, evolution stage, and selection/unlock state.
+  2. **Dynamic 4-Stage Evolution Auras (`_buildEvolutionAura`)**:
+     * **Stage 1 (Hatchling)**: Soft ambient morning-dew glow halo (`stage.auraColor.withValues(alpha: 0.35)`).
+     * **Stage 2 (Explorer)**: Concentric double-ring bioluminescent shimmer aura.
+     * **Stage 3 (Guardian)**: Iridescent caustic sweep halo with cyan, white, and accent color gradient stops.
+     * **Stage 4 (Mythic Spirit)**: Cosmic celestial rainbow aurora sweep with starfall gold, electric cyan, and magenta shimmering gradient, with optional continuous rotation controller.
+     * Respects `MediaQuery.disableAnimationsOf(context)`: clamps rotating sweep gradients to smooth static auras for zero CPU consumption.
+  3. **Integration in Companion Sheet & Evolution Celebration**:
+     * Integrated `CompanionAvatarRenderer` into `BiomeCompanionSelectorSheet` active companion banner (`size: 64`, `isSelected: true`, `animate: false`) and companion list tiles (`size: 50`).
+     * Integrated `CompanionAvatarRenderer` into `CompanionEvolutionModal` central celebration pedestal (`size: 110`, `animate: true`), replacing generic emoji text with animated vector artwork.
+  4. **10-Animal Comprehensive Ecosystem Regression Suite (`test/presentation/companion_avatar_test.dart`)**:
+     * Certified all 10 companions across multi-platform viewport sizes (`32x32`, `56x56`, `120x120`, `300x345`, `800x600`), validating non-empty bounds and bounded coordinates.
+     * Verified unique IDs, names, biomes, non-zero capacity, 4 evolution stages, and authentic emoji mappings with zero `'🐾'` fallbacks.
+     * Full test suite: 130 / 130 passing tests, 0 analyzer issues.
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+

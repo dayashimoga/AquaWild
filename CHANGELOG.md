@@ -2,6 +2,24 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.17.0] - 2026-11-22 — Stage 4: Subphase 4.2.2 — High-Detail Companion Avatar Renderer, Evolution Auras & Stage 4 Sign-Off
+### Added
+- **High-Detail Companion Avatar Renderer (`CompanionAvatarRenderer`)**:
+  * Created reusable `CompanionAvatarRenderer` component rendering living vector companion vessels via `AnimalFluidVesselPainter` and `AnimalSilhouettePaths`.
+  * Pre-allocated static 16-column wave solver for zero heap allocations during avatar rendering.
+  * Added species emoji badge pill, frosted glass padlock overlay for locked companions, and full screen-reader semantics.
+- **Dynamic 4-Stage Evolution Auras (`CompanionEvolutionAura`)**:
+  * Hatchling (gentle ambient morning-dew glow halo), Explorer (concentric bioluminescent double-ring shimmer), Guardian (iridescent caustic sweep halo), and Mythic Spirit (cosmic celestial rainbow aurora sweep with continuous rotation and reduced-motion fallback).
+- **Selector Sheet & Celebration Modal Integration**:
+  * Integrated vector avatars into `BiomeCompanionSelectorSheet` active banner (`size: 64`) and companion list tiles (`size: 50`).
+  * Integrated into `CompanionEvolutionModal` celebration pedestal (`size: 110`), replacing raw text emoji placeholders with animated vector artwork.
+- **10-Animal Comprehensive Ecosystem Regression Suite (`companion_avatar_test.dart`)**:
+  * Certified all 10 companions across multi-platform viewport sizes (`32x32`, `56x56`, `120x120`, `300x345`, `800x600`).
+  * Verified unique IDs, names, biomes, non-zero capacity, 4 evolution stages, and authentic emoji mappings with zero `'🐾'` fallbacks.
+  * 130 / 130 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.16.0] - 2026-11-22 — Stage 4: Subphase 4.2.1 — Apex Exotic Companions Vector Silhouettes & Anatomical Details Upgrade
 ### Added
 - **Continuous Anatomical Silhouette Vectorization (`AnimalSilhouettePaths`)**:
