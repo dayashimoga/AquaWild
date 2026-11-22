@@ -10,6 +10,7 @@ import 'package:aquawild/src/presentation/widgets/biomes/biome_companion_selecto
 import 'package:aquawild/src/presentation/widgets/environmental/weather_activity_bar.dart';
 import 'package:aquawild/src/presentation/widgets/gamification/achievements_gallery_sheet.dart';
 import 'package:aquawild/src/presentation/widgets/gamification/streak_badge_chip.dart';
+import 'package:aquawild/src/presentation/widgets/sync/sync_status_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -94,9 +95,15 @@ class HomeScreen extends ConsumerWidget {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Net Hydration Today',
-                              style: TextStyle(color: Colors.white70),
+                            const Row(
+                              children: [
+                                Text(
+                                  'Net Hydration Today',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                                SizedBox(width: 8),
+                                SyncStatusIndicator(),
+                              ],
                             ),
                             const SizedBox(height: 4),
                             Text(

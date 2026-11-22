@@ -14,8 +14,8 @@
 | Stage 2 | **Phase 2.2: Launch Screen — Animated SVG Red Panda Floating Pool Physics Engine** | **Subphase 2.2.1** | Interactive Top-View Pool Water Shader/Canvas (Caustics, Procedural Waves, Ripples, Parallax Shadows, Particles) + Detailed Animated SVG Red Panda on Floating Tube + Seamless Hero Transition | High | Medium | 35 min | ✅ **COMPLETED (Approved)** |
 | Stage 2 | **Phase 2.3: Animal Silhouette Fluid Simulation, Multi-Drink Stratification & Micro-Interactions** | **Subphase 2.3.1** | Real-Time 2D Shallow-Water Wave & Meniscus Solver Inside Exotic Animal Silhouettes, Multi-Beverage Colored Density Layers, Splash Particles, Pour Slider, Adaptive Haptics & Synthesized Audio | High | Medium | 40 min | ✅ **COMPLETED (Approved)** |
 | **Stage 3: AI Intelligence, Biometrics, Gamification & Backend** | **Phase 3.1: AI Hydration Coach, Weather/Activity Engine & Health Integrations** | **Subphase 3.1.1** | OpenAI-Compatible AI Hydration Advisor, Dynamic Weather/Activity/Altitude Goal Calculator, Smart Circadian Reminders, Apple HealthKit / Google Health Connect Bridges & Electrolyte Balance | High | Medium | 35 min | ✅ **COMPLETED (Approved)** |
-| Stage 3 | **Phase 3.2: Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics** | **Subphase 3.2.1** | Habit-Building Engine, XP/Leveling, Streaks, Seasonal Challenges, Animal Evolution Unlock System, Interactive World Biomes & Predictive Analytics Reports | Medium | Low | 35 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
-| Stage 3 | **Phase 3.3: Supabase Backend Schema, Row-Level Security, Realtime & Edge Functions** | **Subphase 3.3.1** | Production Supabase PostgreSQL Migrations, RLS Policies, Realtime Sync Queue, Edge Functions (`ai-hydration-coach`, `weather-hydration-goal`) & Security Audit | Medium | Medium | 30 min | ⏳ Pending |
+| Stage 3 | **Phase 3.2: Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics** | **Subphase 3.2.1** | Habit-Building Engine, XP/Leveling, Streaks, Seasonal Challenges, Animal Evolution Unlock System, Interactive World Biomes & Predictive Analytics Reports | Medium | Low | 35 min | ✅ **COMPLETED (Approved)** |
+| Stage 3 | **Phase 3.3: Supabase Backend Schema, Row-Level Security, Realtime & Edge Functions** | **Subphase 3.3.1** | Production Supabase PostgreSQL Migrations, RLS Policies, Realtime Sync Queue, Edge Functions (`ai-hydration-coach`, `sync-health-telemetry`) & Security Audit | Medium | Medium | 30 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
 | **Stage 4: Multi-Platform UX, Accessibility & CI/CD Release Automation** | **Phase 4.1: Responsive Cross-Platform Shell, Multimodal Accessibility & Dynamic Themes** | **Subphase 4.1.1** | Adaptive Mobile/Tablet/Desktop/Web Layouts, Light/Dark/Hydro-Glass/High-Contrast Themes, Voice Command Logging, Full Keyboard Navigation, Screen Reader Semantics & Reduced-Motion Mode | Medium | Low | 35 min | ⏳ Pending |
 | Stage 4 | **Phase 4.2: Production GitHub Actions Multi-Platform CI/CD & Full Verification Suite** | **Subphase 4.2.1** | 7 GitHub Actions Workflows (`build-all.yml` with selective platform inputs + Android, iOS, Web, Windows, macOS, Linux workflows), Security/Coverage Gates & End-to-End Integration Suite | Medium | Low | 30 min | ⏳ Pending |
 
@@ -111,3 +111,25 @@
 - **Risk Level**: Low
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Multi-tier gamification motivation, streak freeze resilience, interactive biome exploration, and predictive dehydration forecasting.
+
+---
+
+### Subphase 3.3.1 — Supabase Backend Schema, Row-Level Security, Realtime & Edge Functions
+- **Complexity**: Medium
+- **Dependencies**: Subphase 3.2.1, Subphase 3.1.1
+- **Deliverables**:
+  - `supabase/migrations/20261122000000_create_aquawild_schema.sql`: Complete PostgreSQL schema defining `profiles`, `hydration_entries`, `user_streaks`, `user_achievements`, and `activity_sessions` with automated `updated_at` and `on_auth_user_created` provisioning triggers.
+  - Strict Row-Level Security (RLS) policies on all tables enforcing `auth.uid() = user_id` for SELECT, INSERT, UPDATE, DELETE.
+  - `supabase/functions/ai-hydration-coach/index.ts`: TypeScript Deno serverless edge function proxying OpenAI/LLM requests with prompt sanitization, rate limiting, and fallback.
+  - `supabase/functions/sync-health-telemetry/index.ts`: TypeScript Deno edge function for batch ingestion of fitness tracker telemetry.
+  - `supabase/config.toml`: Project and port settings.
+  - `lib/src/domain/models/sync_queue_item.dart`: Offline mutation queue model with JSON serialization and retry tracking.
+  - `lib/src/core/services/supabase_sync_service.dart`: Offline-first synchronization service with local queue management, batch flushing, and conflict resolution.
+  - `lib/src/presentation/controllers/sync_controller.dart`: Riverpod 3 notifier coordinating sync states (`synced`, `syncing`, `offlinePending`, `error`).
+  - `lib/src/presentation/widgets/sync/sync_status_indicator.dart`: Live cloud sync status pill embedded on `HomeScreen`.
+  - Automated test suites: `test/data/supabase_sync_service_test.dart` and `test/presentation/sync_status_ui_test.dart` (62 total tests passing, 0 analyzer issues).
+- **Validation Criteria**: Zero analyzer warnings; 100% test pass rate; strict RLS on all tables; offline queue persistence verified.
+- **Maximum Execution Time**: 30 minutes
+- **Risk Level**: Medium
+- **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
+- **Success Metrics**: Verified PostgreSQL schema with zero exposed cross-user data, functional offline queue flushing, and seamless cloud indicator UX.

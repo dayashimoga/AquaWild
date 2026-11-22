@@ -66,6 +66,17 @@
 
 ---
 
+## Entry 008 — 2026-11-22 (Subphase 3.3.1)
+- **Context**: Supabase PostgreSQL database architecture, Row-Level Security (RLS) enforcement, Edge Functions, and client-side offline-first sync queue.
+- **Course-Correction & Observations**:
+  1. **Strict Zero-Trust RLS Governance**: Security audits of modern health apps frequently identify leaky REST endpoints where unauthorized users can query other profiles or hydration logs. We enforced strict RLS policies on all 5 tables (`profiles`, `hydration_entries`, `user_streaks`, `user_achievements`, `activity_sessions`) using `auth.uid() = user_id`, guaranteeing full mathematical isolation between tenant data.
+  2. **Automated User Lifecycle Triggers**: Built `handle_new_user()` trigger on `auth.users` that automatically provisions default profile data (Ruby the Red Panda companion, 2500ml base goal, Bamboo Misty Springs biome) and an initial streak record with 2 protective freeze tokens, preventing client race conditions on first sign-up.
+  3. **Local Offline-First Queue with Conflict Resolution**: Created `SupabaseSyncService` and `SyncQueueItem` storing mutations in local persistent queues when offline. When connectivity is re-established, mutations are flushed in batch with client timestamp reconciliation, while `SyncStatusIndicator` provides transparent visual status (`Cloud Synced`, `Syncing...`, `X Pending`).
+  4. **Deno Edge Function Proxy**: Implemented `ai-hydration-coach` Edge Function so that third-party AI keys (OpenAI/Groq) are safely held server-side in Supabase Vault/Secrets rather than being exposed in compiled client binaries.
+- **Sign-Off**: `solution-architect`, `backend-agent`, `security-agent`, `mobile-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
 ## Entry 007 — 2026-11-22 (Subphase 3.2.1)
 - **Context**: Gamification habit engine, streak freeze protection, animal evolution unlock hub, living world biomes, and predictive circadian analytics.
 - **Course-Correction & Observations**:

@@ -2,6 +2,18 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [0.7.0-subphase-3.3.1] - 2026-11-22
+### Added
+- **Production Supabase PostgreSQL Schema**: Created `20261122000000_create_aquawild_schema.sql` defining `profiles`, `hydration_entries`, `user_streaks`, `user_achievements`, and `activity_sessions` with indexing and constraints.
+- **Strict Row-Level Security (RLS) Policies**: Enabled RLS and enforced `auth.uid() = user_id` for SELECT, INSERT, UPDATE, and DELETE operations across all 5 tables.
+- **Automated Database Triggers**: Implemented `handle_updated_at()` and `handle_new_user()` on `auth.users` automatically provisioning starter companions and streak freezes.
+- **TypeScript Deno Edge Functions**: Developed `ai-hydration-coach` (secure serverless OpenAI proxy with fallback) and `sync-health-telemetry` (batch wearable sync).
+- **Client Offline-First Sync Queue**: Implemented `SyncQueueItem` and `SupabaseSyncService` managing persistent offline mutations, batch flushing, and conflict resolution.
+- **Real-Time Cloud Sync UI**: Created `SyncStatusIndicator` displaying cloud status (`Cloud Synced`, `Syncing...`, `X Pending`) on `HomeScreen`.
+- **Automated Sync Engine Test Suite**: Added `test/data/supabase_sync_service_test.dart` and `test/presentation/sync_status_ui_test.dart` (62 total tests passing, 0 analyzer issues).
+
+---
+
 ## [0.6.0-subphase-3.2.1] - 2026-11-22
 ### Added
 - **Habit Consistency & Streak Freeze Engine**: Implemented `HydrationStreak` and `GamificationService` supporting continuous daily streak calculation, longest streak records, and streak freeze shields to protect user momentum.
