@@ -78,6 +78,13 @@ class BeverageType {
     }
   }
 
+  /// Alias for bioavailability index
+  double get hydrationCoefficient => hydrationIndex;
+
+  static const BeverageType electrolyte = electrolyteDrink;
+  static const BeverageType citrusJuice = orangeJuice;
+  static const BeverageType smoothie = greenSmoothie;
+
   // --- Comprehensive 16-Beverage Global Catalog ---
 
   static const BeverageType pureWater = BeverageType(

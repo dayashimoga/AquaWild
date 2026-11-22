@@ -1,4 +1,5 @@
 import 'package:uuid/uuid.dart';
+import 'beverage_type.dart';
 
 /// Urgency tier for AI hydration recommendations.
 enum RecommendationUrgency {
@@ -47,6 +48,16 @@ class AiRecommendation {
     this.isFromOfflineHeuristic = false,
   })  : id = id ?? const Uuid().v4(),
         generatedAt = generatedAt ?? DateTime.now();
+
+  /// Alias for message
+  String get companionMessage => message;
+
+  /// Alias for recommended intake as double
+  double get suggestedVolumeMl => recommendedIntakeMl.toDouble();
+
+  /// Resolves suggested BeverageType from ID
+  BeverageType get suggestedBeverage =>
+      BeverageType.findById(suggestedBeverageId);
 
   AiRecommendation copyWith({
     String? id,

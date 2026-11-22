@@ -158,8 +158,10 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                 const SizedBox(height: 12),
 
                 // Interactive Custom Pour & Precision Keypad Action Row
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 12,
+                  runSpacing: 8,
                   children: [
                     OutlinedButton.icon(
                       onPressed: () => _openPourSheet(

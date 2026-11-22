@@ -136,3 +136,6 @@ final aiCoachNotifierProvider =
     NotifierProvider<AiCoachNotifier, AiCoachState>(() {
   return AiCoachNotifier();
 });
+
+/// Alias provider for AI Coach
+final aiCoachProvider = aiCoachNotifierProvider;

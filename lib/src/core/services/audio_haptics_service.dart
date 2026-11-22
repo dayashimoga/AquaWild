@@ -22,6 +22,9 @@ class AudioHapticsService {
     } catch (_) {}
   }
 
+  /// Alias for volume changes
+  Future<void> onVolumeChanged() => onSliderTick();
+
   /// Tactile feedback when a drink entry is successfully logged and liquid splashes into vessel
   Future<void> onDrinkLogged() async {
     try {
