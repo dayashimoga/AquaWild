@@ -2,6 +2,21 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.18.0] - 2026-11-22 — Stage 5: Subphase 5.1.1 — Monetization Domain & State Engine
+### Added
+- **Monetization Domain & Repository (`MonetizationRepository`)**:
+  * Added `MonetizationRepository` interface and `LocalMonetizationRepository` implementation with in-memory caching and offline-first `SharedPreferences` persistence.
+- **Reactive Monetization State Engine (`MonetizationController`)**:
+  * Implemented `MonetizationController` (`monetizationProvider`) supporting AquaWild Pro subscriptions (Monthly, Annual, Lifetime), one-time IAP unlock packs (Deep Sea Legends, Alpine Glacier, Neon Bioluminescence), and Summer Splash Seasonal Pass.
+  * Added compound entitlement resolution (`isAnimalUnlocked`, `isThemeUnlocked`, `isSeasonalPassActive`) combining Pro overrides, purchased IAPs, and XP thresholds.
+- **Reactive Companion Integration**:
+  * Wired `AnimalHabitatNotifier` and `BiomeCompanionSelectorSheet` to `monetizationProvider`: IAP purchases or Pro subscriptions instantly unlock companions without requiring an app reload.
+- **Automated Test Coverage**:
+  * Added `test/domain/monetization_test.dart` verifying subscriptions, purchases, admin overrides, and reactive controller sync.
+  * 143 / 143 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.17.0] - 2026-11-22 — Stage 4: Subphase 4.2.2 — High-Detail Companion Avatar Renderer, Evolution Auras & Stage 4 Sign-Off
 ### Added
 - **High-Detail Companion Avatar Renderer (`CompanionAvatarRenderer`)**:

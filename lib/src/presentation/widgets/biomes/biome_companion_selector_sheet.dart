@@ -3,6 +3,7 @@ import 'package:aquawild/src/domain/models/exotic_animal.dart';
 import 'package:aquawild/src/domain/models/hydration_biome.dart';
 import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
 import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
+import 'package:aquawild/src/presentation/controllers/monetization_controller.dart';
 import 'package:aquawild/src/presentation/widgets/biomes/companion_avatar_renderer.dart';
 import 'package:aquawild/src/presentation/widgets/biomes/companion_evolution_modal.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +26,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final habitat = ref.watch(animalHabitatProvider);
     final biome = ref.watch(biomeProvider);
+    final monetization = ref.watch(monetizationProvider);
     final activeAnimal = habitat.activeAnimal;
     final activeBiome = biome.activeBiome;
 
@@ -80,7 +82,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
               child: TabBarView(
                 children: [
                   // Tab 1: Animal Companions & Evolution Stages
-                  _buildCompanionsTab(context, ref, habitat, activeAnimal),
+                  _buildCompanionsTab(context, ref, habitat, activeAnimal, monetization),
 
                   // Tab 2: Living Biomes Gallery
                   _buildBiomesTab(context, ref, biome, activeBiome),
@@ -98,6 +100,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
     WidgetRef ref,
     AnimalHabitatState habitat,
     ExoticAnimal activeAnimal,
+    MonetizationState monetization,
   ) {
     return ListView(
       physics: const BouncingScrollPhysics(),
@@ -195,7 +198,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
         // 10 Animal Companions Grid/List
         ...ExoticAnimal.allAnimals.map((animal) {
           final isSelected = animal.id == activeAnimal.id;
-          final isUnlocked = habitat.userXp >= animal.unlockXp;
+          final isUnlocked = monetization.isAnimalUnlocked(animal.id, habitat.userXp);
 
           return Container(
             margin: const EdgeInsets.only(bottom: 10),

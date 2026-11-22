@@ -3,6 +3,7 @@ import '../../data/repositories/hydration_repository.dart';
 import '../../domain/models/animal_evolution_stage.dart';
 import '../../domain/models/exotic_animal.dart';
 import 'hydration_controller.dart';
+import 'monetization_controller.dart';
 
 class AnimalHabitatState {
   final ExoticAnimal activeAnimal;
@@ -46,6 +47,13 @@ class AnimalHabitatNotifier extends Notifier<AnimalHabitatState> {
 
   @override
   AnimalHabitatState build() {
+    ref.listen(monetizationProvider, (previous, next) {
+      if (previous?.isPro != next.isPro ||
+          previous?.unlockedAnimalIds != next.unlockedAnimalIds) {
+        _updateState(state.activeAnimal, state.userXp);
+      }
+    });
+
     final initialState = AnimalHabitatState(
       activeAnimal: ExoticAnimal.allAnimals.first,
       userXp: 0,
@@ -85,8 +93,10 @@ class AnimalHabitatNotifier extends Notifier<AnimalHabitatState> {
 
   void _updateState(ExoticAnimal animal, int xp) {
     if (!ref.mounted) return;
-    final unlocked =
-        ExoticAnimal.allAnimals.where((a) => a.unlockXp <= xp).toList();
+    final monetization = ref.read(monetizationProvider);
+    final unlocked = ExoticAnimal.allAnimals
+        .where((a) => monetization.isAnimalUnlocked(a.id, xp))
+        .toList();
 
     final stages = animal.evolutionStages;
     AnimalEvolutionStage current = stages.first;

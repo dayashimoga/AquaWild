@@ -406,5 +406,30 @@
      * Full test suite: 130 / 130 passing tests, 0 analyzer issues.
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 025 — 2026-11-22 (Stage 5: Subphase 5.1.1 — Monetization Domain & State Engine Architecture)
+- **Context**: Implementing the complete monetization, subscription (AquaWild Pro), one-time in-app purchase (IAP) unlock packs, and seasonal pass framework across the domain, repository, and presentation layers.
+- **Architectural Decisions & Deliverables**:
+  1. **Monetization Domain Contracts & Repository Pattern**:
+     * Defined [monetization_repository.dart](file:///h:/water/lib/src/data/repositories/monetization_repository.dart) and implemented [local_monetization_repository.dart](file:///h:/water/lib/src/data/repositories/local_monetization_repository.dart).
+     * Backed by `SharedPreferences` with in-memory synchronous caching for zero-latency lookups and offline-first availability.
+  2. **Reactive Monetization State Engine (`MonetizationController`)**:
+     * Built [monetization_controller.dart](file:///h:/water/lib/src/presentation/controllers/monetization_controller.dart) (`monetizationProvider`).
+     * Supports subscription tiers: `free`, `proMonthly`, `proAnnual`, and `proLifetime`.
+     * Evaluates compound entitlement rules:
+       - `isAnimalUnlocked(animalId, userXp)`: returns true if active Pro, OR if unlocked via purchased animal pack (`pack_deep_sea`, `pack_alpine_glacier`), OR if earned via XP threshold.
+       - `isThemeUnlocked(themeId)`: returns true if active Pro or unlocked via theme/animation pack (`pack_neon_bioluminescence`).
+       - `isSeasonalPassActive()`: returns true if active Pro or unlocked via seasonal pass (`pass_summer_splash`).
+     * State operations: `subscribe()`, `cancelSubscription()`, `purchaseProduct()`, `grantEntitlement()`, `revokeEntitlement()`, `restorePurchases()`, and `resetToFree()`.
+  3. **Reactive Habitat Controller Integration**:
+     * Wired `AnimalHabitatNotifier` to listen to `monetizationProvider`: purchasing an IAP pack or activating Pro immediately unlocks the corresponding companions without requiring an app reload.
+     * Wired `BiomeCompanionSelectorSheet` to evaluate `isAnimalUnlocked` via `monetizationProvider`.
+  4. **Automated Test Coverage**:
+     * Authored comprehensive test suite in [monetization_test.dart](file:///h:/water/test/domain/monetization_test.dart) verifying domain models, local repository caching, purchase workflows, Pro overrides, admin overrides, and reactive controller synchronization.
+     * Full project test suite: 143 / 143 passing tests, 0 analyzer issues.
+- **Sign-Off**: `solution-architect`, `backend-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
 
 
