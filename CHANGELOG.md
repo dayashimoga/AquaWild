@@ -2,6 +2,24 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.27.0] - 2026-11-22 — Stage 7: Subphase 7.1.2 — Immutable Security Audit Trail Logger, Monetization Analytics Telemetry & Notification Broadcast Engine
+### Added
+- **Cryptographic Immutable Audit Trail Engine (`AdminAuditLogService`)**:
+  * Implemented `AdminAuditEntry` and `AdminActionType` in `lib/src/domain/models/admin_audit_models.dart`.
+  * Implemented `AdminAuditLogService` in `lib/src/core/services/admin_audit_log_service.dart` with SHA-256 hash chaining and full-chain verification.
+  * Automatic tamper detection down to specific compromised block indices and filtering by action, operator, and entity.
+- **Monetization Analytics Telemetry Service (`AdminMonetizationTelemetryService`)**:
+  * Implemented `MonetizationKpiSummary` and `SkuSalesPerformance` in `lib/src/domain/models/admin_analytics_models.dart`.
+  * Real-time calculation of MRR, ARR, ARPU, active subscriber tiers, and SKU conversion rates in `lib/src/core/services/admin_monetization_analytics_service.dart`.
+- **Notification Broadcast Campaign Engine (`AdminNotificationBroadcastService`)**:
+  * Implemented `AdminBroadcastMessage`, `BroadcastCategory`, and `BroadcastTargetAudience` in `lib/src/domain/models/admin_broadcast_models.dart`.
+  * Multi-channel broadcast dispatcher in `lib/src/core/services/admin_broadcast_service.dart` supporting immediate dispatch, scheduling, and cancellation with segmented recipient targeting.
+- **Automated Audit, Analytics & Broadcast Test Suites**:
+  * Added `admin_audit_analytics_broadcast_test.dart` and `admin_audit_analytics_broadcast_services_test.dart` (18 new tests).
+  * Certified full project test suite: **239 / 239 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.26.0] - 2026-11-22 — Stage 7: Subphase 7.1.1 — Admin Domain & Controller (`AdminPortalController`)
 ### Added
 - **Admin Command Domain Models (`admin_portal_models.dart`)**:
@@ -20,6 +38,39 @@ All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered H
 - **Admin Test Suites (`admin_portal_models_test.dart` & `admin_portal_controller_test.dart`)**:
   * Added 16 tests covering RBAC permissions, serialization, God-Mode activation, user filtering, catalog CRUD, flags, and environment switching.
   * Certified full project test suite: **229 / 229 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
+## [1.26.0] - 2026-11-22 — Stage 7: Subphase 7.1.1 — Admin Domain & Controller (`AdminPortalController`)
+### Added
+- **Admin Command Domain Models (`admin_portal_models.dart`)**:
+  * Implemented `UserRole` with RBAC permissions (`standard`, `pro`, `moderator`, `admin`, `superAdmin`) and `UserAccountStatus` in `lib/src/domain/models/admin_portal_models.dart`.
+  * Implemented `AdminUserProfile` tracking XP, streak, freeze tokens, and timestamps with seed mock directory.
+  * Implemented `AdminGodModeConfig` with `standard` and `fullUnlocked` presets.
+  * Implemented `AdminBeverageItem` and `AdminAnimalItem` populated from real AquaWild default catalogs.
+  * Implemented `AdminFeatureFlag` with runtime categories (`core`, `experimental`, `monetization`, `ui`, `ai`).
+  * Implemented `AppEnvironment` and `AdminEnvironmentConfig` for `development`, `staging`, and `production`.
+- **Admin Portal Controller (`AdminPortalNotifier`)**:
+  * Created `AdminPortalNotifier` in `lib/src/presentation/controllers/admin_portal_controller.dart`.
+  * Built God-Mode master toggle: activates Pro Lifetime, all pack entitlements, and 25,000 XP in one tap.
+  * Built User Directory search, XP adjustment, streak freeze grants, status updates, and role elevation.
+  * Built Beverage and Animal catalog CRUD operations with availability toggling.
+  * Built Dynamic Feature Flag manager and Multi-Environment switcher.
+- **Admin Test Suites (`admin_portal_models_test.dart` & `admin_portal_controller_test.dart`)**:
+  * Added 16 tests covering RBAC permissions, serialization, God-Mode activation, user filtering, catalog CRUD, flags, and environment switching.
+  * Certified full project test suite: **229 / 229 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
+## [1.25.0] - 2026-11-22 — Stage 6: Subphase 6.2.2 — Fix Reactive AI Hydration Coach Auto-Sync on Drink Log/Delete + Notification & Widget Test Suite
+### Added
+- **AI Hydration Coach Auto-Sync Test Suite (`ai_coach_auto_sync_test.dart`)**:
+  * Added 5 tests covering drink log auto-sync (+1000ml pure water updates advice to 40%), drink deletion auto-sync, 100% target conquest headline transition, companion persona switching, and end-to-end multi-provider synchronization.
+  * Certified full project test suite: **213 / 213 passing tests**, **0 analyzer issues**, **zero warnings**.
+### Fixed
+- **Reactive AI Hydration Coach State Synchronization (`HIGH-08`)**:
+  * Updated `AiCoachNotifier` in `lib/src/presentation/controllers/ai_coach_controller.dart` to reactively listen to `hydrationProvider`, `animalHabitatProvider`, and `weatherActivityNotifierProvider`.
+  * Completely eliminated stale AI advice: drink logging, drink removal, target goal adjustment, companion switches, or workout/weather updates immediately recalibrate intelligent clinical hydration advice without requiring a manual refresh.
 
 ---
 

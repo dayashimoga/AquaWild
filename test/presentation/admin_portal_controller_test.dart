@@ -1,4 +1,6 @@
 import 'package:aquawild/src/data/repositories/local_hydration_repository.dart';
+import 'package:aquawild/src/domain/models/admin_audit_models.dart';
+import 'package:aquawild/src/domain/models/admin_broadcast_models.dart';
 import 'package:aquawild/src/domain/models/admin_portal_models.dart';
 import 'package:aquawild/src/presentation/controllers/admin_portal_controller.dart';
 import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
@@ -30,7 +32,7 @@ void main() {
       container.dispose();
     });
 
-    test('Initializes with standard defaults and seed data', () {
+    test('Initializes with standard defaults, seed data, and analytics KPIs', () {
       final state = container.read(adminPortalControllerProvider);
 
       expect(state.godMode.isGodModeEnabled, isFalse);
@@ -39,6 +41,8 @@ void main() {
       expect(state.animals.isNotEmpty, isTrue);
       expect(state.featureFlags.isNotEmpty, isTrue);
       expect(state.environmentConfig.environment, equals(AppEnvironment.development));
+      expect(state.kpiSummary.monthlyRecurringRevenueUsd, greaterThan(0.0));
+      expect(state.isAuditChainValid, isTrue);
       expect(state.isLoading, isFalse);
     });
 
@@ -56,6 +60,8 @@ void main() {
       final adminState = container.read(adminPortalControllerProvider);
       expect(adminState.godMode.isGodModeEnabled, isTrue);
       expect(adminState.statusMessage, contains('God Mode Activated'));
+      expect(adminState.auditEntries.isNotEmpty, isTrue);
+      expect(adminState.auditEntries.first.actionType, equals(AdminActionType.godModeToggled));
 
       // Check monetization is now Pro Lifetime
       monetization = container.read(monetizationProvider);
@@ -108,12 +114,12 @@ void main() {
       expect(state.selectedUser, isNull);
     });
 
-    test('User modifications: update XP, grant freeze tokens, status and role', () {
+    test('User modifications: update XP, grant freeze tokens, status and role', () async {
       final notifier = container.read(adminPortalControllerProvider.notifier);
       const targetId = 'usr_sam_03';
 
       // Update XP
-      notifier.updateUserXp(targetId, 8500);
+      await notifier.updateUserXp(targetId, 8500);
       var user = container
           .read(adminPortalControllerProvider)
           .users
@@ -122,7 +128,7 @@ void main() {
 
       // Grant freeze tokens
       final initialTokens = user.freezeTokens;
-      notifier.grantUserFreezeTokens(targetId, 3);
+      await notifier.grantUserFreezeTokens(targetId, 3);
       user = container
           .read(adminPortalControllerProvider)
           .users
@@ -130,7 +136,7 @@ void main() {
       expect(user.freezeTokens, equals(initialTokens + 3));
 
       // Update account status
-      notifier.updateUserStatus(targetId, UserAccountStatus.suspended);
+      await notifier.updateUserStatus(targetId, UserAccountStatus.suspended);
       user = container
           .read(adminPortalControllerProvider)
           .users
@@ -138,7 +144,7 @@ void main() {
       expect(user.status, equals(UserAccountStatus.suspended));
 
       // Update role
-      notifier.updateUserRole(targetId, UserRole.admin);
+      await notifier.updateUserRole(targetId, UserRole.admin);
       user = container
           .read(adminPortalControllerProvider)
           .users
@@ -146,7 +152,7 @@ void main() {
       expect(user.role, equals(UserRole.admin));
     });
 
-    test('Beverage catalog CRUD operations', () {
+    test('Beverage catalog CRUD operations', () async {
       final notifier = container.read(adminPortalControllerProvider.notifier);
 
       // 1. Create custom beverage
@@ -164,18 +170,18 @@ void main() {
         isCustom: true,
       );
 
-      notifier.createBeverage(customBev);
+      await notifier.createBeverage(customBev);
       var state = container.read(adminPortalControllerProvider);
       expect(state.beverages.any((b) => b.id == 'golden_turmeric_latte'), isTrue);
 
       // Attempt duplicate ID
-      notifier.createBeverage(customBev);
+      await notifier.createBeverage(customBev);
       state = container.read(adminPortalControllerProvider);
       expect(state.errorMessage, contains('already exists'));
 
       // 2. Update beverage properties
       final updatedBev = customBev.copyWith(hydrationIndex: 0.98);
-      notifier.updateBeverage(updatedBev);
+      await notifier.updateBeverage(updatedBev);
       final fetched = container
           .read(adminPortalControllerProvider)
           .beverages
@@ -183,12 +189,12 @@ void main() {
       expect(fetched.hydrationIndex, equals(0.98));
 
       // 3. Delete custom beverage
-      notifier.deleteBeverage('golden_turmeric_latte');
+      await notifier.deleteBeverage('golden_turmeric_latte');
       state = container.read(adminPortalControllerProvider);
       expect(state.beverages.any((b) => b.id == 'golden_turmeric_latte'), isFalse);
 
       // 4. Toggle built-in beverage availability
-      notifier.toggleBeverageEnabled('espresso');
+      await notifier.toggleBeverageEnabled('espresso');
       final espresso = container
           .read(adminPortalControllerProvider)
           .beverages
@@ -196,7 +202,7 @@ void main() {
       expect(espresso.isEnabled, isFalse);
     });
 
-    test('Animal companion metadata update and toggling', () {
+    test('Animal companion metadata update and toggling', () async {
       final notifier = container.read(adminPortalControllerProvider.notifier);
 
       final capybara = container
@@ -205,14 +211,14 @@ void main() {
           .firstWhere((a) => a.id == 'capybara');
       final updatedCapybara = capybara.copyWith(unlockXp: 500);
 
-      notifier.updateAnimal(updatedCapybara);
+      await notifier.updateAnimal(updatedCapybara);
       var fetched = container
           .read(adminPortalControllerProvider)
           .animals
           .firstWhere((a) => a.id == 'capybara');
       expect(fetched.unlockXp, equals(500));
 
-      notifier.toggleAnimalEnabled('capybara');
+      await notifier.toggleAnimalEnabled('capybara');
       fetched = container
           .read(adminPortalControllerProvider)
           .animals
@@ -220,7 +226,7 @@ void main() {
       expect(fetched.isEnabled, isFalse);
     });
 
-    test('Feature flag toggling and evaluation', () {
+    test('Feature flag toggling and evaluation', () async {
       final notifier = container.read(adminPortalControllerProvider.notifier);
       const flagKey = 'enable_ar_companion_preview';
 
@@ -229,29 +235,29 @@ void main() {
         isFalse,
       );
 
-      notifier.toggleFeatureFlag(flagKey, true);
+      await notifier.toggleFeatureFlag(flagKey, true);
       expect(
         container.read(adminPortalControllerProvider).isFeatureEnabled(flagKey),
         isTrue,
       );
 
-      notifier.toggleFeatureFlag(flagKey, false);
+      await notifier.toggleFeatureFlag(flagKey, false);
       expect(
         container.read(adminPortalControllerProvider).isFeatureEnabled(flagKey),
         isFalse,
       );
     });
 
-    test('Environment switching and parameter updates', () {
+    test('Environment switching and parameter updates', () async {
       final notifier = container.read(adminPortalControllerProvider.notifier);
 
-      notifier.switchEnvironment(AppEnvironment.staging);
+      await notifier.switchEnvironment(AppEnvironment.staging);
       var env = container.read(adminPortalControllerProvider).environmentConfig;
       expect(env.environment, equals(AppEnvironment.staging));
       expect(env.supabaseUrl, equals('https://staging-db.aquawild.app'));
       expect(env.isMockMode, isFalse);
 
-      notifier.switchEnvironment(AppEnvironment.production);
+      await notifier.switchEnvironment(AppEnvironment.production);
       env = container.read(adminPortalControllerProvider).environmentConfig;
       expect(env.environment, equals(AppEnvironment.production));
       expect(env.supabaseUrl, equals('https://api.aquawild.app'));
@@ -265,10 +271,56 @@ void main() {
       );
 
       // Reset to defaults
-      notifier.resetToDefaults();
+      await notifier.resetToDefaults();
       final resetState = container.read(adminPortalControllerProvider);
       expect(resetState.environmentConfig.environment, equals(AppEnvironment.development));
       expect(resetState.godMode.isGodModeEnabled, isFalse);
+    });
+
+    test('Cryptographic audit trail integrity verification and tampering check', () async {
+      final notifier = container.read(adminPortalControllerProvider.notifier);
+
+      // Perform a series of actions
+      await notifier.updateUserXp('usr_alex_02', 7777);
+      await notifier.toggleFeatureFlag('enable_ambient_caustic_audio', false);
+
+      final result = notifier.verifyAuditTrailIntegrity();
+      expect(result.isValid, isTrue);
+      expect(result.totalEntriesChecked, greaterThanOrEqualTo(2));
+      expect(container.read(adminPortalControllerProvider).isAuditChainValid, isTrue);
+    });
+
+    test('Push notification broadcast dispatcher, scheduler, and cancellation', () async {
+      final notifier = container.read(adminPortalControllerProvider.notifier);
+
+      // 1. Dispatch immediate broadcast
+      final msg = await notifier.dispatchBroadcast(
+        title: 'Midday Rehydration Call',
+        body: 'Sip 250ml water now to stay on pace!',
+        category: BroadcastCategory.announcement,
+        audience: BroadcastTargetAudience.allUsers,
+      );
+
+      expect(msg.isSent, isTrue);
+      expect(msg.totalRecipients, greaterThan(0));
+
+      final state = container.read(adminPortalControllerProvider);
+      expect(state.broadcasts.any((b) => b.id == msg.id), isTrue);
+
+      // 2. Schedule broadcast
+      final sched = await notifier.scheduleBroadcast(
+        title: 'Evening Relax Notice',
+        body: 'Unwind with herbal tea in the sanctuary.',
+        category: BroadcastCategory.community,
+        audience: BroadcastTargetAudience.proUsersOnly,
+        scheduledAt: DateTime.now().add(const Duration(hours: 4)),
+      );
+
+      expect(sched.isSent, isFalse);
+
+      // 3. Cancel scheduled broadcast
+      final cancelled = await notifier.cancelScheduledBroadcast(sched.id);
+      expect(cancelled, isTrue);
     });
   });
 }
