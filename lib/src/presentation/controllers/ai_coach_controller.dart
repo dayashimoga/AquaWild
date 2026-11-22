@@ -49,6 +49,33 @@ class AiCoachNotifier extends Notifier<AiCoachState> {
   @override
   AiCoachState build() {
     _service = AiCoachService();
+
+    // Listen reactively to hydration state mutations (drink logged, removed, or goal changed)
+    ref.listen<HydrationState>(hydrationProvider, (previous, next) {
+      if (previous == null ||
+          previous.goal.netHydrationMl != next.goal.netHydrationMl ||
+          previous.entries.length != next.entries.length ||
+          previous.goal.baseGoalMl != next.goal.baseGoalMl) {
+        refreshAdvice();
+      }
+    });
+
+    // Listen reactively to active companion switches
+    ref.listen<AnimalHabitatState>(animalHabitatProvider, (previous, next) {
+      if (previous?.activeAnimal.id != next.activeAnimal.id) {
+        refreshAdvice();
+      }
+    });
+
+    // Listen reactively to weather & workout activity target adjustments
+    ref.listen<WeatherActivityState>(weatherActivityNotifierProvider,
+        (previous, next) {
+      if (previous?.dynamicTargetMl != next.dynamicTargetMl ||
+          previous?.activities.length != next.activities.length) {
+        refreshAdvice();
+      }
+    });
+
     // Auto-fetch initial advice on startup
     Future.microtask(() => refreshAdvice());
     return const AiCoachState();

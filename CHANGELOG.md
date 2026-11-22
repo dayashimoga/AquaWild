@@ -2,6 +2,18 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.25.0] - 2026-11-22 — Stage 6: Subphase 6.2.2 — Fix Reactive AI Hydration Coach Auto-Sync on Drink Log/Delete + Notification & Widget Test Suite
+### Added
+- **AI Hydration Coach Auto-Sync Test Suite (`ai_coach_auto_sync_test.dart`)**:
+  * Added 5 tests covering drink log auto-sync (+1000ml pure water updates advice to 40%), drink deletion auto-sync, 100% target conquest headline transition, companion persona switching, and end-to-end multi-provider synchronization.
+  * Certified full project test suite: **213 / 213 passing tests**, **0 analyzer issues**, **zero warnings**.
+### Fixed
+- **Reactive AI Hydration Coach State Synchronization (`HIGH-08`)**:
+  * Updated `AiCoachNotifier` in `lib/src/presentation/controllers/ai_coach_controller.dart` to reactively listen to `hydrationProvider`, `animalHabitatProvider`, and `weatherActivityNotifierProvider`.
+  * Completely eliminated stale AI advice: drink logging, drink removal, target goal adjustment, companion switches, or workout/weather updates immediately recalibrate intelligent clinical hydration advice without requiring a manual refresh.
+
+---
+
 ## [1.24.0] - 2026-11-22 — Stage 6: Subphase 6.2.1 — Interactive Home Screen & Lock Screen Widget Preview Studio
 ### Added
 - **Widget Preview Studio Modal (`WidgetPreviewStudioModal`)**:
