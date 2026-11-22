@@ -162,6 +162,7 @@ class ReceiptVerificationService {
       'desktop_sandbox',
       'iap',
       'admin_override',
+      'admin_god_mode',
     ];
     if (!supportedStores.contains(receipt.store)) {
       return ReceiptValidationResult.failed(

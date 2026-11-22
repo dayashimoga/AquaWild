@@ -639,6 +639,36 @@
      * Static analysis: `flutter analyze --fatal-infos --fatal-warnings` passing with **0 issues found**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 033 — 2026-11-22 (Stage 7: Subphase 7.1.1 — Admin Domain & Controller (`AdminPortalController`))
+- **Context**: Fulfilling ADR-009 by engineering the comprehensive administrative domain architecture, master God-Mode override engine, user directory management, content catalog CRUD, dynamic feature flags, and multi-environment switcher.
+- **Architectural Decisions & Deliverables**:
+  1. **Admin Domain Model Contracts (`admin_portal_models.dart`)**:
+     * Built [admin_portal_models.dart](file:///h:/water/lib/src/domain/models/admin_portal_models.dart) specifying immutable domain models:
+       - `UserRole`: RBAC permission tiers (`standard`, `pro`, `moderator`, `admin`, `superAdmin`) with fine-grained capability checks (`canAccessAdmin`, `canManageUsers`, `canManageContent`, `canSwitchEnvironment`).
+       - `UserAccountStatus`: Account lifecycle states (`active`, `suspended`, `pendingVerification`).
+       - `AdminUserProfile`: Rich profile entity tracking XP, streak count, freeze tokens, active companion, Pro entitlement, and timestamps with seed mock directory.
+       - `AdminGodModeConfig`: Master developer/operator configuration with `standard` and `fullUnlocked` presets.
+       - `AdminBeverageItem`: Physical and biological properties (hydration factor, caffeine, sugar, density, viscosity) seeded from `BeverageType.defaultBeverages`.
+       - `AdminAnimalItem`: Companion tier, species, unlock XP, biome binding, and premium flags seeded from `ExoticAnimal.allAnimals`.
+       - `AdminFeatureFlag`: Dynamic runtime toggles grouped by `FeatureFlagCategory` (`core`, `experimental`, `monetization`, `ui`, `ai`).
+       - `AdminEnvironmentConfig`: Backend environment targeting (`development`, `staging`, `production`) with Supabase URL, anon key, timeout, and mock mode configurations.
+  2. **Admin Command Center Controller (`AdminPortalNotifier`)**:
+     * Built [admin_portal_controller.dart](file:///h:/water/lib/src/presentation/controllers/admin_portal_controller.dart).
+     * **God-Mode Master Switch**: One-tap toggle orchestrates `monetizationProvider.subscribe(SubscriptionTier.proLifetime, store: 'admin_override')`, grants all product entitlements from `ProductSKU.catalog`, and awards 25,000 XP via `animalHabitatProvider` to instantly unlock all 10 companions and evolution stages.
+     * **User Directory Management**: Live substring search across name, email, and ID; XP adjustment, streak freeze token grants, account status toggling, and RBAC role elevation.
+     * **Content Catalog CRUD**: Custom beverage creation, parameter tuning, beverage availability toggling, companion metadata updates, and companion activation/deactivation.
+     * **Dynamic Feature Flags**: Runtime evaluation and toggling of features without recompilation.
+     * **Environment Switcher**: One-tap presets switching between local mock sandbox, staging database, and production CDN endpoints.
+  3. **Receipt Verification Service Hardening**:
+     * Updated [receipt_verification_service.dart](file:///h:/water/lib/src/core/security/receipt_verification_service.dart) to recognize `'admin_god_mode'` alongside `'admin_override'` in supported store providers.
+  4. **Comprehensive Automated Test Coverage**:
+     * Authored [admin_portal_models_test.dart](file:///h:/water/test/domain/admin_portal_models_test.dart) (8 tests) and [admin_portal_controller_test.dart](file:///h:/water/test/presentation/admin_portal_controller_test.dart) (8 tests).
+     * Certified full project test suite: **229 / 229 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `security-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+
 
 
 

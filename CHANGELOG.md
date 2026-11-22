@@ -2,6 +2,27 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.26.0] - 2026-11-22 — Stage 7: Subphase 7.1.1 — Admin Domain & Controller (`AdminPortalController`)
+### Added
+- **Admin Command Domain Models (`admin_portal_models.dart`)**:
+  * Implemented `UserRole` with RBAC permissions (`standard`, `pro`, `moderator`, `admin`, `superAdmin`) and `UserAccountStatus` in `lib/src/domain/models/admin_portal_models.dart`.
+  * Implemented `AdminUserProfile` tracking XP, streak, freeze tokens, and timestamps with seed mock directory.
+  * Implemented `AdminGodModeConfig` with `standard` and `fullUnlocked` presets.
+  * Implemented `AdminBeverageItem` and `AdminAnimalItem` populated from real AquaWild default catalogs.
+  * Implemented `AdminFeatureFlag` with runtime categories (`core`, `experimental`, `monetization`, `ui`, `ai`).
+  * Implemented `AppEnvironment` and `AdminEnvironmentConfig` for `development`, `staging`, and `production`.
+- **Admin Portal Controller (`AdminPortalNotifier`)**:
+  * Created `AdminPortalNotifier` in `lib/src/presentation/controllers/admin_portal_controller.dart`.
+  * Built God-Mode master toggle: activates Pro Lifetime, all pack entitlements, and 25,000 XP in one tap.
+  * Built User Directory search, XP adjustment, streak freeze grants, status updates, and role elevation.
+  * Built Beverage and Animal catalog CRUD operations with availability toggling.
+  * Built Dynamic Feature Flag manager and Multi-Environment switcher.
+- **Admin Test Suites (`admin_portal_models_test.dart` & `admin_portal_controller_test.dart`)**:
+  * Added 16 tests covering RBAC permissions, serialization, God-Mode activation, user filtering, catalog CRUD, flags, and environment switching.
+  * Certified full project test suite: **229 / 229 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.25.0] - 2026-11-22 — Stage 6: Subphase 6.2.2 — Fix Reactive AI Hydration Coach Auto-Sync on Drink Log/Delete + Notification & Widget Test Suite
 ### Added
 - **AI Hydration Coach Auto-Sync Test Suite (`ai_coach_auto_sync_test.dart`)**:
