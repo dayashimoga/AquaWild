@@ -2,6 +2,20 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.15.0] - 2026-11-22 — Stage 4: Subphase 4.1.2 — Capybara, Axolotl, Sea Otter & Andean Llama Starter Vessels Upgrade
+### Added
+- **Continuous Anatomical Silhouette Vectorization (`AnimalSilhouettePaths`)**:
+  * Replaced jagged/polygonal paths with continuous smooth beziers for Capybara (blunt snout, barrel back), Axolotl (6 branching plume arches), Sea Otter (floating posture, folded paws, paddle tail), and Andean Llama (scalloped wool puffs, banana ears).
+- **Layered Facial, Eye, Fur & Micro-Interaction Engine (`AnimalFluidVesselPainter`)**:
+  * Added natural involuntary blinking, radial gradient iris eyes, dual specular catchlights, muzzle patches, smiles, and species-specific accents.
+  * Added folded paws clutching tummy shell for Sea Otter, glowing pink tongue and feathery gills for Axolotl, flat snout and zen squint for Capybara, and curled eyelashes and Aztec pompom collar for Andean Llama.
+  * Pre-allocated all companion feature paints for 120 FPS jitter-free rendering.
+- **Automated Test Coverage**:
+  * Added companion-specific blinking, clutching, and reaction widget tests.
+  * 121 / 121 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.14.0] - 2026-11-22 — Stage 4: Subphase 4.1.1 — Red Panda Home Vessel Silhouette & Anatomical Facial Overlay Redesign
 ### Added
 - **Anatomical Red Panda Vessel Silhouette (`AnimalSilhouettePaths`)**:

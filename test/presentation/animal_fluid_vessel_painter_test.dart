@@ -202,6 +202,35 @@ void main() {
       );
     });
 
+    testWidgets('Paints Ollie the Sea Otter during blinking and clutching shell',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'sea_otter',
+                fillFraction: 0.55,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 0.05, // triggers isBlinking (< 0.20)
+                accentColor: const Color(0xFF4DB6AC),
+                interactionPulse: 1.0,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('Paints Luna the Andean Llama with festive Aztec collar and tassels',
         (tester) async {
       await tester.pumpWidget(
@@ -217,6 +246,35 @@ void main() {
                 time: 2.1,
                 accentColor: const Color(0xFFFFB74D),
                 interactionPulse: 0.5,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Luna the Andean Llama during eye flutter blinking and wool scallops',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'andean_llama',
+                fillFraction: 0.7,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 0.05, // triggers isBlinking
+                accentColor: const Color(0xFFFFB74D),
+                interactionPulse: 1.0,
               ),
             ),
           ),

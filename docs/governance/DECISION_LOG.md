@@ -334,3 +334,24 @@
   4. **Automated Test Coverage**:
      * Added comprehensive unit & widget tests in `test/domain/exotic_animal_biome_test.dart` and `test/presentation/animal_fluid_vessel_painter_test.dart` (119/119 passing tests, 0 analyzer issues).
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 022 — 2026-11-22 (Stage 4: Subphase 4.1.2 — Capybara, Axolotl, Sea Otter & Andean Llama Starter Vessels Upgrade)
+- **Context**: Upgrading the 4 starter and early companions (Capybara, Axolotl, Sea Otter, Andean Llama) with continuous anatomical vector contours, natural idle breathing/blinking cycles, layered facial details, and interactive reactions matching the Red Panda standard.
+- **Architectural Decisions & Deliverables**:
+  1. **Continuous Anatomical Silhouette Vectorization (`AnimalSilhouettePaths`)**:
+     * **Cappy the Capybara**: Replaced rigid polygon cuts with smooth continuous beziers for the broad blunt snout, rounded high ear, muscular barrel back, curved relaxed belly, and sturdy paws.
+     * **Lottie the Axolotl**: Replaced jagged zig-zags with 6 organic branching feathery gill plume arches, smiling crown dome, and undulating tail fin.
+     * **Ollie the Sea Otter**: Replaced simplistic 4-point egg shape with authentic floating-on-back posture: rounded ears, folded paws on chest, buoyant belly, flipper paws, and flat paddle tail.
+     * **Luna the Andean Llama**: Replaced straight cuts with graceful slender neck, soft scalloped wool puffs along the nape and back, iconic curved banana ears, sweet chin/muzzle, and proud upturned tail.
+  2. **Layered Facial, Eye, Fur & Interactive Feature Engine (`AnimalFluidVesselPainter`)**:
+     * **Capybara**: Folded onsen towel, steam wisps, high-contrast nostril pair with bridge catchlight, whisker dots, peaceful smile, zen eyelid squint/peeking clock, and warm onsen rosy cheek blush (`interactionPulse`).
+     * **Axolotl**: Shimmering translucent frilly external gills (6 branches with wave sway, neon pink/cyan glow halos, feathery fringe hairs), expressive radial gradient eyes with involuntary 200ms blinking, wide happy smile with inner pink tongue dot, and bioluminescent rosy cheeks.
+     * **Sea Otter**: Iridescent scallop pearl shell with glowing aqua pearl on tummy, rounded paws clutching shell, blonde muzzle oval, rounded ears with pink shading, chocolate eyes with catchlights and 200ms blinking, broad button nose, smiling mouth, and 6 white whiskers.
+     * **Andean Llama**: Andean Aztec geometric woven collar with 4 dangling swaying wool pompoms, sweet white muzzle oval with dark nostrils, smiling mouth, expressive brown eye with long curled eyelashes and fluttering blink, pink inner banana ears, and wool curl accents along neck and back.
+  3. **Zero Heap Allocation Architecture**:
+     * Shared dedicated pre-allocated feature paints (`_companionWhiteFurPaint`, `_companionPinkAccentPaint`, `_companionBlushPaint`, `_companionEyeBasePaint`, `_companionEyePupilPaint`, `_companionDarkNosePaint`, `_companionWoolAccentPaint`) guaranteeing 0 heap allocations during `paint()` at 60/120 FPS.
+  4. **Automated Test Coverage**:
+     * Expanded `test/presentation/animal_fluid_vessel_painter_test.dart` with dedicated blinking, interactive reaction, and reduced-motion tests for all 4 companions (121/121 passing tests, 0 analyzer issues).
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.

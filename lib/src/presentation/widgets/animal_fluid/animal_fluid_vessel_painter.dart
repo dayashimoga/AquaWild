@@ -116,6 +116,29 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 
+  // Pre-allocated companion facial & anatomical feature paints
+  final Paint _companionWhiteFurPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xEEFFFFFF);
+  final Paint _companionPinkAccentPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0x66FF8A80);
+  final Paint _companionBlushPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _companionEyeBasePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF1A1A2E);
+  final Paint _companionEyePupilPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF000000);
+  final Paint _companionDarkNosePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF1F1B18);
+  final Paint _companionWoolAccentPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 1.4
+    ..strokeCap = StrokeCap.round
+    ..color = const Color(0x44FFFFFF);
+
   AnimalFluidVesselPainter({
     required this.animalId,
     required this.fillFraction,
@@ -455,8 +478,8 @@ class AnimalFluidVesselPainter extends CustomPainter {
     // 1. Zen Folded Onsen Head Towel
     final double towelW = w * 0.16;
     final double towelH = h * 0.055;
-    final double towelX = w * 0.33;
-    final double towelY = h * 0.17;
+    final double towelX = w * 0.30;
+    final double towelY = h * 0.13;
     final double towelTilt =
         reducedMotion ? 0.0 : math.sin(time * 2.0) * 0.035;
 
@@ -507,19 +530,101 @@ class AnimalFluidVesselPainter extends CustomPainter {
       }
     }
 
-    // 3. Zen Closed Smiling Eye and Snout Nostril
-    final Path eyePath = Path();
-    eyePath.moveTo(w * 0.17, h * 0.32);
-    eyePath.quadraticBezierTo(w * 0.20, h * 0.30, w * 0.23, h * 0.32);
-    canvas.drawPath(eyePath, _faceFeaturePaint);
+    // 3. Small Rounded Ear Shading & Inner Fold
+    final Path earFold = Path()
+      ..moveTo(w * 0.32, h * 0.18)
+      ..quadraticBezierTo(w * 0.35, h * 0.16, w * 0.38, h * 0.19);
+    canvas.drawPath(earFold, _faceFeaturePaint..strokeWidth = 1.4);
 
-    // Nostril
+    // 4. Characteristic Capybara Flat Snout & High-Contrast Nostrils
+    final Offset snoutPos = Offset(w * 0.10, h * 0.31);
     canvas.drawCircle(
-      Offset(w * 0.11, h * 0.33),
-      1.8,
-      _faceFeaturePaint..style = PaintingStyle.fill,
+      Offset(snoutPos.dx, snoutPos.dy - 1.0),
+      2.2,
+      _companionDarkNosePaint,
     );
-    _faceFeaturePaint.style = PaintingStyle.stroke;
+    canvas.drawCircle(
+      Offset(snoutPos.dx + 4.0, snoutPos.dy - 1.0),
+      2.2,
+      _companionDarkNosePaint,
+    );
+    canvas.drawCircle(
+      Offset(snoutPos.dx - 0.5, snoutPos.dy - 2.0),
+      0.8,
+      _companionWhiteFurPaint,
+    );
+
+    // Muzzle whisker dots
+    final List<Offset> whiskerDots = [
+      Offset(snoutPos.dx + 8.0, snoutPos.dy),
+      Offset(snoutPos.dx + 12.0, snoutPos.dy - 3.0),
+      Offset(snoutPos.dx + 12.0, snoutPos.dy + 3.0),
+    ];
+    for (final dot in whiskerDots) {
+      canvas.drawCircle(dot, 1.0, _companionDarkNosePaint);
+    }
+
+    // Peaceful contented smile
+    final Path smile = Path()
+      ..moveTo(snoutPos.dx + 2.0, snoutPos.dy + 5.0)
+      ..quadraticBezierTo(
+        snoutPos.dx + 12.0,
+        snoutPos.dy + 9.0,
+        snoutPos.dx + 22.0,
+        snoutPos.dy + 4.0,
+      );
+    canvas.drawPath(smile, _faceFeaturePaint..strokeWidth = 1.6);
+
+    // 5. Zen Closed Eye with Eyelid Squint / Flutter & Catchlight
+    final Offset eyePos = Offset(w * 0.22, h * 0.26);
+    final double blinkCycle = (time * 0.5) % 4.0;
+    final bool isEyesPeeking = !reducedMotion && blinkCycle > 3.7;
+
+    if (isEyesPeeking) {
+      // Peeking open slightly with zen pupil
+      canvas.drawCircle(eyePos, 3.2, _companionEyeBasePaint);
+      canvas.drawCircle(eyePos, 2.4, _companionEyePupilPaint);
+      canvas.drawCircle(
+        Offset(eyePos.dx - 0.8, eyePos.dy - 0.8),
+        0.9,
+        _companionWhiteFurPaint,
+      );
+    } else {
+      // Blissful curved sleeping smile lash with corner lash
+      final Path eyePath = Path();
+      eyePath.moveTo(eyePos.dx - 6.0, eyePos.dy + 1.0);
+      eyePath.quadraticBezierTo(
+        eyePos.dx,
+        eyePos.dy - 3.0,
+        eyePos.dx + 6.0,
+        eyePos.dy + 1.0,
+      );
+      canvas.drawPath(eyePath, _faceFeaturePaint..strokeWidth = 2.2);
+
+      // Corner lash
+      canvas.drawLine(
+        Offset(eyePos.dx + 5.0, eyePos.dy),
+        Offset(eyePos.dx + 8.0, eyePos.dy - 2.5),
+        _faceFeaturePaint..strokeWidth = 1.4,
+      );
+    }
+
+    // 6. Warm Onsen Rosy Cheek Blush
+    final double blushAlpha =
+        (0.35 + interactionPulse * 0.45).clamp(0.0, 0.80);
+    _companionBlushPaint.color =
+        const Color(0xFFFF8A80).withValues(alpha: blushAlpha);
+    canvas.drawCircle(
+      Offset(w * 0.23, h * 0.33),
+      w * 0.040,
+      _companionBlushPaint,
+    );
+
+    // 7. Relaxed Front Paw Contour
+    final Path pawPath = Path()
+      ..moveTo(w * 0.22, h * 0.58)
+      ..quadraticBezierTo(w * 0.26, h * 0.62, w * 0.32, h * 0.60);
+    canvas.drawPath(pawPath, _faceFeaturePaint..strokeWidth = 1.4);
   }
 
   // =========================================================================
@@ -559,7 +664,7 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
 
-    // Glowing Feathery External Gills (3 Left Branches, 3 Right Branches)
+    // 1. Glowing Feathery External Gills (3 Left Branches, 3 Right Branches)
     final leftGills = [
       (Offset(w * 0.25, h * 0.34), Offset(w * 0.08, h * 0.38)),
       (Offset(w * 0.26, h * 0.26), Offset(w * 0.05, h * 0.25)),
@@ -612,40 +717,101 @@ class AnimalFluidVesselPainter extends CustomPainter {
       }
     }
 
-    // Cute Axolotl Eyes and Rosy Cheeks
+    // 2. Cute Expressive Axolotl Eyes with Radial Gradient Iris & Involuntary Blinking
     final Offset leftEye = Offset(w * 0.42, h * 0.22);
     final Offset rightEye = Offset(w * 0.58, h * 0.22);
+    final double eyeRadius = w * 0.035;
 
-    final Paint eyePaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0xFF1A1A2E);
-    canvas.drawCircle(leftEye, w * 0.035, eyePaint);
-    canvas.drawCircle(rightEye, w * 0.035, eyePaint);
+    final double blinkCycle = (time * 0.6) % 3.5;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
 
-    // Eye catchlights
-    canvas.drawCircle(
-      Offset(leftEye.dx - 1.5, leftEye.dy - 1.5),
-      1.8,
-      _bubblePaint,
-    );
-    canvas.drawCircle(
-      Offset(rightEye.dx - 1.5, rightEye.dy - 1.5),
-      1.8,
-      _bubblePaint,
-    );
+    if (isBlinking) {
+      // Happy curved closed eyelids
+      final Path leftLid = Path()
+        ..moveTo(leftEye.dx - eyeRadius, leftEye.dy)
+        ..quadraticBezierTo(
+          leftEye.dx,
+          leftEye.dy + eyeRadius * 0.8,
+          leftEye.dx + eyeRadius,
+          leftEye.dy,
+        );
+      canvas.drawPath(leftLid, _faceFeaturePaint..strokeWidth = 2.4);
 
-    // Cheerful Smile
+      final Path rightLid = Path()
+        ..moveTo(rightEye.dx - eyeRadius, rightEye.dy)
+        ..quadraticBezierTo(
+          rightEye.dx,
+          rightEye.dy + eyeRadius * 0.8,
+          rightEye.dx + eyeRadius,
+          rightEye.dy,
+        );
+      canvas.drawPath(rightLid, _faceFeaturePaint..strokeWidth = 2.4);
+    } else {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        // Deep obsidian base
+        canvas.drawCircle(eyeCenter, eyeRadius, _companionEyeBasePaint);
+
+        // Bioluminescent pink/lavender radial iris gradient
+        final Paint axoIrisPaint = Paint()
+          ..shader = const RadialGradient(
+            colors: [Color(0xFFFF80AB), Color(0xFFC2185B), Color(0xFF1A1A2E)],
+            stops: [0.2, 0.6, 1.0],
+          ).createShader(
+            Rect.fromCircle(center: eyeCenter, radius: eyeRadius * 0.85),
+          );
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.85, axoIrisPaint);
+
+        // Core pupil
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.48, _companionEyePupilPaint);
+
+        // Specular catchlights
+        canvas.drawCircle(
+          Offset(
+            eyeCenter.dx - eyeRadius * 0.28,
+            eyeCenter.dy - eyeRadius * 0.28,
+          ),
+          eyeRadius * 0.34,
+          _companionWhiteFurPaint,
+        );
+        canvas.drawCircle(
+          Offset(
+            eyeCenter.dx + eyeRadius * 0.24,
+            eyeCenter.dy + eyeRadius * 0.22,
+          ),
+          eyeRadius * 0.16,
+          _companionWhiteFurPaint,
+        );
+      }
+    }
+
+    // 3. Wide Joyous Smile with Inner Tongue
     final Path smilePath = Path();
-    smilePath.moveTo(w * 0.46, h * 0.27);
-    smilePath.quadraticBezierTo(w * 0.50, h * 0.295, w * 0.54, h * 0.27);
-    canvas.drawPath(smilePath, _faceFeaturePaint..strokeWidth = 1.8);
+    smilePath.moveTo(w * 0.44, h * 0.275);
+    smilePath.quadraticBezierTo(w * 0.50, h * 0.305, w * 0.56, h * 0.275);
+    canvas.drawPath(smilePath, _faceFeaturePaint..strokeWidth = 2.0);
 
-    // Rosy Pink Blush
-    final Paint blushPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0x66FF80AB);
-    canvas.drawCircle(Offset(w * 0.36, h * 0.25), w * 0.03, blushPaint);
-    canvas.drawCircle(Offset(w * 0.64, h * 0.25), w * 0.03, blushPaint);
+    // Inner pink tongue dot
+    canvas.drawCircle(
+      Offset(w * 0.50, h * 0.292),
+      2.0,
+      _companionPinkAccentPaint,
+    );
+
+    // 4. Glowing Bioluminescent Rosy Cheeks
+    final double blushAlpha =
+        (0.45 + interactionPulse * 0.45).clamp(0.0, 0.90);
+    _companionBlushPaint.color =
+        const Color(0xFFFF4081).withValues(alpha: blushAlpha);
+    canvas.drawCircle(
+      Offset(w * 0.35, h * 0.255),
+      w * 0.032,
+      _companionBlushPaint,
+    );
+    canvas.drawCircle(
+      Offset(w * 0.65, h * 0.255),
+      w * 0.032,
+      _companionBlushPaint,
+    );
   }
 
   // =========================================================================
@@ -1007,26 +1173,146 @@ class AnimalFluidVesselPainter extends CustomPainter {
 
     canvas.restore();
 
-    // 2. Otter Nose & Whiskers
-    final Offset nosePos = Offset(w * 0.50, h * 0.24);
+    // 2. Rounded Front Paws Clutching the Shell
+    final Path leftPaw = Path()
+      ..moveTo(w * 0.38, h * 0.56)
+      ..quadraticBezierTo(w * 0.42, h * 0.58, w * 0.44, h * 0.55);
+    canvas.drawPath(leftPaw, _faceFeaturePaint..strokeWidth = 2.0);
+
+    final Path rightPaw = Path()
+      ..moveTo(w * 0.62, h * 0.56)
+      ..quadraticBezierTo(w * 0.58, h * 0.58, w * 0.56, h * 0.55);
+    canvas.drawPath(rightPaw, _faceFeaturePaint..strokeWidth = 2.0);
+
+    // 3. Blonde / Cream Face & Muzzle Patch
+    final Rect muzzleRect = Rect.fromCenter(
+      center: Offset(w * 0.50, h * 0.25),
+      width: w * 0.22,
+      height: h * 0.09,
+    );
+    canvas.drawOval(muzzleRect, _companionWhiteFurPaint);
+
+    // 4. Little Rounded Ears with Inner Shading
     canvas.drawCircle(
-      nosePos,
-      3.0,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF212121),
+      Offset(w * 0.28, h * 0.19),
+      w * 0.03,
+      _companionWhiteFurPaint,
     );
-    // Whiskers
-    canvas.drawLine(
-      Offset(w * 0.45, h * 0.25),
-      Offset(w * 0.36, h * 0.26),
-      _faceFeaturePaint..strokeWidth = 1.0,
+    canvas.drawCircle(
+      Offset(w * 0.28, h * 0.19),
+      w * 0.018,
+      _companionPinkAccentPaint,
     );
-    canvas.drawLine(
-      Offset(w * 0.55, h * 0.25),
-      Offset(w * 0.64, h * 0.26),
-      _faceFeaturePaint..strokeWidth = 1.0,
+    canvas.drawCircle(
+      Offset(w * 0.72, h * 0.19),
+      w * 0.03,
+      _companionWhiteFurPaint,
     );
+    canvas.drawCircle(
+      Offset(w * 0.72, h * 0.19),
+      w * 0.018,
+      _companionPinkAccentPaint,
+    );
+
+    // 5. Expressive Dark Otter Eyes with Specular Catchlights & Blinking
+    final Offset leftEye = Offset(w * 0.43, h * 0.21);
+    final Offset rightEye = Offset(w * 0.57, h * 0.21);
+    final double eyeRadius = w * 0.030;
+
+    final double blinkCycle = (time * 0.65) % 3.8;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      final Path leftLid = Path()
+        ..moveTo(leftEye.dx - eyeRadius, leftEye.dy)
+        ..quadraticBezierTo(
+          leftEye.dx,
+          leftEye.dy + eyeRadius * 0.7,
+          leftEye.dx + eyeRadius,
+          leftEye.dy,
+        );
+      canvas.drawPath(leftLid, _faceFeaturePaint..strokeWidth = 2.2);
+
+      final Path rightLid = Path()
+        ..moveTo(rightEye.dx - eyeRadius, rightEye.dy)
+        ..quadraticBezierTo(
+          rightEye.dx,
+          rightEye.dy + eyeRadius * 0.7,
+          rightEye.dx + eyeRadius,
+          rightEye.dy,
+        );
+      canvas.drawPath(rightLid, _faceFeaturePaint..strokeWidth = 2.2);
+    } else {
+      for (final eyeCenter in [leftEye, rightEye]) {
+        canvas.drawCircle(eyeCenter, eyeRadius, _companionEyeBasePaint);
+        // Rich chocolate iris
+        final Paint otterIrisPaint = Paint()
+          ..shader = const RadialGradient(
+            colors: [Color(0xFF8D6E63), Color(0xFF3E2723), Color(0xFF1B0000)],
+            stops: [0.2, 0.7, 1.0],
+          ).createShader(
+            Rect.fromCircle(center: eyeCenter, radius: eyeRadius * 0.85),
+          );
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.85, otterIrisPaint);
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.48, _companionEyePupilPaint);
+        canvas.drawCircle(
+          Offset(
+            eyeCenter.dx - eyeRadius * 0.28,
+            eyeCenter.dy - eyeRadius * 0.28,
+          ),
+          eyeRadius * 0.32,
+          _companionWhiteFurPaint,
+        );
+      }
+    }
+
+    // 6. Broad Button Nose, Cheerful Mouth & Whisker Pads
+    final Offset nosePos = Offset(w * 0.50, h * 0.245);
+    final Path nosePath = Path()
+      ..moveTo(nosePos.dx - 4.5, nosePos.dy - 2.0)
+      ..quadraticBezierTo(
+        nosePos.dx,
+        nosePos.dy - 3.5,
+        nosePos.dx + 4.5,
+        nosePos.dy - 2.0,
+      )
+      ..quadraticBezierTo(
+        nosePos.dx,
+        nosePos.dy + 3.5,
+        nosePos.dx - 4.5,
+        nosePos.dy - 2.0,
+      )
+      ..close();
+    canvas.drawPath(nosePath, _companionDarkNosePaint);
+    canvas.drawCircle(
+      Offset(nosePos.dx - 1.0, nosePos.dy - 1.2),
+      0.9,
+      _companionWhiteFurPaint,
+    );
+
+    // Mouth
+    final Path mouth = Path()
+      ..moveTo(nosePos.dx - 7.0, nosePos.dy + 4.5)
+      ..quadraticBezierTo(
+        nosePos.dx,
+        nosePos.dy + 8.0,
+        nosePos.dx + 7.0,
+        nosePos.dy + 4.5,
+      );
+    canvas.drawPath(mouth, _faceFeaturePaint..strokeWidth = 1.6);
+
+    // 6 White Whiskers
+    final whiskerSpans = [
+      (Offset(w * 0.44, h * 0.245), Offset(w * 0.33, h * 0.235)),
+      (Offset(w * 0.44, h * 0.255), Offset(w * 0.32, h * 0.260)),
+      (Offset(w * 0.44, h * 0.265), Offset(w * 0.34, h * 0.285)),
+      (Offset(w * 0.56, h * 0.245), Offset(w * 0.67, h * 0.235)),
+      (Offset(w * 0.56, h * 0.255), Offset(w * 0.68, h * 0.260)),
+      (Offset(w * 0.56, h * 0.265), Offset(w * 0.66, h * 0.285)),
+    ];
+    for (final (start, end) in whiskerSpans) {
+      canvas.drawLine(start, end, _faceFeaturePaint..strokeWidth = 1.0);
+    }
   }
 
   // =========================================================================
@@ -1082,28 +1368,99 @@ class AnimalFluidVesselPainter extends CustomPainter {
       );
     }
 
-    // 2. Cute Llama Eye with Eyelashes & Ear Tuft
-    final Offset eye = Offset(w * 0.33, h * 0.13);
-    canvas.drawCircle(
-      eye,
-      2.5,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF212121),
+    // 2. Soft White Muzzle Patch & Snout
+    final Rect llamaMuzzle = Rect.fromCenter(
+      center: Offset(w * 0.32, h * 0.12),
+      width: w * 0.12,
+      height: h * 0.065,
     );
-    // Eyelashes
-    canvas.drawLine(
-      Offset(eye.dx - 1, eye.dy - 2),
-      Offset(eye.dx - 4, eye.dy - 5),
-      _faceFeaturePaint..strokeWidth = 1.0,
-    );
+    canvas.drawOval(llamaMuzzle, _companionWhiteFurPaint);
 
-    // Fluffy ear tufts
-    final Paint woolPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0xEEFFFFFF);
-    canvas.drawCircle(Offset(w * 0.42, h * 0.06), 4.0, woolPaint);
-    canvas.drawCircle(Offset(w * 0.46, h * 0.06), 4.0, woolPaint);
+    // Dark nostrils & smile
+    canvas.drawCircle(
+      Offset(w * 0.29, h * 0.11),
+      1.5,
+      _companionDarkNosePaint,
+    );
+    final Path llamaSmile = Path()
+      ..moveTo(w * 0.29, h * 0.13)
+      ..quadraticBezierTo(w * 0.32, h * 0.145, w * 0.35, h * 0.13);
+    canvas.drawPath(llamaSmile, _faceFeaturePaint..strokeWidth = 1.4);
+
+    // 3. Cute Llama Eye with Long Curled Eyelashes & Blinking
+    final Offset eye = Offset(w * 0.34, h * 0.10);
+    final double eyeRadius = w * 0.024;
+
+    final double blinkCycle = (time * 0.55) % 4.0;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      final Path lid = Path()
+        ..moveTo(eye.dx - eyeRadius, eye.dy)
+        ..quadraticBezierTo(
+          eye.dx,
+          eye.dy + eyeRadius * 0.8,
+          eye.dx + eyeRadius,
+          eye.dy,
+        );
+      canvas.drawPath(lid, _faceFeaturePaint..strokeWidth = 2.0);
+    } else {
+      canvas.drawCircle(eye, eyeRadius, _companionEyeBasePaint);
+      final Paint llamaIrisPaint = Paint()
+        ..shader = const RadialGradient(
+          colors: [Color(0xFFFFB74D), Color(0xFF6D4C41), Color(0xFF1B0000)],
+          stops: [0.2, 0.7, 1.0],
+        ).createShader(
+          Rect.fromCircle(center: eye, radius: eyeRadius * 0.85),
+        );
+      canvas.drawCircle(eye, eyeRadius * 0.85, llamaIrisPaint);
+      canvas.drawCircle(eye, eyeRadius * 0.45, _companionEyePupilPaint);
+      canvas.drawCircle(
+        Offset(
+          eye.dx - eyeRadius * 0.28,
+          eye.dy - eyeRadius * 0.28,
+        ),
+        eyeRadius * 0.32,
+        _companionWhiteFurPaint,
+      );
+
+      // Long curled eyelashes
+      canvas.drawLine(
+        Offset(eye.dx - 1, eye.dy - eyeRadius),
+        Offset(eye.dx - 4, eye.dy - eyeRadius - 3),
+        _faceFeaturePaint..strokeWidth = 1.2,
+      );
+      canvas.drawLine(
+        Offset(eye.dx + 2, eye.dy - eyeRadius),
+        Offset(eye.dx + 3, eye.dy - eyeRadius - 4),
+        _faceFeaturePaint..strokeWidth = 1.2,
+      );
+    }
+
+    // 4. Pink Inner Ear Linings
+    final Path leftEarInner = Path()
+      ..moveTo(w * 0.40, h * 0.06)
+      ..quadraticBezierTo(w * 0.42, h * 0.03, w * 0.44, h * 0.06);
+    canvas.drawPath(leftEarInner, _companionPinkAccentPaint);
+
+    final Path rightEarInner = Path()
+      ..moveTo(w * 0.49, h * 0.06)
+      ..quadraticBezierTo(w * 0.51, h * 0.03, w * 0.53, h * 0.06);
+    canvas.drawPath(rightEarInner, _companionPinkAccentPaint);
+
+    // 5. Woolly Texture Scallop Curls along Back & Rump
+    final List<Offset> woolAccents = [
+      Offset(w * 0.56, h * 0.24),
+      Offset(w * 0.55, h * 0.34),
+      Offset(w * 0.68, h * 0.45),
+      Offset(w * 0.78, h * 0.52),
+    ];
+    for (final pos in woolAccents) {
+      final Path woolCurl = Path()
+        ..moveTo(pos.dx - 4.0, pos.dy)
+        ..quadraticBezierTo(pos.dx, pos.dy - 3.5, pos.dx + 4.0, pos.dy);
+      canvas.drawPath(woolCurl, _companionWoolAccentPaint);
+    }
   }
 
   // =========================================================================

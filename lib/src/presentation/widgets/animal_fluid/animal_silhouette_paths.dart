@@ -92,104 +92,188 @@ class AnimalSilhouettePaths {
     return path;
   }
 
-  /// Cappy the Capybara silhouette (Chunky, zen profile with flat snout and rounded rump)
+  /// Cappy the Capybara silhouette (Chunky, peaceful zen profile with flat blunt snout,
+  /// small rounded ear, barrel torso, and relaxed paws)
   static Path _buildCapybaraPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.22, h * 0.95); // Left front foot
-    path.lineTo(w * 0.18, h * 0.65); // Front chest
-    path.lineTo(w * 0.12, h * 0.45); // Lower snout
-    path.lineTo(w * 0.10, h * 0.32); // Snout tip
-    path.lineTo(w * 0.25, h * 0.28); // Snout bridge
-    path.lineTo(w * 0.32, h * 0.20); // Small ear
-    path.lineTo(w * 0.38, h * 0.25); // Behind ear
-    path.cubicTo(w * 0.55, h * 0.22, w * 0.78, h * 0.26, w * 0.90, h * 0.45); // Broad barrel back
-    path.cubicTo(w * 0.95, h * 0.60, w * 0.92, h * 0.82, w * 0.84, h * 0.95); // Rump
-    path.lineTo(w * 0.72, h * 0.95); // Hind leg
-    path.lineTo(w * 0.68, h * 0.75); // Belly
-    path.lineTo(w * 0.35, h * 0.75); // Underbelly
-    path.lineTo(w * 0.32, h * 0.95); // Right front foot
+    // Front left paw base
+    path.moveTo(w * 0.24, h * 0.95);
+
+    // Front chest ascending to broad chin
+    path.cubicTo(w * 0.20, h * 0.82, w * 0.16, h * 0.65, w * 0.16, h * 0.50);
+
+    // Characteristic blunt, flat snout
+    path.cubicTo(w * 0.14, h * 0.42, w * 0.08, h * 0.38, w * 0.08, h * 0.30);
+    path.cubicTo(w * 0.08, h * 0.24, w * 0.18, h * 0.22, w * 0.26, h * 0.22);
+
+    // Small rounded ear perched high on head
+    path.cubicTo(w * 0.28, h * 0.18, w * 0.30, h * 0.15, w * 0.34, h * 0.15);
+    path.cubicTo(w * 0.38, h * 0.15, w * 0.40, h * 0.18, w * 0.42, h * 0.22);
+
+    // Broad, muscular barrel back
+    path.cubicTo(w * 0.55, h * 0.22, w * 0.72, h * 0.26, w * 0.85, h * 0.40);
+
+    // Rounded rump contour
+    path.cubicTo(w * 0.95, h * 0.52, w * 0.95, h * 0.76, w * 0.88, h * 0.90);
+
+    // Rear hind paw
+    path.cubicTo(w * 0.85, h * 0.95, w * 0.78, h * 0.96, w * 0.74, h * 0.95);
+
+    // Chunky relaxed underbelly
+    path.cubicTo(w * 0.66, h * 0.84, w * 0.45, h * 0.84, w * 0.38, h * 0.92);
+
+    // Front right paw meeting base
+    path.cubicTo(w * 0.34, h * 0.96, w * 0.28, h * 0.96, w * 0.24, h * 0.95);
     path.close();
 
     return path;
   }
 
-  /// Lottie the Axolotl silhouette (Cute aquatic salamander with branching feathery gills)
+  /// Lottie the Axolotl silhouette (Cute aquatic salamander with 6 organic branching feathery gill plumes)
   static Path _buildAxolotlPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.35, h * 0.95); // Tail tip
-    path.cubicTo(w * 0.20, h * 0.75, w * 0.22, h * 0.50, w * 0.28, h * 0.42); // Left body
-    // Left external branching gills
-    path.lineTo(w * 0.10, h * 0.38);
-    path.lineTo(w * 0.24, h * 0.32);
-    path.lineTo(w * 0.08, h * 0.25);
-    path.lineTo(w * 0.26, h * 0.22);
-    path.lineTo(w * 0.15, h * 0.14);
-    path.lineTo(w * 0.34, h * 0.18);
-    // Head crown
-    path.quadraticBezierTo(w * 0.50, h * 0.12, w * 0.66, h * 0.18);
-    // Right external branching gills
-    path.lineTo(w * 0.85, h * 0.14);
-    path.lineTo(w * 0.74, h * 0.22);
-    path.lineTo(w * 0.92, h * 0.25);
-    path.lineTo(w * 0.76, h * 0.32);
-    path.lineTo(w * 0.90, h * 0.38);
-    path.lineTo(w * 0.72, h * 0.42); // Right body
-    path.cubicTo(w * 0.78, h * 0.50, w * 0.80, h * 0.75, w * 0.65, h * 0.95);
+    // Paddle tail tip at base
+    path.moveTo(w * 0.42, h * 0.95);
+
+    // Left body and fin ascending to gills
+    path.cubicTo(w * 0.28, h * 0.82, w * 0.22, h * 0.62, w * 0.28, h * 0.46);
+
+    // Left external branching gills (3 soft plume arches)
+    // Lower left plume
+    path.cubicTo(w * 0.18, h * 0.44, w * 0.08, h * 0.42, w * 0.08, h * 0.38);
+    path.cubicTo(w * 0.08, h * 0.34, w * 0.16, h * 0.33, w * 0.24, h * 0.33);
+
+    // Middle left plume
+    path.cubicTo(w * 0.14, h * 0.31, w * 0.05, h * 0.29, w * 0.05, h * 0.25);
+    path.cubicTo(w * 0.05, h * 0.21, w * 0.15, h * 0.22, w * 0.25, h * 0.22);
+
+    // Upper left plume
+    path.cubicTo(w * 0.18, h * 0.19, w * 0.10, h * 0.14, w * 0.12, h * 0.11);
+    path.cubicTo(w * 0.15, h * 0.09, w * 0.25, h * 0.12, w * 0.32, h * 0.16);
+
+    // Wide smiling head crown
+    path.quadraticBezierTo(w * 0.50, h * 0.11, w * 0.68, h * 0.16);
+
+    // Right external branching gills (3 soft plume arches)
+    // Upper right plume
+    path.cubicTo(w * 0.75, h * 0.12, w * 0.85, h * 0.09, w * 0.88, h * 0.11);
+    path.cubicTo(w * 0.90, h * 0.14, w * 0.82, h * 0.19, w * 0.75, h * 0.22);
+
+    // Middle right plume
+    path.cubicTo(w * 0.85, h * 0.22, w * 0.95, h * 0.21, w * 0.95, h * 0.25);
+    path.cubicTo(w * 0.95, h * 0.29, w * 0.86, h * 0.31, w * 0.76, h * 0.33);
+
+    // Lower right plume
+    path.cubicTo(w * 0.84, h * 0.33, w * 0.92, h * 0.34, w * 0.92, h * 0.38);
+    path.cubicTo(w * 0.92, h * 0.42, w * 0.82, h * 0.44, w * 0.72, h * 0.46);
+
+    // Right body and tail fin descending
+    path.cubicTo(w * 0.78, h * 0.62, w * 0.72, h * 0.82, w * 0.58, h * 0.95);
+    path.quadraticBezierTo(w * 0.50, h * 0.92, w * 0.42, h * 0.95);
     path.close();
 
     return path;
   }
 
-  /// Ollie the Sea Otter silhouette (Floating on back with folded paws and paddle tail)
+  /// Ollie the Sea Otter silhouette (Floating on back with folded paws, rounded ears,
+  /// flippers and broad paddle tail)
   static Path _buildSeaOtterPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.38, h * 0.95);
-    path.cubicTo(w * 0.22, h * 0.85, w * 0.18, h * 0.55, w * 0.26, h * 0.35);
-    path.lineTo(w * 0.28, h * 0.20); // Round head
-    path.quadraticBezierTo(w * 0.50, h * 0.12, w * 0.72, h * 0.20);
-    path.lineTo(w * 0.74, h * 0.35);
-    path.cubicTo(w * 0.82, h * 0.55, w * 0.78, h * 0.85, w * 0.62, h * 0.95);
+    // Paddle tail base
+    path.moveTo(w * 0.40, h * 0.95);
+
+    // Left flipper and hindquarters
+    path.cubicTo(w * 0.26, h * 0.90, w * 0.20, h * 0.78, w * 0.22, h * 0.68);
+
+    // Left buoyant barrel flank and folded paw
+    path.cubicTo(w * 0.20, h * 0.52, w * 0.22, h * 0.38, w * 0.28, h * 0.28);
+
+    // Left rounded ear
+    path.cubicTo(w * 0.26, h * 0.24, w * 0.25, h * 0.18, w * 0.30, h * 0.16);
+    path.cubicTo(w * 0.33, h * 0.15, w * 0.36, h * 0.18, w * 0.38, h * 0.20);
+
+    // Round head dome
+    path.quadraticBezierTo(w * 0.50, h * 0.11, w * 0.62, h * 0.20);
+
+    // Right rounded ear
+    path.cubicTo(w * 0.64, h * 0.18, w * 0.67, h * 0.15, w * 0.70, h * 0.16);
+    path.cubicTo(w * 0.75, h * 0.18, w * 0.74, h * 0.24, w * 0.72, h * 0.28);
+
+    // Right folded paw and buoyant flank
+    path.cubicTo(w * 0.78, h * 0.38, w * 0.80, h * 0.52, w * 0.78, h * 0.68);
+
+    // Right flipper paw
+    path.cubicTo(w * 0.80, h * 0.78, w * 0.74, h * 0.90, w * 0.60, h * 0.95);
+
+    // Broad flat paddle tail
+    path.quadraticBezierTo(w * 0.50, h * 0.92, w * 0.40, h * 0.95);
     path.close();
 
     return path;
   }
 
-  /// Luna the Andean Llama silhouette (Inspired by Waterllama reference image with long neck and fluffy coat)
+  /// Luna the Andean Llama silhouette (Graceful high-altitude camelid with long neck,
+  /// fluffy woolly scallops, curved banana ears, and proud tail)
   static Path _buildLlamaPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.24, h * 0.95); // Front left leg
-    path.lineTo(w * 0.26, h * 0.70); // Front knee
-    path.lineTo(w * 0.28, h * 0.52); // Chest
-    path.lineTo(w * 0.32, h * 0.32); // Base of long neck
-    path.lineTo(w * 0.34, h * 0.18); // Chin
-    path.lineTo(w * 0.28, h * 0.14); // Muzzle
-    path.lineTo(w * 0.38, h * 0.10); // Forehead
-    path.lineTo(w * 0.40, h * 0.04); // Left tall ear
-    path.lineTo(w * 0.44, h * 0.09); // Ear notch
-    path.lineTo(w * 0.48, h * 0.04); // Right tall ear
-    path.lineTo(w * 0.52, h * 0.12); // Neck nape
-    path.lineTo(w * 0.50, h * 0.38); // Fluffy back of neck
-    path.cubicTo(w * 0.60, h * 0.40, w * 0.75, h * 0.42, w * 0.84, h * 0.50); // Fluffy back
-    path.lineTo(w * 0.90, h * 0.48); // Small fluffy tail
-    path.lineTo(w * 0.88, h * 0.58);
-    path.lineTo(w * 0.82, h * 0.70); // Rump
-    path.lineTo(w * 0.80, h * 0.95); // Rear leg
-    path.lineTo(w * 0.72, h * 0.95);
-    path.lineTo(w * 0.70, h * 0.68); // Underbelly
-    path.lineTo(w * 0.38, h * 0.68);
-    path.lineTo(w * 0.32, h * 0.95); // Front right leg
+    // Front left leg / hoof base
+    path.moveTo(w * 0.26, h * 0.95);
+
+    // Foreleg rising to fluffy chest wool
+    path.cubicTo(w * 0.26, h * 0.84, w * 0.27, h * 0.68, w * 0.29, h * 0.54);
+
+    // Chest woolly tufts
+    path.cubicTo(w * 0.25, h * 0.48, w * 0.28, h * 0.40, w * 0.33, h * 0.34);
+
+    // Slender neck rising to chin
+    path.cubicTo(w * 0.33, h * 0.26, w * 0.32, h * 0.18, w * 0.35, h * 0.15);
+
+    // Muzzle and sweet chin
+    path.cubicTo(w * 0.30, h * 0.15, w * 0.26, h * 0.12, w * 0.28, h * 0.09);
+    path.cubicTo(w * 0.32, h * 0.08, w * 0.36, h * 0.08, w * 0.40, h * 0.09);
+
+    // Curved banana ears
+    // Left ear
+    path.cubicTo(w * 0.38, h * 0.05, w * 0.39, h * 0.02, w * 0.43, h * 0.02);
+    path.cubicTo(w * 0.45, h * 0.04, w * 0.44, h * 0.08, w * 0.46, h * 0.09);
+
+    // Right ear
+    path.cubicTo(w * 0.48, h * 0.05, w * 0.50, h * 0.02, w * 0.53, h * 0.02);
+    path.cubicTo(w * 0.55, h * 0.05, w * 0.54, h * 0.09, w * 0.54, h * 0.14);
+
+    // Fluffy scalloped wool along back of neck
+    path.cubicTo(w * 0.57, h * 0.18, w * 0.58, h * 0.24, w * 0.54, h * 0.28);
+    path.cubicTo(w * 0.57, h * 0.32, w * 0.58, h * 0.38, w * 0.55, h * 0.42);
+
+    // Fluffy woolly back
+    path.cubicTo(w * 0.65, h * 0.42, w * 0.76, h * 0.44, w * 0.82, h * 0.50);
+
+    // Fluffy upturned tail
+    path.cubicTo(w * 0.90, h * 0.48, w * 0.92, h * 0.55, w * 0.86, h * 0.60);
+
+    // Rounded rump descending to rear leg
+    path.cubicTo(w * 0.84, h * 0.68, w * 0.82, h * 0.80, w * 0.80, h * 0.95);
+
+    // Rear hoof
+    path.cubicTo(w * 0.76, h * 0.96, w * 0.70, h * 0.96, w * 0.68, h * 0.95);
+
+    // Fluffy wool underbelly
+    path.cubicTo(w * 0.68, h * 0.76, w * 0.42, h * 0.76, w * 0.38, h * 0.95);
+
+    // Front hooves meeting base
+    path.cubicTo(w * 0.34, h * 0.96, w * 0.28, h * 0.96, w * 0.26, h * 0.95);
     path.close();
 
     return path;
