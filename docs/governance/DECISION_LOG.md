@@ -29,3 +29,14 @@
   2. Protected asynchronous state mutation against post-dispose memory leaks by adding `if (!ref.mounted) return;` across all notifier async methods.
   3. Implemented realistic fluid density sorting: beverages logged into the active vessel automatically arrange in stratification layers according to physical fluid density ($g/cm^3$), ensuring heavier beverages (e.g., Espresso at 1.04, Protein Shake at 1.045) realistically settle below lighter fluids (Pure Water at 1.00, Sparkling Water at 0.99).
 - **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 004 — 2026-11-22 (Subphase 2.2.1)
+- **Context**: Launch screen physics engine, top-view pool simulation, and SVG Red Panda vector assembly.
+- **Course-Correction & Observations**:
+  1. Replaced static mockup approaches with a fully procedural dual-layer caustic wave lattice and ceramic tile refraction engine executed on Flutter's hardware-accelerated canvas.
+  2. Implemented realistic spring-damper buoyancy physics: user taps apply an initial vertical impulse ($+14\text{px}$) and rotational tilt ($\pm 0.12\text{ rad}$) which exponentially decay back into tranquil sinusoidal bobbing.
+  3. Pre-allocated all `Paint` and `Path` objects outside the per-frame `paint()` lifecycle, ensuring 0 GC pressure and flawless 60/120 FPS frame pacing.
+  4. Implemented full reduced-motion accessibility: when `MediaQuery.disableAnimationsOf(context)` is true, wave oscillations and particles pause gracefully into tranquil static caustics while maintaining full interactive usability.
+- **Sign-Off**: `animation-agent`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.

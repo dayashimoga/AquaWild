@@ -20,17 +20,24 @@ void main() {
       expect(AppColors.redPandaAuburn.toARGB32(), equals(0xFFD84315));
     });
 
-    testWidgets('AquaWildApp mounts cleanly with ProviderScope and shows LaunchScreen',
+    testWidgets('AquaWildApp mounts cleanly with ProviderScope and shows LaunchScreen with Red Panda Mascot',
         (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: AquaWildApp(),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text(AppConstants.appName), findsOneWidget);
-      expect(find.text('Dive In'), findsOneWidget);
+      expect(find.text('Dive Into Habitat'), findsOneWidget);
+      expect(find.text('Bamboo Misty Springs • Relax Mode'), findsOneWidget);
+
+      // Verify Red Panda mascot semantics is accessible
+      final mascot = find.bySemanticsLabel(
+        RegExp(r'Ruby the Red Panda wearing aviator sunglasses'),
+      );
+      expect(mascot, findsOneWidget);
     });
 
     testWidgets('Navigating to HomeScreen displays active companion and quick dock',
@@ -40,9 +47,9 @@ void main() {
           child: AquaWildApp(),
         ),
       );
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 100));
 
-      final diveInButton = find.text('Dive In');
+      final diveInButton = find.text('Dive Into Habitat');
       expect(diveInButton, findsOneWidget);
 
       await tester.tap(diveInButton);
