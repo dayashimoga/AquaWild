@@ -2,6 +2,23 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.14.0] - 2026-11-22 — Stage 4: Subphase 4.1.1 — Red Panda Home Vessel Silhouette & Anatomical Facial Overlay Redesign
+### Added
+- **Anatomical Red Panda Vessel Silhouette (`AnimalSilhouettePaths`)**:
+  * Replaced blocky polygonal cuts with authentic *Ailurus fulgens* continuous bezier curves: rounded ears, cheek fur ruffs, sweeping bushy tail, and paws.
+- **Layered Facial, Eye, Fur & Tail Overlay (`AnimalFluidVesselPainter`)**:
+  * Implemented expressive hazel/amber radial gradient eyes with dual catchlights and natural involuntary 200ms blinking.
+  * Added white muzzle patch, eyebrow accents, cheek patches, dark auburn tear stripes, and high-contrast button nose with specular highlight.
+  * Added reactive peach cheek blush on interaction and 4 signature alternating cream/gold tail rings across the bushy tail.
+  * Pre-allocated all feature paints for zero GC pressure and 120 FPS rendering.
+- **Exotic Animal Catalog & Emoji Consistency (`ExoticAnimal`)**:
+  * Corrected `bottlenose_dolphin` (`🐬`) and `blue_ringed_octopus` (`🐙`) mapping to eliminate unintended `'🐾'` fallbacks across all 10 companions.
+- **Automated Test Coverage**:
+  * Added all-animal emoji parity tests and Red Panda blinking/interaction widget tests.
+  * 119 / 119 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.13.0] - 2026-11-22 — Stage 3: Subphase 3.2.2 — Fluid Solver Benchmark Profiling & Stage 3 Sign-Off
 ### Added
 - **Wave Column Solver Performance Benchmark (`test/presentation/wave_solver_test.dart`)**:

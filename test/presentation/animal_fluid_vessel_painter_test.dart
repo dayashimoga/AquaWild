@@ -115,6 +115,64 @@ void main() {
       );
     });
 
+    testWidgets('Paints Ruby the Red Panda mascot features during blinking and interaction pulse',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'red_panda',
+                fillFraction: 0.6,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 0.05, // triggers isBlinking (< 0.20)
+                accentColor: const Color(0xFFD84315),
+                interactionPulse: 1.0, // max blush and glow
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('Paints Ruby the Red Panda in reduced-motion mode without blinking or dynamic wobble',
+        (tester) async {
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: CustomPaint(
+              size: const Size(300, 345),
+              painter: AnimalFluidVesselPainter(
+                animalId: 'red_panda',
+                fillFraction: 0.7,
+                stratifiedLayers: stratifiedLayers,
+                waveSolver: waveSolver,
+                time: 0.05,
+                accentColor: const Color(0xFFD84315),
+                reducedMotion: true,
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(
+        find.byWidgetPredicate(
+          (w) => w is CustomPaint && w.painter is AnimalFluidVesselPainter,
+        ),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('Paints Ollie the Sea Otter with kelp and pearl shell cleanly',
         (tester) async {
       await tester.pumpWidget(

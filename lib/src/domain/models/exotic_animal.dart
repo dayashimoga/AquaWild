@@ -48,8 +48,10 @@ class ExoticAnimal {
         return '🐺';
       case 'emperor_penguin':
         return '🐧';
+      case 'bottlenose_dolphin':
       case 'pink_river_dolphin':
         return '🐬';
+      case 'blue_ringed_octopus':
       case 'bioluminescent_octopus':
         return '🐙';
       case 'snow_leopard':

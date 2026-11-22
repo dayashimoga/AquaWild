@@ -34,27 +34,59 @@ class AnimalSilhouettePaths {
     }
   }
 
-  /// Ruby the Red Panda silhouette (Perched upright with rounded ears and fluffy tail)
+  /// Ruby the Red Panda silhouette (Anatomically accurate Ailurus fulgens contour:
+  /// rounded ears, cheek fur ruffs, sweeping bushy tail, and paws)
   static Path _buildRedPandaPath(Size size) {
     final Path path = Path();
     final double w = size.width;
     final double h = size.height;
 
-    path.moveTo(w * 0.25, h * 0.95); // Left rear paw
-    path.lineTo(w * 0.20, h * 0.82); // Left flank
-    path.cubicTo(w * 0.05, h * 0.88, w * 0.02, h * 0.60, w * 0.12, h * 0.45); // Sweeping tail
-    path.cubicTo(w * 0.16, h * 0.38, w * 0.25, h * 0.48, w * 0.26, h * 0.60); // Tail arch
-    path.lineTo(w * 0.30, h * 0.48); // Left shoulder
-    path.lineTo(w * 0.28, h * 0.28); // Left cheek
-    path.lineTo(w * 0.22, h * 0.12); // Left ear tip
-    path.lineTo(w * 0.38, h * 0.18); // Left ear base
-    path.quadraticBezierTo(w * 0.50, h * 0.14, w * 0.62, h * 0.18); // Crown between ears
-    path.lineTo(w * 0.78, h * 0.12); // Right ear tip
-    path.lineTo(w * 0.72, h * 0.28); // Right ear base
-    path.lineTo(w * 0.70, h * 0.48); // Right cheek & shoulder
-    path.cubicTo(w * 0.84, h * 0.58, w * 0.86, h * 0.75, w * 0.82, h * 0.88); // Right torso & flank
-    path.lineTo(w * 0.75, h * 0.95); // Right rear paw
-    path.quadraticBezierTo(w * 0.50, h * 0.92, w * 0.25, h * 0.95); // Base curve
+    // Start at left rear paw
+    path.moveTo(w * 0.28, h * 0.95);
+
+    // Left flank ascending to bushy tail base
+    path.cubicTo(w * 0.22, h * 0.92, w * 0.17, h * 0.86, w * 0.16, h * 0.76);
+
+    // Outer sweeping bushy tail arc
+    path.cubicTo(w * 0.06, h * 0.82, w * 0.02, h * 0.66, w * 0.04, h * 0.52);
+
+    // Rounded bushy tail apex
+    path.cubicTo(w * 0.06, h * 0.40, w * 0.14, h * 0.36, w * 0.20, h * 0.42);
+
+    // Inner tail contour meeting torso
+    path.cubicTo(w * 0.25, h * 0.46, w * 0.26, h * 0.56, w * 0.28, h * 0.64);
+
+    // Left shoulder rising to head
+    path.cubicTo(w * 0.28, h * 0.54, w * 0.27, h * 0.45, w * 0.28, h * 0.38);
+
+    // Left cheek fur ruffs (double tuft flare)
+    path.cubicTo(w * 0.23, h * 0.35, w * 0.21, h * 0.30, w * 0.24, h * 0.26);
+    path.cubicTo(w * 0.22, h * 0.23, w * 0.24, h * 0.20, w * 0.27, h * 0.18);
+
+    // Left ear (rounded triangular contour with wide base)
+    path.cubicTo(w * 0.24, h * 0.14, w * 0.23, h * 0.09, w * 0.26, h * 0.07);
+    path.cubicTo(w * 0.30, h * 0.07, w * 0.35, h * 0.11, w * 0.38, h * 0.15);
+
+    // Crown dome between ears
+    path.quadraticBezierTo(w * 0.50, h * 0.12, w * 0.62, h * 0.15);
+
+    // Right ear (rounded triangular contour with wide base)
+    path.cubicTo(w * 0.65, h * 0.11, w * 0.70, h * 0.07, w * 0.74, h * 0.07);
+    path.cubicTo(w * 0.77, h * 0.09, w * 0.76, h * 0.14, w * 0.73, h * 0.18);
+
+    // Right cheek fur ruffs (double tuft flare)
+    path.cubicTo(w * 0.76, h * 0.20, w * 0.78, h * 0.23, w * 0.76, h * 0.26);
+    path.cubicTo(w * 0.79, h * 0.30, w * 0.77, h * 0.35, w * 0.72, h * 0.38);
+
+    // Right shoulder and barrel torso
+    path.cubicTo(w * 0.73, h * 0.45, w * 0.74, h * 0.54, w * 0.74, h * 0.62);
+    path.cubicTo(w * 0.81, h * 0.68, w * 0.84, h * 0.78, w * 0.80, h * 0.88);
+
+    // Right rear paw
+    path.cubicTo(w * 0.78, h * 0.93, w * 0.75, h * 0.96, w * 0.72, h * 0.95);
+
+    // Underbelly base curve arching back to left paw
+    path.quadraticBezierTo(w * 0.50, h * 0.92, w * 0.28, h * 0.95);
     path.close();
 
     return path;

@@ -311,3 +311,26 @@
   3. **Stage 3 Completion & Sign-Off**:
      * All Stage 3 deliverables (Subphase 3.1.1, 3.1.2, 3.2.1, 3.2.2) fully certified with zero gaps, zero analyzer issues, and 116 passing tests across the entire test suite.
 - **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 021 — 2026-11-22 (Stage 4: Subphase 4.1.1 — Red Panda Home Vessel Silhouette & Anatomical Facial Overlay Redesign)
+- **Context**: Resolving CRITICAL-03 (Screenshot 2: `#/home` blocky cat-like polygon cuts, missing eyes, invisible nose dot) and HIGH-04 (`exotic_animal.dart` Dolphin/Octopus ID and emoji mismatch fallback to `🐾`).
+- **Architectural Decisions & Deliverables**:
+  1. **Anatomical Vector Vessel Silhouette (`AnimalSilhouettePaths._buildRedPandaPath`)**:
+     * Completely replaced sharp polygonal cuts (`lineTo(w * 0.28, h * 0.28)`) with smooth, authentic *Ailurus fulgens* continuous bezier curves.
+     * Modeled rounded triangular ears with wide bases, double-tufted cheek fur ruffs, contoured neck and shoulders, paws, and a lush, sweeping bushy ringed tail along the left perimeter ($>10\%$ vessel volume for stratified beverage filling).
+  2. **Layered Facial & Fur Overlay Engine (`AnimalFluidVesselPainter._drawRedPandaExteriorDetails`)**:
+     * **Ears**: Warm pastel pink inner ear fill (`Color(0x55FF8A80)`) with dense white inner fur tufts (`Color(0xEEFFFFFF)`).
+     * **Face Markings**: Pure white muzzle oval, eyebrow accent spots, and cheek fur patches.
+     * **Tear Stripes**: Characteristic dark espresso/auburn facial tear stripes running vertically down from eyes across cheeks (`Color(0xAA3E2723)`).
+     * **Expressive Amber/Hazel Eyes**: Deep sclera, luminous hazel-to-amber radial gradient iris, obsidian pupil, dual catchlights, and involuntary 200ms blinking cycle every 3.5 seconds.
+     * **High-Contrast Snout & Smile**: High-contrast button nose with top bridge specular highlight (visible against both dark empty backdrops and colorful fluid strata), cheerful curved philtrum, smiling mouth, and dual whisker sprays.
+     * **Reactive Cheek Blush**: Peach blush on white cheek patches that softly glows during touch interaction (`interactionPulse`).
+     * **Bushy Tail Rings & Collar**: 4 signature alternating cream/gold and specular white bands across the arched tail, plus chest fur collar accent.
+     * **Zero Heap Allocation**: All paints pre-allocated as fields on `AnimalFluidVesselPainter` for 60/120 FPS frame pacing.
+  3. **Catalog ID & Avatar Emoji Parity (`ExoticAnimal.avatarEmoji`)**:
+     * Corrected `bottlenose_dolphin` -> `🐬` and `blue_ringed_octopus` -> `🐙` while maintaining backward-compatible aliases (`pink_river_dolphin`, `bioluminescent_octopus`). All 10 companions certified to return species-accurate emojis with zero `'🐾'` fallbacks.
+  4. **Automated Test Coverage**:
+     * Added comprehensive unit & widget tests in `test/domain/exotic_animal_biome_test.dart` and `test/presentation/animal_fluid_vessel_painter_test.dart` (119/119 passing tests, 0 analyzer issues).
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.

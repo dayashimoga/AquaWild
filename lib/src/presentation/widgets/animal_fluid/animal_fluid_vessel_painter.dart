@@ -88,6 +88,34 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..strokeCap = StrokeCap.round
     ..color = const Color(0xDDFFFFFF);
 
+  // Pre-allocated Red Panda facial & anatomical feature paints
+  final Paint _pandaWhiteFurPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xEEFFFFFF);
+  final Paint _pandaPinkEarPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0x55FF8A80);
+  final Paint _pandaBlushPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _pandaTearStripePaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round
+    ..color = const Color(0xAA3E2723);
+  final Paint _pandaEyeBasePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF2C1810);
+  final Paint _pandaEyePupilPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF150804);
+  final Paint _pandaCatchlightPaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = Colors.white;
+  final Paint _pandaNosePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0xFF1F1B18);
+  final Paint _pandaTailRingPaint = Paint()
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+
   AnimalFluidVesselPainter({
     required this.animalId,
     required this.fillFraction,
@@ -628,30 +656,281 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
 
-    // White Inner Ear Tufts
-    final Paint earTuftPaint = Paint()
-      ..style = PaintingStyle.fill
-      ..color = const Color(0xCCFFFFFF);
-    canvas.drawCircle(Offset(w * 0.29, h * 0.17), w * 0.045, earTuftPaint);
-    canvas.drawCircle(Offset(w * 0.71, h * 0.17), w * 0.045, earTuftPaint);
+    // 1. Warm Pink Inner Ear Fill & Fluffy White Ear Tufts
+    // Left Ear
+    final Path leftEarInner = Path()
+      ..moveTo(w * 0.28, h * 0.15)
+      ..cubicTo(w * 0.26, h * 0.12, w * 0.25, h * 0.09, w * 0.27, h * 0.08)
+      ..cubicTo(w * 0.30, h * 0.08, w * 0.34, h * 0.11, w * 0.36, h * 0.14)
+      ..close();
+    canvas.drawPath(leftEarInner, _pandaPinkEarPaint);
 
-    // Auburn Muzzle & Nose
-    final Offset nosePos = Offset(w * 0.50, h * 0.25);
-    canvas.drawCircle(
-      nosePos,
-      3.2,
-      Paint()
-        ..style = PaintingStyle.fill
-        ..color = const Color(0xFF212121),
+    // Right Ear
+    final Path rightEarInner = Path()
+      ..moveTo(w * 0.64, h * 0.14)
+      ..cubicTo(w * 0.66, h * 0.11, w * 0.70, h * 0.08, w * 0.73, h * 0.08)
+      ..cubicTo(w * 0.75, h * 0.09, w * 0.74, h * 0.12, w * 0.72, h * 0.15)
+      ..close();
+    canvas.drawPath(rightEarInner, _pandaPinkEarPaint);
+
+    // Dense White Inner Ear Fur Tufts
+    final Path leftEarTuft = Path()
+      ..moveTo(w * 0.29, h * 0.16)
+      ..lineTo(w * 0.31, h * 0.11)
+      ..lineTo(w * 0.33, h * 0.14)
+      ..lineTo(w * 0.35, h * 0.10)
+      ..lineTo(w * 0.36, h * 0.15)
+      ..close();
+    canvas.drawPath(leftEarTuft, _pandaWhiteFurPaint);
+
+    final Path rightEarTuft = Path()
+      ..moveTo(w * 0.64, h * 0.15)
+      ..lineTo(w * 0.65, h * 0.10)
+      ..lineTo(w * 0.67, h * 0.14)
+      ..lineTo(w * 0.69, h * 0.11)
+      ..lineTo(w * 0.71, h * 0.16)
+      ..close();
+    canvas.drawPath(rightEarTuft, _pandaWhiteFurPaint);
+
+    // 2. White Muzzle, Brow Spots & Cheek Ruffs
+    // Pure White Muzzle Oval around Nose and Mouth
+    final Rect muzzleRect = Rect.fromCenter(
+      center: Offset(w * 0.50, h * 0.265),
+      width: w * 0.17,
+      height: h * 0.085,
+    );
+    canvas.drawOval(muzzleRect, _pandaWhiteFurPaint);
+
+    // White Teardrop Eye Brow Accents (Above eyes)
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(w * 0.43, h * 0.17),
+        width: w * 0.045,
+        height: h * 0.024,
+      ),
+      _pandaWhiteFurPaint,
+    );
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(w * 0.57, h * 0.17),
+        width: w * 0.045,
+        height: h * 0.024,
+      ),
+      _pandaWhiteFurPaint,
     );
 
-    // Playful Whisker Lines
-    final Path whiskerPath = Path();
-    whiskerPath.moveTo(w * 0.44, h * 0.26);
-    whiskerPath.lineTo(w * 0.34, h * 0.27);
-    whiskerPath.moveTo(w * 0.56, h * 0.26);
-    whiskerPath.lineTo(w * 0.66, h * 0.27);
-    canvas.drawPath(whiskerPath, _faceFeaturePaint..strokeWidth = 1.2);
+    // White Cheek Fur Patches
+    final Path leftCheekWhite = Path()
+      ..moveTo(w * 0.36, h * 0.24)
+      ..cubicTo(w * 0.28, h * 0.25, w * 0.24, h * 0.28, w * 0.26, h * 0.33)
+      ..cubicTo(w * 0.30, h * 0.35, w * 0.36, h * 0.32, w * 0.38, h * 0.28)
+      ..close();
+    canvas.drawPath(leftCheekWhite, _pandaWhiteFurPaint);
+
+    final Path rightCheekWhite = Path()
+      ..moveTo(w * 0.64, h * 0.24)
+      ..cubicTo(w * 0.72, h * 0.25, w * 0.76, h * 0.28, w * 0.74, h * 0.33)
+      ..cubicTo(w * 0.70, h * 0.35, w * 0.64, h * 0.32, w * 0.62, h * 0.28)
+      ..close();
+    canvas.drawPath(rightCheekWhite, _pandaWhiteFurPaint);
+
+    // Rosy Blush on White Cheeks (enhanced by interaction pulse)
+    final double blushAlpha = (0.25 + interactionPulse * 0.45).clamp(0.0, 0.75);
+    _pandaBlushPaint.color =
+        const Color(0xFFFF8A80).withValues(alpha: blushAlpha);
+    canvas.drawCircle(Offset(w * 0.33, h * 0.29), w * 0.032, _pandaBlushPaint);
+    canvas.drawCircle(Offset(w * 0.67, h * 0.29), w * 0.032, _pandaBlushPaint);
+
+    // 3. Red Panda Characteristic Dark Tear Stripes
+    // Dark auburn/espresso vertical stripes from eyes down cheeks
+    final Path leftTearStripe = Path()
+      ..moveTo(w * 0.40, h * 0.22)
+      ..quadraticBezierTo(w * 0.38, h * 0.26, w * 0.37, h * 0.30);
+    canvas.drawPath(leftTearStripe, _pandaTearStripePaint..strokeWidth = 2.4);
+
+    final Path rightTearStripe = Path()
+      ..moveTo(w * 0.60, h * 0.22)
+      ..quadraticBezierTo(w * 0.62, h * 0.26, w * 0.63, h * 0.30);
+    canvas.drawPath(rightTearStripe, _pandaTearStripePaint..strokeWidth = 2.4);
+
+    // 4. Expressive Hazel / Amber Eyes with Specular Catchlights & Blinking
+    final Offset leftEyeCenter = Offset(w * 0.42, h * 0.215);
+    final Offset rightEyeCenter = Offset(w * 0.58, h * 0.215);
+    final double eyeRadius = w * 0.034;
+
+    // Involuntary blinking cycle every ~3.5 seconds for 200ms
+    final double blinkCycle = (time * 0.7) % 3.5;
+    final bool isBlinking = !reducedMotion && blinkCycle < 0.20;
+
+    if (isBlinking) {
+      // Gentle curved smiling eyelids
+      final Path leftLid = Path()
+        ..moveTo(leftEyeCenter.dx - eyeRadius, leftEyeCenter.dy)
+        ..quadraticBezierTo(
+          leftEyeCenter.dx,
+          leftEyeCenter.dy + eyeRadius * 0.8,
+          leftEyeCenter.dx + eyeRadius,
+          leftEyeCenter.dy,
+        );
+      canvas.drawPath(leftLid, _faceFeaturePaint..strokeWidth = 2.4);
+
+      final Path rightLid = Path()
+        ..moveTo(rightEyeCenter.dx - eyeRadius, rightEyeCenter.dy)
+        ..quadraticBezierTo(
+          rightEyeCenter.dx,
+          rightEyeCenter.dy + eyeRadius * 0.8,
+          rightEyeCenter.dx + eyeRadius,
+          rightEyeCenter.dy,
+        );
+      canvas.drawPath(rightLid, _faceFeaturePaint..strokeWidth = 2.4);
+    } else {
+      for (final eyeCenter in [leftEyeCenter, rightEyeCenter]) {
+        // Deep espresso eye base
+        canvas.drawCircle(eyeCenter, eyeRadius, _pandaEyeBasePaint);
+
+        // Luminous Hazel/Amber Iris Radial Gradient
+        final Paint irisPaint = Paint()
+          ..shader = const RadialGradient(
+            colors: [
+              Color(0xFFFFB74D),
+              Color(0xFFD84315),
+              Color(0xFF3E2723),
+            ],
+            stops: [0.2, 0.7, 1.0],
+          ).createShader(
+            Rect.fromCircle(center: eyeCenter, radius: eyeRadius * 0.85),
+          );
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.85, irisPaint);
+
+        // Dark obsidian pupil
+        canvas.drawCircle(eyeCenter, eyeRadius * 0.48, _pandaEyePupilPaint);
+
+        // Primary crisp catchlight
+        canvas.drawCircle(
+          Offset(
+            eyeCenter.dx - eyeRadius * 0.28,
+            eyeCenter.dy - eyeRadius * 0.28,
+          ),
+          eyeRadius * 0.32,
+          _pandaCatchlightPaint,
+        );
+
+        // Secondary subtle specular gleam
+        canvas.drawCircle(
+          Offset(
+            eyeCenter.dx + eyeRadius * 0.24,
+            eyeCenter.dy + eyeRadius * 0.22,
+          ),
+          eyeRadius * 0.16,
+          _pandaCatchlightPaint,
+        );
+      }
+    }
+
+    // 5. Button Nose & Gentle Smile
+    final Offset noseCenter = Offset(w * 0.50, h * 0.252);
+    // Dark brown/black nose with rounded triangular contour
+    final Path nosePath = Path()
+      ..moveTo(noseCenter.dx - w * 0.022, noseCenter.dy - h * 0.008)
+      ..quadraticBezierTo(
+        noseCenter.dx,
+        noseCenter.dy - h * 0.012,
+        noseCenter.dx + w * 0.022,
+        noseCenter.dy - h * 0.008,
+      )
+      ..quadraticBezierTo(
+        noseCenter.dx + w * 0.018,
+        noseCenter.dy + h * 0.009,
+        noseCenter.dx,
+        noseCenter.dy + h * 0.012,
+      )
+      ..quadraticBezierTo(
+        noseCenter.dx - w * 0.018,
+        noseCenter.dy + h * 0.009,
+        noseCenter.dx - w * 0.022,
+        noseCenter.dy - h * 0.008,
+      )
+      ..close();
+    canvas.drawPath(nosePath, _pandaNosePaint);
+
+    // High-contrast specular highlight on nose bridge (visible on all backgrounds!)
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(noseCenter.dx - 1.2, noseCenter.dy - 2.0),
+        width: 3.5,
+        height: 2.0,
+      ),
+      _pandaCatchlightPaint,
+    );
+
+    // Cheerful philtrum and mouth
+    final Path mouthPath = Path()
+      ..moveTo(noseCenter.dx, noseCenter.dy + h * 0.012)
+      ..lineTo(noseCenter.dx, noseCenter.dy + h * 0.022)
+      ..moveTo(noseCenter.dx - w * 0.035, noseCenter.dy + h * 0.025)
+      ..quadraticBezierTo(
+        noseCenter.dx - w * 0.018,
+        noseCenter.dy + h * 0.032,
+        noseCenter.dx,
+        noseCenter.dy + h * 0.022,
+      )
+      ..quadraticBezierTo(
+        noseCenter.dx + w * 0.018,
+        noseCenter.dy + h * 0.032,
+        noseCenter.dx + w * 0.035,
+        noseCenter.dy + h * 0.025,
+      );
+    canvas.drawPath(mouthPath, _faceFeaturePaint..strokeWidth = 1.6);
+
+    // Whiskers
+    final Path whiskers = Path()
+      ..moveTo(w * 0.39, h * 0.265)
+      ..lineTo(w * 0.28, h * 0.260)
+      ..moveTo(w * 0.39, h * 0.280)
+      ..lineTo(w * 0.29, h * 0.295)
+      ..moveTo(w * 0.61, h * 0.265)
+      ..lineTo(w * 0.72, h * 0.260)
+      ..moveTo(w * 0.61, h * 0.280)
+      ..lineTo(w * 0.71, h * 0.295);
+    canvas.drawPath(whiskers, _faceFeaturePaint..strokeWidth = 1.0);
+
+    // 6. Signature Red Panda Tail Rings!
+    // Alternating cream and golden bands across the curved bushy tail on left
+    final List<(Offset, Offset)> tailRingSpans = [
+      (Offset(w * 0.08, h * 0.44), Offset(w * 0.17, h * 0.46)),
+      (Offset(w * 0.05, h * 0.52), Offset(w * 0.18, h * 0.55)),
+      (Offset(w * 0.04, h * 0.61), Offset(w * 0.19, h * 0.64)),
+      (Offset(w * 0.06, h * 0.70), Offset(w * 0.20, h * 0.73)),
+    ];
+
+    for (int r = 0; r < tailRingSpans.length; r++) {
+      final (p1, p2) = tailRingSpans[r];
+      final Path ringPath = Path()
+        ..moveTo(p1.dx, p1.dy)
+        ..quadraticBezierTo(
+          (p1.dx + p2.dx) / 2 + 3.0,
+          (p1.dy + p2.dy) / 2 - 3.0,
+          p2.dx,
+          p2.dy,
+        );
+
+      final Color ringColor = (r % 2 == 0)
+          ? const Color(0x66FFE082) // Warm cream band
+          : const Color(0x44FFFFFF); // Specular white band
+      _pandaTailRingPaint
+        ..color = ringColor
+        ..strokeWidth = 3.6;
+      canvas.drawPath(ringPath, _pandaTailRingPaint);
+    }
+
+    // 7. Chest Fur Collar Accent
+    final Path chestFur = Path()
+      ..moveTo(w * 0.40, h * 0.38)
+      ..quadraticBezierTo(w * 0.50, h * 0.43, w * 0.60, h * 0.38);
+    _pandaTailRingPaint
+      ..color = const Color(0x44FFFFFF)
+      ..strokeWidth = 1.8;
+    canvas.drawPath(chestFur, _pandaTailRingPaint);
   }
 
   // =========================================================================
