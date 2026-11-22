@@ -2,6 +2,27 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.24.0] - 2026-11-22 — Stage 6: Subphase 6.2.1 — Interactive Home Screen & Lock Screen Widget Preview Studio
+### Added
+- **Widget Preview Studio Modal (`WidgetPreviewStudioModal`)**:
+  * Implemented in-app widget simulator modal in `lib/src/presentation/widgets/widgets_preview/widget_preview_studio_modal.dart`.
+  * Interactive tabs for Compact (2x2), Medium (4x2), and Lock Screen Live Activity form factors.
+  * Switchable phone wallpaper backdrops (Dark Abyssal Ocean, Minimal Midnight, Emerald Bamboo, Aurora Glacier).
+  * Live reactive simulator connected to `telemetrySnapshotProvider` with instant state updates on tap.
+- **High-Fidelity Widget Component Views**:
+  * Compact 2x2 Home Widget (`CompactWidgetView`): 156x156dp with circular progress ring, companion avatar, streak badge, and +250ml action.
+  * Medium 4x2 Home Widget (`MediumWidgetView`): 328x156dp with multi-nutrient chips (caffeine, electrolytes, sugar), circadian pace, and 4-volume quick dock.
+  * Lock Screen Live Activity (`LockScreenLiveActivityView`): 340x140dp AMOLED glass card with companion evolution stage, linear progress bar, and quick actions.
+- **Cross-Platform Native Widget Bridge (`WidgetBridgeSyncService`)**:
+  * Implemented `WidgetBridgeSyncService` in `lib/src/core/services/widget_bridge_sync_service.dart` syncing snapshots to native iOS WidgetKit, Android Glance, and local storage.
+- **Responsive Shell Widget Studio Navigation**:
+  * Added quick launcher across mobile menu, tablet rail, and desktop command deck in `lib/src/presentation/screens/home/responsive_home_shell.dart`.
+- **Automated Widget Studio Test Suite (`widget_preview_studio_test.dart`)**:
+  * Added 7 tests covering models, component rendering, quick-logging, and studio modal lifecycle.
+  * **208 / 208 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.23.0] - 2026-11-22 — Stage 6: Subphase 6.1.2 — Interactive Rich Notification Payload Generator & Actionable Quick-Log Notification Handlers
 ### Added
 - **Interactive Rich Notification Payload Engine**:

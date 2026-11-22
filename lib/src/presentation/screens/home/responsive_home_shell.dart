@@ -24,6 +24,7 @@ import '../../widgets/shortcuts/keyboard_shortcuts_modal.dart';
 import '../../widgets/sync/sync_status_indicator.dart';
 import '../../widgets/theme/theme_switcher_button.dart';
 import '../../widgets/voice/voice_command_modal.dart';
+import '../../widgets/widgets_preview/widget_preview_studio_modal.dart';
 
 /// Responsive cross-platform layout shell adapting across Compact (Phone),
 /// Medium (Tablet/Foldable), and Expanded (Desktop/Web/4K) screen breakpoints.
@@ -108,6 +109,9 @@ class ResponsiveHomeShell extends ConsumerWidget {
             icon: const Icon(Icons.more_vert_rounded),
             onSelected: (val) {
               switch (val) {
+                case 'widgets':
+                  WidgetPreviewStudioModal.show(context);
+                  break;
                 case 'backup':
                   DataBackupModal.show(context);
                   break;
@@ -120,6 +124,16 @@ class ResponsiveHomeShell extends ConsumerWidget {
               }
             },
             itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'widgets',
+                child: Row(
+                  children: [
+                    Icon(Icons.widgets_outlined, size: 18),
+                    SizedBox(width: 8),
+                    Text('Widget Studio'),
+                  ],
+                ),
+              ),
               PopupMenuItem(
                 value: 'analytics',
                 child: Row(
@@ -221,6 +235,11 @@ class ResponsiveHomeShell extends ConsumerWidget {
                       icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
                       tooltip: 'AquaWild Pro Store',
                       onPressed: () => PremiumStorefrontModal.show(context),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.widgets_outlined),
+                      tooltip: 'Widget Studio',
+                      onPressed: () => WidgetPreviewStudioModal.show(context),
                     ),
                     IconButton(
                       icon: const Icon(Icons.keyboard_outlined),
@@ -516,6 +535,12 @@ class ResponsiveHomeShell extends ConsumerWidget {
                             title: 'AquaWild Store',
                             shortcut: 'S',
                             onTap: () => PremiumStorefrontModal.show(context),
+                          ),
+                          _buildDesktopNavTile(
+                            icon: Icons.widgets_outlined,
+                            title: 'Widget Studio',
+                            shortcut: 'W',
+                            onTap: () => WidgetPreviewStudioModal.show(context),
                           ),
                           _buildDesktopNavTile(
                             icon: Icons.backup_outlined,

@@ -586,6 +586,36 @@
      * Certified full project test suite: **201 / 201 passing tests**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 031 — 2026-11-22 (Stage 6: Subphase 6.2.1 — Interactive Home Screen & Lock Screen Widget Preview Studio)
+- **Context**: Enabling in-app interactive simulation, configuration, and device synchronization for home-screen and lock-screen widgets across all platforms (Android, iOS, Web, Windows, macOS, Linux).
+- **Architectural Decisions & Deliverables**:
+  1. **Widget Form Factors & Domain Specifications (`WidgetModels`)**:
+     * Built [widget_models.dart](file:///h:/water/lib/src/domain/models/widget_models.dart) specifying standard widget dimensions:
+       - `systemSmall` (Compact 2x2: 156x156dp)
+       - `systemMedium` (Medium 4x2: 328x156dp)
+       - `lockScreenLiveActivity` (Lock Screen & Dynamic Island: 340x140dp)
+     * Added `WidgetSimulatorWallpaper` supporting switchable wallpaper backdrops (Dark Abyssal Ocean, Minimal Midnight, Emerald Bamboo, Aurora Glacier).
+     * Added `WidgetSyncResult` tracking synchronization metadata and target platforms.
+  2. **Cross-Platform Native Widget Bridge (`WidgetBridgeSyncService`)**:
+     * Built [widget_bridge_sync_service.dart](file:///h:/water/lib/src/core/services/widget_bridge_sync_service.dart) coordinating snapshot caching and native widget reloading via platform channel `com.aquawild/widget_bridge` (`reloadWidgets`).
+     * Graceful fallback: handles non-mobile platforms (Web, Windows, macOS, Linux) by updating local persistent caches with zero crashes.
+  3. **High-Fidelity Widget Component Views**:
+     * Built [compact_widget_view.dart](file:///h:/water/lib/src/presentation/widgets/widgets_preview/compact_widget_view.dart) with circular progress ring, active companion avatar, streak pill, and one-tap +250ml quick-log button.
+     * Built [medium_widget_view.dart](file:///h:/water/lib/src/presentation/widgets/widgets_preview/medium_widget_view.dart) with left circular meter, circadian pace pill, streak chip, multi-nutrient badges (caffeine, electrolytes, sugar), and 4-button quick-log dock (150ml, 250ml, 330ml, 500ml).
+     * Built [lock_screen_widget_view.dart](file:///h:/water/lib/src/presentation/widgets/widgets_preview/lock_screen_widget_view.dart) featuring AMOLED dark glass styling, companion evolution stage, live linear progress indicator, and action triggers (+250ml, Snooze 30m).
+  4. **Widget Preview Studio Modal (`WidgetPreviewStudioModal`)**:
+     * Built [widget_preview_studio_modal.dart](file:///h:/water/lib/src/presentation/widgets/widgets_preview/widget_preview_studio_modal.dart) featuring tabbed form-factor switching, backdrop wallpaper picker, real-time reactive telemetry binding, and live interactive quick-log buttons.
+     * Integrated "Sync to Device Widgets" button triggering `WidgetBridgeSyncService`.
+  5. **Responsive Home Shell Navigation Integration**:
+     * Integrated "Widget Studio" launcher across all 3 viewports in [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart): mobile popup menu, tablet NavigationRail, and desktop command deck (shortcut 'W').
+  6. **Comprehensive Automated Test Coverage**:
+     * Authored [widget_preview_studio_test.dart](file:///h:/water/test/presentation/widget_preview_studio_test.dart) (7 tests) verifying models, sync service, widget components, tab switching, and simulator interactions.
+     * Certified full project test suite: **208 / 208 passing tests**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
 
 
 
