@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.8.0] - 2026-11-22 — Stage 2: Subphase 2.2.1 — Tap/Click-to-Move Kinematic Locomotion Controller
+### Added
+- **Kinematic Mascot Locomotion Controller (`MascotKinematicController`)**:
+  * Tap or click anywhere on the pool surface directs Ruby the Red Panda to swim to the destination with smooth pathfinding and boundary rect clamping.
+  * 140ms pre-movement anticipation crouch with downward volume-preserving squash and heading orientation alignment.
+  * Distance-scaled cubic eased trajectory (`Curves.easeInOutCubic`) cruising at ~380px/s with momentum tilt and hydrodynamic forward stretch.
+  * Continuous trailing wake ripples emitted every 26px behind the tail along the inverse travel vector.
+  * Damped harmonic landing bounce upon arrival with arrival splash before settling to idle floating.
+  * Seamless in-flight retargeting preserving current instantaneous position and velocity.
+- **Direct Petting vs Swim Differentiation**:
+  * Taps within 65px of Ruby trigger affectionate petting reactions (squint, blush, smile).
+  * Taps outside Ruby trigger tap-to-move swimming navigation with target beacon ripples.
+- **Accessibility & 120 FPS Performance**:
+  * Full WCAG 2.2 AA+ reduced-motion compliance (instant relocation with zero momentum or tilt).
+  * Frame-rate independent physics simulation based on delta time.
+- **Automated Test Coverage**:
+  * Added `test/presentation/mascot_kinematic_controller_test.dart` and updated `test/presentation/pool_simulation_test.dart` (110/110 tests passing, 0 analyzer issues).
+
+---
+
 ## [1.7.0] - 2026-11-22 — Stage 2: Subphase 2.1.2 — Natural Idle Animation Rig & Multi-Track Interactive Life-Cycle
 ### Added
 - **Multi-Track Natural Idle Animation Rig (`FloatingRedPandaPainter`, `InteractivePoolView`)**:

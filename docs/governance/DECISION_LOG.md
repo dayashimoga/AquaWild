@@ -195,3 +195,27 @@
   4. **Automated Test Coverage**:
      * Expanded `test/presentation/pool_simulation_test.dart` with tests for ear twitching, reaction pulse, eye tracking, mouse hover gestures, and reduced-motion enforcement (102/102 test pass rate, 0 analyzer issues).
 - **Sign-Off**: `animation-agent`, `ux-ui-agent`, `solution-architect`, `qa-agent`, `mobile-agent`, `desktop-web-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 015 — 2026-11-22 (Stage 2: Subphase 2.2.1 — Tap/Click-to-Move Kinematic Locomotion Controller)
+- **Context**: Replacing static coordinate mascot placement with an intelligent, physics-based tap/click-to-move kinematic locomotion system across the launch water environment.
+- **Architectural Decisions & Deliverables**:
+  1. **Kinematic Locomotion Engine (`MascotKinematicController`)**:
+     * **Locomotion State Phases**: `idle` $\to$ `anticipating` $\to$ `swimming` $\to$ `landing` $\to$ `idle`.
+     * **Boundary Rect Clamping**: Keeps Ruby safely centered within the pool basin, preventing clipping against top header or bottom launch cards.
+     * **Pre-Movement Anticipation**: 140ms pre-swim phase featuring a volume-preserving downward crouch into the water cushion ($\text{verticalSquash} = 1.0 - 0.08\sin(p\pi)$) and angular heading pre-alignment.
+     * **Cubic Eased Swimming Trajectory**: Travel velocity dynamically scales by distance ($\sim 380\text{px/sec}$) using `Curves.easeInOutCubic` for natural acceleration and deceleration.
+     * **Momentum Lean & Hydrodynamic Stretch**: Instantaneous horizontal velocity vector $\vec{v}_x$ drives roll tilt ($\pm 0.22\text{ rad}$) while speed elastically stretches the vector body along the travel vector.
+     * **Continuous Trailing Wake Ripples**: Emits dynamic wake ripples behind the tail along the inverse travel vector every $26\text{px}$ of displacement.
+     * **Damped Harmonic Landing Bounce**: Upon arrival, an exponential decay oscillator ($e^{-4.5p}\sin(3\pi p) \times 10\text{px}$) cushions the mascot into equilibrium with an arrival splash ripple before resuming tranquil idle floating.
+     * **Smooth In-Flight Retargeting**: Retargeting mid-swim preserves current instantaneous position and velocity, seamlessly curving into the new destination path without discontinuities.
+  2. **Touch/Click Differentiation**:
+     * Tapping within $65\text{px}$ of Ruby triggers an affectionate pet reaction (happy squint, soft rosy blush, and joy smile).
+     * Tapping outside Ruby triggers pathfinding swim navigation with target beacon ripples.
+  3. **Reduced-Motion Mode**:
+     * When `MediaQuery.disableAnimationsOf(context)` is enabled, immediately relocates Ruby to the clamped destination with 0 tilt, 0 anticipation, and 0 bounce for full accessibility compliance.
+  4. **Automated Test Coverage**:
+     * Added `test/presentation/mascot_kinematic_controller_test.dart` and updated `test/presentation/pool_simulation_test.dart` (110/110 passing tests, 0 analyzer issues).
+- **Sign-Off**: `animation-agent`, `ux-ui-agent`, `solution-architect`, `qa-agent`, `mobile-agent`, `desktop-web-agent`, `release-devops-agent`.

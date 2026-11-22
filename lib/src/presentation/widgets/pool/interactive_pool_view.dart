@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'floating_red_panda_painter.dart';
+import 'mascot_kinematic_controller.dart';
 import 'pool_particles_painter.dart';
 import 'pool_water_simulation_painter.dart';
 import 'ripple_emitter.dart';
@@ -44,6 +45,10 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
   // Eye-tracking target & smoothed gaze position
   Offset? _pointerPosition;
   Offset _currentLookTarget = Offset.zero;
+
+  // Kinematic locomotion controller for tap/click-to-move pathfinding
+  MascotKinematicController? _kinematics;
+  double _lastFrameTime = 0.0;
 
   @override
   void initState() {
@@ -100,7 +105,18 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
     return LayoutBuilder(
       builder: (context, constraints) {
         final Size size = Size(constraints.maxWidth, constraints.maxHeight);
-        final Offset center = Offset(size.width / 2, size.height * 0.42);
+        final Offset defaultCenter = Offset(size.width / 2, size.height * 0.42);
+
+        // Initialize kinematics controller at pool center if not yet created
+        _kinematics ??=
+            MascotKinematicController(initialPosition: defaultCenter);
+
+        final Rect poolBounds = Rect.fromLTRB(
+          120.0,
+          90.0,
+          math.max(120.0, size.width - 120.0),
+          math.max(90.0, size.height * 0.75 - 60.0),
+        );
 
         return AnimatedBuilder(
           animation: _controller,
@@ -108,12 +124,40 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             final double currentTime =
                 DateTime.now().millisecondsSinceEpoch / 1000.0;
 
-            // Trigger ambient breathing ripple from Red Panda every 2.5 seconds
-            if (!reducedMotion && (currentTime - _lastAmbientRippleTime) > 2.5) {
+            // Frame-rate independent delta time
+            final double dt = _lastFrameTime > 0.0
+                ? (currentTime - _lastFrameTime).clamp(0.001, 0.05)
+                : 0.016;
+            _lastFrameTime = currentTime;
+
+            // Update kinematic locomotion simulation
+            _kinematics!.update(dt, reducedMotion: reducedMotion);
+            final MascotKinematics kState = _kinematics!.state;
+
+            // Emit wake trail ripple behind mascot when traveling
+            if (kState.shouldEmitWake && !reducedMotion) {
+              final Offset wakeOffset = kState.velocity.distanceSquared > 1.0
+                  ? kState.position -
+                      (kState.velocity / kState.velocity.distance) * 28.0
+                  : kState.position;
+              _ripples.add(
+                WaterRipple(
+                  origin: wakeOffset,
+                  startTimeSeconds: currentTime,
+                  amplitude: 0.65,
+                  maxRadius: 110.0,
+                ),
+              );
+            }
+
+            // Trigger ambient breathing ripple from Red Panda every 2.5 seconds when idle
+            if (!reducedMotion &&
+                kState.state == LocomotionState.idle &&
+                (currentTime - _lastAmbientRippleTime) > 2.5) {
               _lastAmbientRippleTime = currentTime;
               _ripples.add(
                 WaterRipple(
-                  origin: Offset(center.dx + 40, center.dy + 30),
+                  origin: Offset(kState.position.dx + 40, kState.position.dy + 30),
                   startTimeSeconds: currentTime,
                   amplitude: 0.6,
                   maxRadius: 140.0,
@@ -121,9 +165,13 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
               );
             }
 
+            // Clean up expired ripples
+            _ripples.removeWhere((r) => r.isExpired(currentTime));
+
             // Damped harmonic buoyancy bobbing & tilt rocking
             final double t = _controller.value * math.pi * 2;
-            final double naturalBob = reducedMotion ? 0.0 : math.sin(t * 1.5) * 8.0;
+            final double naturalBob =
+                reducedMotion ? 0.0 : math.sin(t * 1.5) * 8.0;
             final double naturalTilt =
                 reducedMotion ? 0.0 : math.cos(t * 1.1) * 0.05;
 
@@ -133,8 +181,10 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             _reactionPulse *= 0.93;
             if (_reactionPulse < 0.005) _reactionPulse = 0.0;
 
-            final double totalBob = naturalBob + _touchImpulse;
-            final double totalTilt = naturalTilt + _touchTilt;
+            final double totalBob =
+                naturalBob + _touchImpulse + kState.landingBounce;
+            final double totalTilt =
+                naturalTilt + _touchTilt + kState.momentumTilt;
             final double glintPhase = (_controller.value * 3.0) % 1.0;
 
             // Involuntary Blinking calculation
@@ -159,7 +209,8 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             if (!reducedMotion) {
               if (currentTime >= _nextEarTwitchTime) {
                 _twitchStartTime = currentTime;
-                _nextEarTwitchTime = currentTime + 4.0 + _random.nextDouble() * 3.5;
+                _nextEarTwitchTime =
+                    currentTime + 4.0 + _random.nextDouble() * 3.5;
               }
               final double twitchElapsed = currentTime - _twitchStartTime;
               if (twitchElapsed >= 0.0 && twitchElapsed < 0.24) {
@@ -169,18 +220,22 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
               }
             }
 
-            // Gaze eye tracking towards pointer hover
+            // Gaze eye tracking towards pointer hover relative to active mascot position
             if (!reducedMotion && _pointerPosition != null) {
               final double dx =
-                  ((_pointerPosition!.dx - center.dx) / 160.0).clamp(-1.0, 1.0);
+                  ((_pointerPosition!.dx - kState.position.dx) / 160.0)
+                      .clamp(-1.0, 1.0);
               final double dy =
-                  ((_pointerPosition!.dy - (center.dy - 32)) / 160.0).clamp(-1.0, 1.0);
+                  ((_pointerPosition!.dy - (kState.position.dy - 32)) / 160.0)
+                      .clamp(-1.0, 1.0);
               final Offset targetLook = Offset(dx, dy);
               _currentLookTarget =
-                  Offset.lerp(_currentLookTarget, targetLook, 0.15) ?? Offset.zero;
+                  Offset.lerp(_currentLookTarget, targetLook, 0.15) ??
+                      Offset.zero;
             } else {
               _currentLookTarget =
-                  Offset.lerp(_currentLookTarget, Offset.zero, 0.08) ?? Offset.zero;
+                  Offset.lerp(_currentLookTarget, Offset.zero, 0.08) ??
+                      Offset.zero;
             }
 
             return MouseRegion(
@@ -192,17 +247,38 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
               },
               child: GestureDetector(
                 onTapDown: (details) {
-                  _addRipple(details.localPosition, amplitude: 1.2, maxRadius: 220.0);
-                  setState(() {
-                    _touchImpulse = 14.0;
-                    _touchTilt = (details.localPosition.dx > center.dx) ? 0.12 : -0.12;
-                    _reactionPulse = 1.0;
-                    _pointerPosition = details.localPosition;
-                  });
+                  final Offset tapPos = details.localPosition;
+                  final double distToMascot =
+                      (tapPos - kState.position).distance;
+
+                  if (distToMascot < 65.0) {
+                    // Direct petting stroke on Ruby
+                    _addRipple(tapPos, amplitude: 1.0, maxRadius: 140.0);
+                    setState(() {
+                      _touchImpulse = 12.0;
+                      _reactionPulse = 1.0;
+                      _pointerPosition = tapPos;
+                    });
+                  } else {
+                    // Tap-to-move kinematic swim
+                    _addRipple(tapPos, amplitude: 1.3, maxRadius: 200.0);
+                    setState(() {
+                      _touchImpulse = 10.0;
+                      _touchTilt =
+                          (tapPos.dx > kState.position.dx) ? 0.08 : -0.08;
+                      _pointerPosition = tapPos;
+                      _kinematics!.moveTo(
+                        tapPos,
+                        boundaryRect: poolBounds,
+                        immediate: reducedMotion,
+                      );
+                    });
+                  }
                 },
                 onPanUpdate: (details) {
                   if (_random.nextDouble() < 0.25) {
-                    _addRipple(details.localPosition, amplitude: 0.8, maxRadius: 120.0);
+                    _addRipple(details.localPosition,
+                        amplitude: 0.8, maxRadius: 120.0);
                   }
                   _pointerPosition = details.localPosition;
                 },
@@ -231,13 +307,13 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
 
                     // Layer 3: Anatomically Accurate Red Panda Reclining Naturally in Water
                     Positioned(
-                      left: center.dx - 120,
-                      top: center.dy - 120,
+                      left: kState.position.dx - 120,
+                      top: kState.position.dy - 120,
                       width: 240,
                       height: 240,
                       child: Semantics(
                         label:
-                            'Ruby the Red Panda reclining naturally in crystal-clear highland mineral water. Tap anywhere to splash and create ripples.',
+                            'Ruby the Red Panda reclining naturally in crystal-clear highland mineral water. Tap anywhere to swim and create ripples.',
                         button: true,
                         child: CustomPaint(
                           size: const Size(240, 240),
@@ -251,6 +327,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                             lookTarget: _currentLookTarget,
                             earTwitchAngle: earTwitchAngle,
                             reactionPulse: _reactionPulse,
+                            verticalSquash: kState.verticalSquash,
                           ),
                         ),
                       ),

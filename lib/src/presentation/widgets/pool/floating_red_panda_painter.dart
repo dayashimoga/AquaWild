@@ -21,6 +21,7 @@ class FloatingRedPandaPainter extends CustomPainter {
   final Offset lookTarget; // Pupil eye-tracking offset (-1.0 to 1.0)
   final double earTwitchAngle; // Radians for spontaneous ear twitch flick
   final double reactionPulse; // 0.0 to 1.0 for affectionate squint & smile flare
+  final double verticalSquash; // Squash/stretch ratio for anticipation & landing (1.0 = normal)
 
   // Reusable paints to ensure 120 FPS performance with zero per-frame GC allocations
   final Paint _shadowPaint = Paint()
@@ -70,6 +71,7 @@ class FloatingRedPandaPainter extends CustomPainter {
     this.lookTarget = Offset.zero,
     this.earTwitchAngle = 0.0,
     this.reactionPulse = 0.0,
+    this.verticalSquash = 1.0,
   });
 
   @override
@@ -80,10 +82,14 @@ class FloatingRedPandaPainter extends CustomPainter {
     // 1. Projected Underwater Parallax Shadow on Pool Tiles
     _drawUnderwaterShadow(canvas, centerX, centerY);
 
-    // Apply buoyancy displacement & rocking tilt to the floating mascot assembly
+    // Apply buoyancy displacement, rocking tilt, and volume-preserving squash/stretch
     canvas.save();
     canvas.translate(centerX, centerY + bobOffset);
     canvas.rotate(tiltAngle);
+    if ((verticalSquash - 1.0).abs() > 0.005) {
+      final double safeSquash = verticalSquash.clamp(0.80, 1.25);
+      canvas.scale(1.0 / math.sqrt(safeSquash), safeSquash);
+    }
 
     // 2. Submerged Water Contact & Wet Rim
     _drawWaterlinePerimeter(canvas);
@@ -627,6 +633,7 @@ class FloatingRedPandaPainter extends CustomPainter {
         oldDelegate.tailWagPhase != tailWagPhase ||
         oldDelegate.lookTarget != lookTarget ||
         oldDelegate.earTwitchAngle != earTwitchAngle ||
-        oldDelegate.reactionPulse != reactionPulse;
+        oldDelegate.reactionPulse != reactionPulse ||
+        oldDelegate.verticalSquash != verticalSquash;
   }
 }

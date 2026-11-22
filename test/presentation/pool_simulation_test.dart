@@ -84,6 +84,15 @@ void main() {
         lookTarget: const Offset(0.5, -0.2),
       );
       expect(painter1.shouldRepaint(painterLook), isTrue);
+
+      final painterSquash = FloatingRedPandaPainter(
+        bobOffset: 5.0,
+        tiltAngle: 0.05,
+        glintPhase: 0.2,
+        breathPhase: 0.1,
+        verticalSquash: 0.92,
+      );
+      expect(painter1.shouldRepaint(painterSquash), isTrue);
     });
 
     test('PoolWaterSimulationPainter repaints when ripples or time changes', () {
@@ -161,6 +170,26 @@ void main() {
 
       // With reduced motion, particles are omitted and physics bob is frozen
       expect(find.byType(InteractivePoolView), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('InteractivePoolView handles tap-to-move swim navigation across pool',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: InteractivePoolView(),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Tap on a destination point to trigger swimming
+      await tester.tapAt(const Offset(350, 200));
+      await tester.pump(const Duration(milliseconds: 50)); // Anticipation
+      await tester.pump(const Duration(milliseconds: 300)); // Swimming
+      await tester.pump(const Duration(milliseconds: 400)); // Landing & settling
+
       expect(tester.takeException(), isNull);
     });
   });
