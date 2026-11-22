@@ -23,6 +23,7 @@ class KeyboardShortcutsModal extends StatelessWidget {
     ('T', 'Cycle Theme Mode', 'Cycles between Hydro-Glass, Dark, Light, and High Contrast'),
     ('V', 'Voice Logger', 'Opens natural language speech input simulation modal'),
     ('X', 'Backup & Export', 'Exports telemetry to lossless JSON or spreadsheet CSV'),
+    ('Ctrl+Shift+A', 'Admin Mission Control', 'Opens AquaWild Mission Control & Developer Portal'),
     ('? / F1', 'Shortcuts Guide', 'Displays this shortcuts reference dialog'),
   ];
 

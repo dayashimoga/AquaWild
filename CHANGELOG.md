@@ -2,6 +2,31 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.28.0] - 2026-11-22 — Stage 7: Subphase 7.2.1 — Multi-Module Admin Portal UI (`/admin`), Navigation Deck & Cross-Platform Command Center
+### Added
+- **Multi-Module Admin Portal Screen (`AdminPortalScreen`)**:
+  * Built `AdminPortalScreen` in `lib/src/presentation/screens/admin/admin_portal_screen.dart` featuring Hydro-Glass aesthetics (`#0A0F1D` canvas, `#111827` surface cards, glowing cyan/amber chips, and status banners).
+  * Responsive 6-platform layout: 240px wide sidebar navigation deck on desktop/tablet ($\ge 800\text{px}$) and horizontal choice-chip selector on mobile ($< 800\text{px}$).
+  * 8 Comprehensive Functional Modules:
+    - **KPI Overview**: Financial telemetry cards (MRR, ARR, ARPU, Active Pro Subscribers, Conversion Rate %, Total Revenue) and SKU performance table with gross revenues and unit sales.
+    - **God Mode & Developer Overrides**: Master God-Mode toggle with glowing app-bar indicator, individual subsystem bypasses (force Pro, unlock biomes, unlock companions, unlock themes, infinite streak freezes, max evolution stages), and instant milestone beverage simulators (25%, 50%, 75%, 100%, 150%).
+    - **User Directory**: Search bar with real-time filtering, user count chip, user profile cards with role badges and account status chips, plus action dialogs for XP adjustment, freeze token grants, account suspension/activation, and role changes.
+    - **Content Catalog CRUD**: Tabbed view for Beverages and Animal Companions with parameter inspect/edit and live availability switches.
+    - **Feature Flags**: Category-segmented flags (Core, Experimental, Monetization, UI, AI) with interactive live switches.
+    - **Environment Switcher**: Target cards (Development, Staging, Production) with active radio checks, endpoint details, and live environment badge in the top app bar.
+    - **Security Audit Trail**: Live log table with cryptographic status banner, timestamp, operator email, target entity, SHA-256 hash snippets, and an interactive "Verify Chain" button executing full SHA-256 hash-chain integrity verification.
+    - **Notification Broadcast Center**: Broadcast composer form (title, body, category, audience selector), immediate dispatch button, +1h schedule button, and scheduled broadcast management list with cancellation controls.
+- **GoRouter Registration & Multi-Entry Navigation Architecture**:
+  * Registered `/admin` route in `lib/src/core/router/app_router.dart`.
+  * Added `AdminPortalScreen.show(context)` static launcher method.
+  * Added entry points across mobile overflow menu, tablet rail, and desktop command deck in `lib/src/presentation/screens/home/responsive_home_shell.dart`.
+  * Added global keyboard shortcut `Ctrl+Shift+A` in `lib/src/presentation/widgets/shortcuts/aqua_wild_shortcuts_wrapper.dart` and documented in `lib/src/presentation/widgets/shortcuts/keyboard_shortcuts_modal.dart`.
+- **Admin Portal UI Widget & Interaction Test Suite**:
+  * Added `test/presentation/screens/admin_portal_screen_test.dart` (9 unit & widget tests).
+  * Certified full project test suite: **248 / 248 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.27.0] - 2026-11-22 — Stage 7: Subphase 7.1.2 — Immutable Security Audit Trail Logger, Monetization Analytics Telemetry & Notification Broadcast Engine
 ### Added
 - **Cryptographic Immutable Audit Trail Engine (`AdminAuditLogService`)**:
@@ -38,39 +63,6 @@ All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered H
 - **Admin Test Suites (`admin_portal_models_test.dart` & `admin_portal_controller_test.dart`)**:
   * Added 16 tests covering RBAC permissions, serialization, God-Mode activation, user filtering, catalog CRUD, flags, and environment switching.
   * Certified full project test suite: **229 / 229 passing tests**, **0 analyzer issues**, **zero warnings**.
-
----
-
-## [1.26.0] - 2026-11-22 — Stage 7: Subphase 7.1.1 — Admin Domain & Controller (`AdminPortalController`)
-### Added
-- **Admin Command Domain Models (`admin_portal_models.dart`)**:
-  * Implemented `UserRole` with RBAC permissions (`standard`, `pro`, `moderator`, `admin`, `superAdmin`) and `UserAccountStatus` in `lib/src/domain/models/admin_portal_models.dart`.
-  * Implemented `AdminUserProfile` tracking XP, streak, freeze tokens, and timestamps with seed mock directory.
-  * Implemented `AdminGodModeConfig` with `standard` and `fullUnlocked` presets.
-  * Implemented `AdminBeverageItem` and `AdminAnimalItem` populated from real AquaWild default catalogs.
-  * Implemented `AdminFeatureFlag` with runtime categories (`core`, `experimental`, `monetization`, `ui`, `ai`).
-  * Implemented `AppEnvironment` and `AdminEnvironmentConfig` for `development`, `staging`, and `production`.
-- **Admin Portal Controller (`AdminPortalNotifier`)**:
-  * Created `AdminPortalNotifier` in `lib/src/presentation/controllers/admin_portal_controller.dart`.
-  * Built God-Mode master toggle: activates Pro Lifetime, all pack entitlements, and 25,000 XP in one tap.
-  * Built User Directory search, XP adjustment, streak freeze grants, status updates, and role elevation.
-  * Built Beverage and Animal catalog CRUD operations with availability toggling.
-  * Built Dynamic Feature Flag manager and Multi-Environment switcher.
-- **Admin Test Suites (`admin_portal_models_test.dart` & `admin_portal_controller_test.dart`)**:
-  * Added 16 tests covering RBAC permissions, serialization, God-Mode activation, user filtering, catalog CRUD, flags, and environment switching.
-  * Certified full project test suite: **229 / 229 passing tests**, **0 analyzer issues**, **zero warnings**.
-
----
-
-## [1.25.0] - 2026-11-22 — Stage 6: Subphase 6.2.2 — Fix Reactive AI Hydration Coach Auto-Sync on Drink Log/Delete + Notification & Widget Test Suite
-### Added
-- **AI Hydration Coach Auto-Sync Test Suite (`ai_coach_auto_sync_test.dart`)**:
-  * Added 5 tests covering drink log auto-sync (+1000ml pure water updates advice to 40%), drink deletion auto-sync, 100% target conquest headline transition, companion persona switching, and end-to-end multi-provider synchronization.
-  * Certified full project test suite: **213 / 213 passing tests**, **0 analyzer issues**, **zero warnings**.
-### Fixed
-- **Reactive AI Hydration Coach State Synchronization (`HIGH-08`)**:
-  * Updated `AiCoachNotifier` in `lib/src/presentation/controllers/ai_coach_controller.dart` to reactively listen to `hydrationProvider`, `animalHabitatProvider`, and `weatherActivityNotifierProvider`.
-  * Completely eliminated stale AI advice: drink logging, drink removal, target goal adjustment, companion switches, or workout/weather updates immediately recalibrate intelligent clinical hydration advice without requiring a manual refresh.
 
 ---
 

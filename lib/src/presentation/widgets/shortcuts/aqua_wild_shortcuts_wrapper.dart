@@ -6,6 +6,7 @@ import '../../../core/theme/theme_mode_notifier.dart';
 import '../../../domain/models/beverage_type.dart';
 import '../../controllers/animal_habitat_controller.dart';
 import '../../controllers/hydration_controller.dart';
+import '../../screens/admin/admin_portal_screen.dart';
 import '../ai/ai_coach_sheet.dart';
 import '../analytics/predictive_analytics_sheet.dart';
 import '../backup/data_backup_modal.dart';
@@ -110,6 +111,8 @@ class AquaWildShortcutsWrapper extends ConsumerWidget {
             VoiceCommandModal.show(context),
         const SingleActivator(LogicalKeyboardKey.keyX): () =>
             DataBackupModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.keyA, control: true, shift: true):
+            () => AdminPortalScreen.show(context),
         const SingleActivator(LogicalKeyboardKey.slash): () =>
             KeyboardShortcutsModal.show(context),
         const SingleActivator(LogicalKeyboardKey.f1): () =>

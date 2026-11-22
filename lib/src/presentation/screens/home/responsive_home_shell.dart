@@ -25,6 +25,7 @@ import '../../widgets/sync/sync_status_indicator.dart';
 import '../../widgets/theme/theme_switcher_button.dart';
 import '../../widgets/voice/voice_command_modal.dart';
 import '../../widgets/widgets_preview/widget_preview_studio_modal.dart';
+import '../admin/admin_portal_screen.dart';
 
 /// Responsive cross-platform layout shell adapting across Compact (Phone),
 /// Medium (Tablet/Foldable), and Expanded (Desktop/Web/4K) screen breakpoints.
@@ -121,6 +122,9 @@ class ResponsiveHomeShell extends ConsumerWidget {
                 case 'shortcuts':
                   KeyboardShortcutsModal.show(context);
                   break;
+                case 'admin':
+                  AdminPortalScreen.show(context);
+                  break;
               }
             },
             itemBuilder: (context) => const [
@@ -161,6 +165,16 @@ class ResponsiveHomeShell extends ConsumerWidget {
                     Icon(Icons.keyboard_outlined, size: 18),
                     SizedBox(width: 8),
                     Text('Keyboard Shortcuts'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'admin',
+                child: Row(
+                  children: [
+                    Icon(Icons.admin_panel_settings_rounded, size: 18, color: Colors.cyanAccent),
+                    SizedBox(width: 8),
+                    Text('Admin Mission Control'),
                   ],
                 ),
               ),
@@ -245,6 +259,11 @@ class ResponsiveHomeShell extends ConsumerWidget {
                       icon: const Icon(Icons.keyboard_outlined),
                       tooltip: 'Shortcuts Guide',
                       onPressed: () => KeyboardShortcutsModal.show(context),
+                    ),
+                    IconButton(
+                      icon: const Icon(Icons.admin_panel_settings_rounded, color: Colors.cyanAccent),
+                      tooltip: 'Admin Mission Control',
+                      onPressed: () => AdminPortalScreen.show(context),
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -554,6 +573,12 @@ class ResponsiveHomeShell extends ConsumerWidget {
                             shortcut: '?',
                             onTap: () =>
                                 KeyboardShortcutsModal.show(context),
+                          ),
+                          _buildDesktopNavTile(
+                            icon: Icons.admin_panel_settings_rounded,
+                            title: 'Admin Portal',
+                            shortcut: 'Ctrl+Shift+A',
+                            onTap: () => AdminPortalScreen.show(context),
                           ),
                         ],
                       ),
