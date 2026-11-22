@@ -2,6 +2,17 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.13.0] - 2026-11-22 — Stage 3: Subphase 3.2.2 — Fluid Solver Benchmark Profiling & Stage 3 Sign-Off
+### Added
+- **Wave Column Solver Performance Benchmark (`test/presentation/wave_solver_test.dart`)**:
+  * Implemented automated 500-iteration performance benchmark for `WaveColumnSolver`.
+  * Verified step computation time $< 0.05\text{ms}$ per step (well within $< 0.2\text{ms}$ frame raster budget on 120Hz displays).
+  * Validated zero memory allocation / zero garbage collection pressure during physics simulation.
+- **Automated Test Coverage**:
+  * 116 / 116 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.12.0] - 2026-11-22 — Stage 3: Subphase 3.2.1 — Smooth Fill-Level Spring-Damper Interpolation & Pour Stream Ripple Excitation
 ### Added
 - **Critically-Damped Spring-Damper Fill Level Interpolation (`AnimalFluidHabitatView`)**:

@@ -51,6 +51,25 @@ void main() {
       expect(solver.totalKineticEnergy, lessThan(100.0));
     });
 
+    test('WaveColumnSolver performance benchmark (<0.2ms per step across 500 iterations)', () {
+      final solver = WaveColumnSolver(columnCount: 64);
+      solver.splash(32, 50.0);
+
+      final stopwatch = Stopwatch()..start();
+      const iterations = 500;
+
+      for (int i = 0; i < iterations; i++) {
+        solver.step(dt: 1.0, subSteps: 2);
+      }
+
+      stopwatch.stop();
+      final double avgMicrosPerStep = stopwatch.elapsedMicroseconds / iterations;
+      final double avgMsPerStep = avgMicrosPerStep / 1000.0;
+
+      // Assert solver step is well under 0.2ms (typically < 0.05ms)
+      expect(avgMsPerStep, lessThan(0.2));
+    });
+
     test('AnimalSilhouettePaths generates non-empty paths for all animals', () {
       const size = Size(300, 350);
       final animals = [

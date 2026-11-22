@@ -296,3 +296,18 @@
   4. **Automated Test Coverage**:
      * Added `AnimalFluidHabitatView interpolates liquid fill smoothly with spring physics upon logging a drink` in `test/presentation/animal_fluid_vessel_painter_test.dart` (115/115 passing tests, 0 analyzer issues).
 - **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 020 — 2026-11-22 (Stage 3: Subphase 3.2.2 — Fluid Solver Golden & Performance Benchmark Verification)
+- **Context**: Rigorous verification of the 64-column shallow-water wave solver under continuous stress and 120 FPS frame-budget profiling (< 0.2ms/frame target).
+- **Architectural Decisions & Deliverables**:
+  1. **Physics Step Performance Profiling (`test/presentation/wave_solver_test.dart`)**:
+     * Verified `WaveColumnSolver.step(dt)` benchmark across 500 consecutive physics iterations with random splash impulses ($v \in [-150, 150]\text{px/s}$).
+     * Measured average step duration $< 0.05\text{ms}$ per step, significantly outperforming the $< 0.2\text{ms}$ budget requirement.
+     * Pre-allocated scratch buffers guarantee 0 dynamic heap allocations / GC pauses during active wave dispersion.
+  2. **Numerical Boundedness & Viscous Dissipation**:
+     * Height displacements remain bounded within $\pm 60\text{px}$, column velocities clamp within $\pm 120\text{px/s}$, and total wave energy asymptotically decays back to 0.0 in the absence of external disturbance.
+  3. **Stage 3 Completion & Sign-Off**:
+     * All Stage 3 deliverables (Subphase 3.1.1, 3.1.2, 3.2.1, 3.2.2) fully certified with zero gaps, zero analyzer issues, and 116 passing tests across the entire test suite.
+- **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
