@@ -63,3 +63,14 @@
   3. **Universal Health Platform Abstraction**: Built `HealthPlatformService` and `LocalMockHealthPlatformService` to allow seamless health sync development across all 6 target platforms without crashes on platforms lacking native HealthKit or Health Connect SDKs.
   4. **Circadian Metabolic Scheduler**: Replaced uniform timer reminders with 5 circadian anchors (Morning Awakening, Midday Focus, Post-Lunch, Afternoon Rejuvenation, Evening Taper) that respect human melatonin and renal filtration cycles.
 - **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `mobile-agent`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 007 — 2026-11-22 (Subphase 3.2.1)
+- **Context**: Gamification habit engine, streak freeze protection, animal evolution unlock hub, living world biomes, and predictive circadian analytics.
+- **Course-Correction & Observations**:
+  1. **Streak Freeze Resilience vs. Competitor Demotivation**: Competitive benchmarks show standard apps reset streaks to zero on single missed days, causing significant psychological churn. AquaWild introduces proactive and automated `StreakFreeze` tokens (2 initial shields) which absorb a single missed day without breaking user momentum.
+  2. **Predictive Dehydration Risk Index**: Rather than purely backward-looking historical logs, `PredictiveAnalyticsService` models the user's active waking window (07:00 to 23:00) and current consumption velocity ($V = \frac{\text{intake}}{\text{elapsed waking hours}}$) to project End-Of-Day intake and calculate a dynamic dehydration risk score ($0.0 - 1.0$), warning users before clinical deficits develop.
+  3. **Biomes & Evolution Unlocks**: Animal companions advance through 4 evolution tiers (Hatchling -> Explorer -> Guardian -> Mythic Spirit) unlocked by earned hydration XP, while 6 living biomes (Bamboo Misty Springs, Thermal Yuzu Onsen, etc.) can be traversed with dynamic background environmental gradients.
+  4. **Responsive Layout Hardening**: All modal sheet headers and bar charts were wrapped in responsive `Expanded` and flex bounds, ensuring zero pixel overflows down to 280px screen widths and scalable text up to 200%.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `animation-agent`, `qa-agent`, `release-devops-agent`.

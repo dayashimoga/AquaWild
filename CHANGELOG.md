@@ -2,6 +2,18 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [0.6.0-subphase-3.2.1] - 2026-11-22
+### Added
+- **Habit Consistency & Streak Freeze Engine**: Implemented `HydrationStreak` and `GamificationService` supporting continuous daily streak calculation, longest streak records, and streak freeze shields to protect user momentum.
+- **Tiered Achievement Badges (12 Badges)**: Created `AchievementBadge` catalog covering habits, circadian dawn intake, electrolyte science, animal bonds, and mythic spirit transcendence with dynamic progress fractions.
+- **Limited-Time Seasonal Challenge Quests**: Built `SeasonalChallenge` with live countdown, XP goals, and claimable rewards ("Verdant Spring Rejuvenation").
+- **Predictive Dehydration Analytics & Circadian Forecasting**: Developed `PredictiveAnalyticsService` computing 7-day rolling window bars, 24-hour hourly intake curves, predictive End-of-Day intake projections, and dynamic dehydration risk scores.
+- **Companion Evolution & Biome Exploration Hub**: Built `BiomeCompanionSelectorSheet` showcasing all 10 companions across 4 evolution stages and allowing ambient travel between the 6 living world biomes.
+- **Interactive Streak Pill & Achievements Gallery**: Created `StreakBadgeChip` on the dashboard header and `AchievementsGallerySheet` for habit inspection and badge claims.
+- **Automated Gamification & Analytics Test Suite**: Added `test/domain/gamification_test.dart`, `test/domain/predictive_analytics_test.dart`, and `test/presentation/gamification_analytics_ui_test.dart` (57 total tests across the project passing, 0 analyzer issues).
+
+---
+
 ## [0.5.0-subphase-3.1.1] - 2026-11-22
 ### Added
 - **OpenAI-Compatible AI Hydration Coach Client**: Implemented `AiCoachService` connecting to any OpenAI-compatible API (`/chat/completions`) with configurable base URL, API key, model selection, prompt sanitization, and structured JSON schema enforcement.

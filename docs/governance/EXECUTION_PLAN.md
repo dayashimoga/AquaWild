@@ -13,8 +13,8 @@
 | **Stage 2: Core Domain, Fluid Physics & Launch Experience** | **Phase 2.1: Hydration Science Domain, Exotic Animal Catalog & Biome Models** | **Subphase 2.1.1** | Beverage Bio-Availability Engine (16+ Beverages), 10 Exotic Animals (Red Panda, Capybara, Axolotl, Otter, Llama, Fox, Penguin, Dolphin, Octopus, Snow Leopard), Evolution Stages, Hydration Biomes & Riverpod Offline-First State | Medium | Low | 30 min | ✅ **COMPLETED (Approved)** |
 | Stage 2 | **Phase 2.2: Launch Screen — Animated SVG Red Panda Floating Pool Physics Engine** | **Subphase 2.2.1** | Interactive Top-View Pool Water Shader/Canvas (Caustics, Procedural Waves, Ripples, Parallax Shadows, Particles) + Detailed Animated SVG Red Panda on Floating Tube + Seamless Hero Transition | High | Medium | 35 min | ✅ **COMPLETED (Approved)** |
 | Stage 2 | **Phase 2.3: Animal Silhouette Fluid Simulation, Multi-Drink Stratification & Micro-Interactions** | **Subphase 2.3.1** | Real-Time 2D Shallow-Water Wave & Meniscus Solver Inside Exotic Animal Silhouettes, Multi-Beverage Colored Density Layers, Splash Particles, Pour Slider, Adaptive Haptics & Synthesized Audio | High | Medium | 40 min | ✅ **COMPLETED (Approved)** |
-| **Stage 3: AI Intelligence, Biometrics, Gamification & Backend** | **Phase 3.1: AI Hydration Coach, Weather/Activity Engine & Health Integrations** | **Subphase 3.1.1** | OpenAI-Compatible AI Hydration Advisor, Dynamic Weather/Activity/Altitude Goal Calculator, Smart Circadian Reminders, Apple HealthKit / Google Health Connect Bridges & Electrolyte Balance | High | Medium | 35 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
-| Stage 3 | **Phase 3.2: Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics** | **Subphase 3.2.1** | Habit-Building Engine, XP/Leveling, Streaks, Seasonal Challenges, Animal Evolution Unlock System, Interactive World Biomes & Predictive Analytics Reports | Medium | Low | 35 min | ⏳ Pending |
+| **Stage 3: AI Intelligence, Biometrics, Gamification & Backend** | **Phase 3.1: AI Hydration Coach, Weather/Activity Engine & Health Integrations** | **Subphase 3.1.1** | OpenAI-Compatible AI Hydration Advisor, Dynamic Weather/Activity/Altitude Goal Calculator, Smart Circadian Reminders, Apple HealthKit / Google Health Connect Bridges & Electrolyte Balance | High | Medium | 35 min | ✅ **COMPLETED (Approved)** |
+| Stage 3 | **Phase 3.2: Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics** | **Subphase 3.2.1** | Habit-Building Engine, XP/Leveling, Streaks, Seasonal Challenges, Animal Evolution Unlock System, Interactive World Biomes & Predictive Analytics Reports | Medium | Low | 35 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
 | Stage 3 | **Phase 3.3: Supabase Backend Schema, Row-Level Security, Realtime & Edge Functions** | **Subphase 3.3.1** | Production Supabase PostgreSQL Migrations, RLS Policies, Realtime Sync Queue, Edge Functions (`ai-hydration-coach`, `weather-hydration-goal`) & Security Audit | Medium | Medium | 30 min | ⏳ Pending |
 | **Stage 4: Multi-Platform UX, Accessibility & CI/CD Release Automation** | **Phase 4.1: Responsive Cross-Platform Shell, Multimodal Accessibility & Dynamic Themes** | **Subphase 4.1.1** | Adaptive Mobile/Tablet/Desktop/Web Layouts, Light/Dark/Hydro-Glass/High-Contrast Themes, Voice Command Logging, Full Keyboard Navigation, Screen Reader Semantics & Reduced-Motion Mode | Medium | Low | 35 min | ⏳ Pending |
 | Stage 4 | **Phase 4.2: Production GitHub Actions Multi-Platform CI/CD & Full Verification Suite** | **Subphase 4.2.1** | 7 GitHub Actions Workflows (`build-all.yml` with selective platform inputs + Android, iOS, Web, Windows, macOS, Linux workflows), Security/Coverage Gates & End-to-End Integration Suite | Medium | Low | 30 min | ⏳ Pending |
@@ -86,3 +86,28 @@
 - **Risk Level**: Medium
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Personalized companion guidance, dynamic weather/workout target adjustments, circadian schedule generation, and 0 compiler warnings.
+
+---
+
+### Subphase 3.2.1 — Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics
+- **Complexity**: Medium
+- **Dependencies**: Subphase 3.1.1, Subphase 2.1.1
+- **Deliverables**:
+  - `lib/src/domain/models/hydration_streak.dart`: Habit streak tracking, longevity records, and streak freeze protection.
+  - `lib/src/domain/models/achievement_badge.dart`: 12 tiered badges with categories, XP rewards, and dynamic progress fraction.
+  - `lib/src/domain/models/seasonal_challenge.dart`: Limited-time community quest with countdown, XP goal, and claimable reward.
+  - `lib/src/domain/models/predictive_analytics.dart`: Daily summaries, 24h circadian hourly buckets, and dehydration risk metric.
+  - `lib/src/core/services/gamification_service.dart`: Evaluates streaks, streak freeze deployment, and badge unlocking.
+  - `lib/src/core/services/predictive_analytics_service.dart`: Aggregates 7-day rolling window, hourly circadian curves, and EOD predictive forecast.
+  - `lib/src/presentation/controllers/gamification_controller.dart`: Riverpod 3 notifier managing streaks, achievements, and seasonal quests.
+  - `lib/src/presentation/controllers/analytics_controller.dart`: Riverpod 3 notifier managing rolling analytics and risk reports.
+  - `lib/src/presentation/widgets/gamification/streak_badge_chip.dart`: Interactive flame streak pill on dashboard header.
+  - `lib/src/presentation/widgets/gamification/achievements_gallery_sheet.dart`: Modal showcase for streak stats, seasonal quest, and badge gallery.
+  - `lib/src/presentation/widgets/biomes/biome_companion_selector_sheet.dart`: Interactive companion evolution viewer and living biome switcher.
+  - `lib/src/presentation/widgets/analytics/predictive_analytics_sheet.dart`: Analytics command center with risk meter, 7-day bar chart, and hourly curve.
+  - Automated test suites: `test/domain/gamification_test.dart`, `test/domain/predictive_analytics_test.dart`, `test/presentation/gamification_analytics_ui_test.dart` (57 total tests passing, 0 analyzer issues).
+- **Validation Criteria**: Zero analyzer warnings; 100% test pass rate; WCAG 2.2 AA+ contrast.
+- **Maximum Execution Time**: 35 minutes
+- **Risk Level**: Low
+- **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
+- **Success Metrics**: Multi-tier gamification motivation, streak freeze resilience, interactive biome exploration, and predictive dehydration forecasting.

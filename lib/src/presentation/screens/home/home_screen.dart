@@ -4,8 +4,12 @@ import 'package:aquawild/src/domain/models/hydration_entry.dart';
 import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
 import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
 import 'package:aquawild/src/presentation/controllers/hydration_controller.dart';
+import 'package:aquawild/src/presentation/widgets/analytics/predictive_analytics_sheet.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart';
+import 'package:aquawild/src/presentation/widgets/biomes/biome_companion_selector_sheet.dart';
 import 'package:aquawild/src/presentation/widgets/environmental/weather_activity_bar.dart';
+import 'package:aquawild/src/presentation/widgets/gamification/achievements_gallery_sheet.dart';
+import 'package:aquawild/src/presentation/widgets/gamification/streak_badge_chip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,6 +32,11 @@ class HomeScreen extends ConsumerWidget {
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.pets_rounded),
+          tooltip: 'Companions & Biomes',
+          onPressed: () => BiomeCompanionSelectorSheet.show(context),
+        ),
         title: Column(
           children: [
             Text(
@@ -44,13 +53,23 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         actions: [
+          const StreakBadgeChip(),
+          IconButton(
+            icon: const Icon(Icons.bar_chart_rounded),
+            tooltip: 'Predictive Analytics',
+            onPressed: () => PredictiveAnalyticsSheet.show(context),
+          ),
           Center(
             child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
-              child: Chip(
-                avatar: const Icon(Icons.bolt, size: 16, color: Colors.amber),
-                label: Text('${habitatState.userXp} XP'),
-                backgroundColor: AppColors.cardGlassDark,
+              padding: const EdgeInsets.only(right: 12.0),
+              child: InkWell(
+                onTap: () => AchievementsGallerySheet.show(context),
+                borderRadius: BorderRadius.circular(16),
+                child: Chip(
+                  avatar: const Icon(Icons.bolt, size: 16, color: Colors.amber),
+                  label: Text('${habitatState.userXp} XP'),
+                  backgroundColor: AppColors.cardGlassDark,
+                ),
               ),
             ),
           ),
