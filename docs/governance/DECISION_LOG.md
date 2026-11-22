@@ -110,3 +110,29 @@
   3. **Release Tag Packaging Pipeline**: Configured release automation triggered on tag pushes (`v*.*.*`) that aggregates build outputs across all runners (Android APK/AAB, iOS zipped archive, Windows executable zip, macOS zipped .app, Linux tarball, and Web Wasm bundle) and attaches them directly to a generated GitHub release with automated notes.
   4. **Repository Governance Assets**: Added `.github/dependabot.yml` for automated dependency updates, `.github/PULL_REQUEST_TEMPLATE.md` enforcing the 12-step governance protocol, and standardized issue templates for bug tracking and feature proposals.
 - **Sign-Off**: `solution-architect`, `release-devops-agent`, `security-agent`, `qa-agent`, `mobile-agent`, `desktop-web-agent`.
+
+---
+
+## Entry 010 — 2026-11-22 (Stage 1: Subphase 1.1.1 — Full Production Audit & 9-Stage Overhaul Plan)
+- **Context**: Comprehensive review of live application screenshots (`#/launch`, `#/home`, Companions modal) and full codebase against store-release production requirements.
+- **Gap Analysis Findings**:
+  1. **Launch Screen Red Panda & Water Caustics (`#/launch`)**: Current launch screen places a simplified Red Panda inside an unrealistic inflatable swim tube surrounded by hundreds of repetitive white circle outlines (`_drawCaustics` drawing $36\text{px}$ grid circles), and pins the Red Panda at a static center coordinate without tap/click-to-move pathfinding or natural idle animations.
+  2. **Stratified Fluid Layer Gaps (`#/home`)**: `AnimalFluidVesselPainter._drawStratifiedFluid()` draws a flat horizontal bottom edge for layer $l$ while layer $l-1$ draws a sinusoidal top wave, creating dark gaps between fluid layers wherever the lower wave trough dips below `currentBaseY`.
+  3. **Home Vessel Red Panda Anatomy (`#/home`)**: `_buildRedPandaPath()` and `_drawRedPandaExteriorDetails()` render a blocky polygonal outline with two white circles on the ears and no visible eyes.
+  4. **Animal Catalog Bug & Asset Consistency**: `ExoticAnimal.avatarEmoji` checks legacy IDs (`pink_river_dolphin`, `bioluminescent_octopus`) instead of actual IDs (`bottlenose_dolphin`, `blue_ringed_octopus`), and all 10 companions require alpha-supported anatomical detail layers and idle life animations.
+  5. **Missing Monetization, Out-of-App Widgets/Notifications & Admin Portal**: Requires complete implementation of subscriptions/IAPs/unlock packs (Stage 5), rich notifications & home/lock-screen widgets showing water consumed, remaining goal, daily budget left, streaks, and unlock progress without opening the app (Stage 6), and a full-featured `/admin` portal with all features unlocked plus user, content, analytics, monetization, notification, config, feature-flag, environment, and audit management (Stage 7).
+  6. **Reactive AI Coach & Viewport Polish**: `AiCoachNotifier` did not reactively refresh when `hydrationProvider` changed (showing 0% at 1639/2500ml), and desktop layouts need scroll/padding refinements.
+- **Course-Correction & Decision**:
+  - Established the mandatory 9-Stage → Phase → Subphase Execution Plan in `docs/governance/EXECUTION_PLAN.md`, strictly executing one subphase at a time with full evidence and user approval gates.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `animation-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 011 — 2026-11-22 (Stage 1: Subphase 1.2.1 — Target Architecture Blueprint & ADRs 006–009)
+- **Context**: Creation of formal Architecture Decision Records (ADRs 006–009) and System Topology updates for the 9-Stage production certification plan.
+- **Architectural Decisions Codified**:
+  1. **ADR-006 (Kinematic Red Panda Rig & Organic Water Caustics)**: Replaces the artificial swim-tube balloon floating and repetitive $36\text{px}$ circle grid caustics with an anatomically accurate vector rig of *Ailurus fulgens*, smooth continuous caustic ribbon networks, 4-phase tap/click-to-move kinematic pathfinding (anticipation, Hermite spline propulsion with banking tilt, trailing wake ripples, and landing settling with splash excitation), and multi-track natural idles (breathing, blinking, dual-joint tail wag, eye tracking).
+  2. **ADR-007 (Zero-Gap Stratified Fluid Wave Mesh Architecture)**: Eliminates dark gaps between stacked beverage layers by coupling layer boundaries to shared 64-vertex wave mesh arrays ($W_0 \dots W_K$) and locking adjacent polygon paths together with 0.0px vertex gaps, accented by thin ($1.2\text{px}$) specular refractive meniscus lines.
+  3. **ADR-008 (Universal Monetization Entitlement Engine & Dual-Path Unlocks)**: Established deterministic unlock hierarchy (`AdminGodMode > ProSubscription > PurchasedPack > EarnedXP`), defined standard SKUs (`aquawild_pro_monthly/annual/lifetime`, IAP packs, theme/FX packs, seasonal passes), and specified cross-platform store simulation with offline grace validation.
+  4. **ADR-009 (Out-of-App Telemetry, Rich Notifications, Lock-Screen Widgets & Unified Admin Portal `/admin`)**: Designed canonical out-of-app telemetry snapshots (water consumed, remaining goal, hydration/caffeine/electrolyte budgets left, streak & freeze counters), actionable background notification handlers, in-app Home/Lock-Screen Widget Center, and enterprise `/admin` management portal with God-Mode master toggle and immutable security audit logging.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `animation-agent`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.

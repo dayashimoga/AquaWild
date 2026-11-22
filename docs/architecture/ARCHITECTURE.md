@@ -24,17 +24,24 @@
 ```mermaid
 flowchart TD
     subgraph Presentation["Presentation Layer (Flutter Material 3 + Impeller)"]
-        Launch["Launch Screen: SVG Red Panda Floating Pool Physics"]
+        Launch["Launch Screen: Kinematic Red Panda Rig & Organic Pool Caustics"]
         Shell["Adaptive Cross-Platform Shell (Phone / Tablet / Desktop / Web)"]
-        Habitat["Interactive Animal Fluid Vessel & Multi-Drink Wave Canvas"]
-        PourSheet["Interactive Drag-to-Pour Vessel & Numeric Keypad Modal"]
+        Habitat["Interactive Animal Fluid Vessel & Zero-Gap Stratified Wave Canvas"]
+        PourSheet["Interactive Pour Studio & Custom Beverage Creator"]
+        Storefront["Premium Storefront Modal (AquaWild Pro, IAP Packs, Passes)"]
+        WidgetPreview["Home & Lock-Screen Widget Center & Notification Center"]
+        AdminPortal["Admin Command Portal (/admin: God-Mode, Users, Content, Config)"]
         AICoach["OpenAI-Compatible AI Hydration Coach & Insights"]
         Biomes["Hydration Worlds, Evolution Gallery & Analytics"]
     end
 
     subgraph State["State & Orchestration Layer (Riverpod)"]
-        HydrationCtrl["HydrationController (Entries, Stratified Layers, Goals)"]
-        PhysicsCtrl["FluidPhysicsController (Wave Solver, Tilt/Impulse, Ripples)"]
+        HydrationCtrl["HydrationController (Entries, Zero-Gap Mesh, Goals)"]
+        PhysicsCtrl["FluidPhysicsController (Wave Solver, Slosh, Meniscus)"]
+        KinematicCtrl["KinematicPandaController (Pathfinding, Idles, Eye-Tracking)"]
+        MonetizationCtrl["MonetizationController (Entitlements, Pro, IAP Store)"]
+        WidgetNotifyCtrl["WidgetNotificationTelemetryController (Out-of-App Budgets)"]
+        AdminCtrl["AdminPortalController (God-Mode, RBAC, Remote Config, Audit)"]
         GamificationCtrl["GamificationController (XP, Streaks, Evolution, Biomes)"]
         ThemeA11yCtrl["Theme & Accessibility Controller (Reduced Motion, High Contrast, Voice)"]
     end
@@ -43,12 +50,17 @@ flowchart TD
         HydrationCalc["Bio-Availability & Electrolyte Netting Engine"]
         GoalCalc["Weather, Activity & Circadian Goal Engine"]
         AnimalCatalog["Exotic Animal & Biome Catalog (10 Species × 4 Evolution Stages)"]
+        MonetizationDomain["Monetization Domain (SubscriptionTier, ProductSKU, Entitlement)"]
+        WidgetTelemetryDomain["Out-of-App Telemetry (WaterLeft, BudgetRemaining, Streaks)"]
+        AdminDomain["Admin Domain (UserRecords, ContentCatalog, AuditLedger)"]
     end
 
     subgraph Data["Data & Integration Layer (Offline-First + Cloud)"]
         LocalStore["Local Encrypted/SharedPreferences Store & Sync Queue"]
         SupabaseAPI["Supabase PostgreSQL + RLS + Realtime + Edge Functions"]
         AIEngine["OpenAI-Compatible Chat/Completion Client + Offline Heuristic Fallback"]
+        StoreBridge["Store Billing Bridge (InAppPurchase + Web/Desktop Sandbox)"]
+        NotificationBridge["Local & Push Notification Bridge + Background Intent Handlers"]
         PlatformBridge["HealthKit / Health Connect + Haptics + Spatial Audio Synthesizer"]
     end
 
@@ -61,33 +73,47 @@ flowchart TD
 
 ## 3. Core Technical Subsystems
 
-### 3.1 Real-Time 2D Shallow-Water Fluid & Multi-Beverage Stratification Engine
-- **Coupled Wave Column Solver**: Models liquid surface elevation $y_i$ and vertical velocity $v_i$ across $N=64$ discrete horizontal columns using spring-damper surface tension and neighbor wave propagation:
+### 3.1 Zero-Gap Coupled Shallow-Water Fluid & Multi-Beverage Mesh Architecture
+- **Coupled 64-Column Wave Solver**: Models liquid surface elevation $y_i$ and vertical velocity $v_i$ across $N=64$ discrete horizontal columns using spring-damper surface tension and neighbor wave propagation:
   $$a_i = -k \cdot (y_i - y_{\text{target}}) - c_{\text{viscosity}} \cdot v_i + s \cdot (y_{i-1} + y_{i+1} - 2y_i)$$
-- **Multi-Beverage Stratification**: Unlike simple single-color fills, every logged drink pushes a distinct fluid stratum (`FluidLayer`) into the active animal silhouette. Each stratum renders with:
-  - Beverage-specific gradient, specular meniscus highlight, and internal micro-bubbles.
-  - Subsurface interfacial waves between stacked beverages (e.g., Water → Green Tea → Espresso → Electrolyte Citrus).
-- **Exotic Animal Vector Silhouettes**: Precision vector clipping paths (`Path`) and detailed anatomical overlays (eyes with blink timers, ears, whiskers, paws, tail idle motion) for **Red Panda, Capybara, Axolotl, Sea Otter, Andean Llama, Arctic Fox, Emperor Penguin, Bottlenose Dolphin, Blue-Ringed Octopus, and Snow Leopard**.
+- **Zero-Gap Mathematical Stitching**: Rather than drawing disconnected flat lines and sinusoidal curves, layer $l$ constructs its bottom boundary by traversing the exact wave vertices of lower boundary $W_{l-1}$ in reverse, and its top boundary by traversing $W_l$ forward, ensuring 0.0px gap continuity across all beverage strata.
+- **Specular Interfacial Meniscus Highlights**: Renders thin ($1.2\text{px}$) refractive highlights along each liquid-liquid interface, accentuating physical density stratification (e.g. coffee settling beneath sparkling water).
+- **Exotic Animal Vector Silhouettes**: Precision vector clipping paths (`Path`) and detailed anatomical overlays (eyes with blink timers, ears, whiskers, paws, tail idle motion) for all 10 companions: **Ruby the Red Panda, Cappy the Capybara, Lottie the Axolotl, Ollie the Sea Otter, Luna the Andean Llama, Freya the Arctic Fox, Percy the Emperor Penguin, Echo the Dolphin, Octavia the Octopus, and Kira the Snow Leopard**.
 
-### 3.2 Launch Screen — Animated SVG Red Panda Floating Pool Engine
-- **Top-View Water Simulation**:
-  - Deep-to-shallow aqua gradient with procedural caustic Voronoi/sinusoidal grid lines distorted in real time by wave phase and active ripple sources.
-  - Interactive ripple emitters triggered automatically by Red Panda breathing/tail movement and interactively by user tap, drag, or mouse cursor movement.
-  - Projected underwater shadow of the Red Panda and float tube offset by solar angle and modulated by wave height (parallax depth effect).
-- **Detailed SVG Red Panda on Floating Tube**:
-  - Multi-part vector assembly: striped coral-cyan inflatable ring tube, specular wet highlights, detailed Red Panda body, ringed tail gently swaying in the water, white facial markings, cool aviator sunglasses with animated glint, and a paw holding a tropical yuzu-mint drink with bobbing ice cubes.
+### 3.2 Kinematic Red Panda Mascot Rig, Locomotion & Natural Idles
+- **Anatomically Accurate Vector Rig**: Multi-layered vector assembly of *Ailurus fulgens* with natural auburn fur gradient, dark belly and legs, white muzzle with auburn tear-stripes, tufted ears, and multi-jointed ringed tail.
+- **Organic Water Caustics**: Replaces artificial soap-bubble circle grids with smooth, continuous procedural caustic refraction ribbons that ripple naturally with water depth.
+- **Tap/Click-to-Move Pathfinding**: 60/120 FPS kinematic controller sequencing anticipation crouching (120ms), cubic Hermite spline navigation with momentum banking ($\pm 0.25$ rad), dynamic trailing wake ripples, and landing settling with splash wave excitation.
+- **Multi-Track Idle Life-Cycle Engine**: Continuous breathing chest expansion ($T=3.2$s), involuntary Poisson blinking (every 3.5–6s), dual-joint pendulum tail wagging, cursor/tap eye tracking, and joyful touch reactions.
 
-### 3.3 OpenAI-Compatible AI Architecture & Offline Resilience
+### 3.3 Universal Monetization Entitlement Engine & Dual-Path Unlocks
+- **Entitlement Hierarchy**: Evaluates unlocks deterministically via `AdminGodMode > AquaWildProActive > PackPurchased > UserEarnedXP`.
+- **SKU Catalog**: Subscriptions (`aquawild_pro_monthly`, `annual`, `lifetime`), IAP Animal Unlock Packs (*Deep Sea Pack*, *Alpine Legends Pack*), Theme & FX Packs, and Seasonal Passes.
+- **Storefront & Dual-Path Unlocks**: In `BiomeCompanionSelectorSheet`, locked animals display both free XP progression and instant Pro/Pack purchase paths.
+- **Cross-Platform Purchase Simulation**: Supports native App Store / Google Play billing with full sandbox and receipt simulation on Web and Desktop.
+
+### 3.4 Out-of-App Hydration & Budget Telemetry, Rich Notifications & Lock-Screen Widgets
+- **Comprehensive Out-of-App Telemetry**: Models water consumed, remaining goal, daily budgets left (hydration budget, caffeine safety limit, electrolyte balance), streaks, streak freeze shields, and evolution XP progress.
+- **Actionable Rich Notifications**: Dispatches notifications with direct quick-log action buttons (`+250ml Water`, `Snooze 30m`) executable without opening the app.
+- **Universal Home & Lock-Screen Widget Engine**: Supports Small (2x2), Medium (4x2), and Lock Screen Live Activities with live synchronizers for Android, iOS, Web badges, and Desktop status docks.
+
+### 3.5 Enterprise Admin Command Portal (`/admin`) & God-Mode Console
+- **Dedicated Management Route (`/admin`)**: Fully guarded by RBAC permissions.
+- **God-Mode Master Toggle**: Instantly unlocks all 10 companions, all evolution stages, all 6 biomes, all 16 beverages, and all premium entitlements for instant live demonstration and QA testing.
+- **Administrative Consoles**: User directory, Content catalog CRUD (animals, beverages, biomes, seasonal quests), Monetization SKU & pricing manager, Push notification broadcast center, Dynamic feature flags (`remote_config`), Environment switcher (`Dev`/`Staging`/`Prod`), and append-only security audit log ledger.
+
+### 3.6 OpenAI-Compatible AI Architecture & Offline Resilience
 - **Configurable OpenAI-Compatible Endpoint**: Supports any OpenAI-compatible `/v1/chat/completions` provider (OpenAI, Gemini OpenAI-compatible endpoint, Azure, local Ollama/vLLM, or Supabase Edge Function proxy) configured via environment variables or user settings.
 - **Deterministic Expert Fallback**: When offline or when no external API key is supplied, a physiological Hydration Science Expert Engine computes personalized recommendations based on temperature, humidity, workout duration, caffeine intake, electrolyte deficit, and circadian time-of-day.
+- **Reactive State Sync**: AI coach listens reactively to `hydrationProvider` and `animalHabitatProvider`, instantly recalculating recommendations upon drink logging or clearing.
 
-### 3.4 Multi-Platform Adaptive Ergonomics & Accessibility (WCAG 2.2 AA+)
+### 3.7 Multi-Platform Adaptive Ergonomics & Accessibility (WCAG 2.2 AA+)
 - **6 Target Platforms**: Android, iOS, Web (PWA/Wasm), Windows, macOS, Linux.
 - **Responsive Breakpoints**:
-  - `Compact (< 600px)`: Single-column immersive habitat with floating glass beverage dock and bottom navigation.
-  - `Medium (600px – 1024px)`: Navigation rail + dual-pane habitat and quick analytics/AI drawer.
-  - `Expanded (> 1024px)`: Desktop/Web Command Center with 3 synchronized panes (Left: Navigation & Biome Switcher; Center: Interactive Animal Fluid Vessel & Drink Dock; Right: Live AI Coach, Weather/Biometric Telemetry & Hydration Analytics).
+  - `Compact (< 700px)`: Single-column immersive habitat with floating glass beverage dock and bottom navigation.
+  - `Medium (700px – 1100px)`: Navigation rail + dual-pane habitat and quick analytics/AI drawer.
+  - `Expanded (>= 1100px)`: Desktop/Web Command Center with 3 synchronized panes (Left: Command Deck; Center: Interactive Animal Fluid Vessel & Drink Dock; Right: Live AI Coach, Weather/Biometric Telemetry & Hydration Analytics).
 - **Accessibility First**:
   - Explicit `Semantics` descriptions on all custom canvases.
-  - Full keyboard shortcut system (`1`–`8` quick log beverages, `Space` quick water, `P` custom pour, `R` launch Red Panda pool relaxation mode, `A` AI advisor, `M` toggle reduced motion, `H` toggle high contrast).
+  - Full keyboard shortcut system (`1`–`9` quick log beverages, `Space` quick water, `P` predictive analytics, `B` biomes, `A` AI advisor, `R` reminders, `G` achievements, `V` voice logger, `X` backup, `?` shortcuts guide).
   - Reduced-motion mode replaces wave oscillation and particle motion with calm, instant or gentle opacity transitions.
