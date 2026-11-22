@@ -19,7 +19,9 @@ class LaunchScreen extends StatelessWidget {
         fit: StackFit.expand,
         children: [
           // Interactive 60/120 FPS Procedural Pool Simulation & Red Panda Mascot
-          const InteractivePoolView(),
+          InteractivePoolView(
+            onDiveInPressed: () => context.go('/home'),
+          ),
 
           // Modern-Futuristic Glassmorphic Controls Overlay
           SafeArea(
@@ -65,81 +67,86 @@ class LaunchScreen extends StatelessWidget {
 
                   const Spacer(),
 
-                  // Bottom Modern-Futuristic Call-To-Action Card
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(24.0),
-                    decoration: BoxDecoration(
-                      color: AppColors.surfaceAbyssal.withValues(alpha: 0.8),
-                      borderRadius: BorderRadius.circular(32),
-                      border: Border.all(
-                        color: AppColors.cardGlassBorderDark,
-                        width: 1.5,
+                  // Bottom Modern-Futuristic Call-To-Action Card (Constrained for 4K / Desktop)
+                  ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 560),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(24.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceAbyssal.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(32),
+                        border: Border.all(
+                          color: AppColors.cardGlassBorderDark,
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.cyanPrimary.withValues(alpha: 0.15),
+                            blurRadius: 32,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
                       ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.cyanPrimary.withValues(alpha: 0.15),
-                          blurRadius: 32,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          AppConstants.appName,
-                          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
-                              ),
-                        ),
-                        const SizedBox(height: 6),
-                        Text(
-                          'Track hydration, evolve exotic animal companions & restore living biomes.',
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.white70,
-                              ),
-                        ),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          width: double.infinity,
-                          height: 54,
-                          child: ElevatedButton(
-                            onPressed: () => context.go('/home'),
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.cyanPrimary,
-                              foregroundColor: AppColors.surfaceAbyssal,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(28),
-                              ),
-                              elevation: 4,
-                            ),
-                            child: const Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Dive Into Habitat',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 0.5,
-                                  ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            AppConstants.appName,
+                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
                                 ),
-                                SizedBox(width: 8),
-                                Icon(Icons.arrow_forward_rounded, size: 20),
-                              ],
+                          ),
+                          const SizedBox(height: 6),
+                          Text(
+                            'Track hydration, evolve exotic animal companions & restore living biomes.',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white70,
+                                ),
+                          ),
+                          const SizedBox(height: 20),
+                          SizedBox(
+                            width: double.infinity,
+                            height: 54,
+                            child: ElevatedButton(
+                              autofocus: true,
+                              onPressed: () => context.go('/home'),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.cyanPrimary,
+                                foregroundColor: AppColors.surfaceAbyssal,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28),
+                                ),
+                                elevation: 4,
+                              ),
+                              child: const Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Dive Into Habitat',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                  SizedBox(width: 8),
+                                  Icon(Icons.arrow_forward_rounded, size: 20),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 10),
-                        const Text(
-                          'Tap pool surface or mascot anytime to create ripples',
-                          style: TextStyle(fontSize: 11, color: Colors.white38),
-                        ),
-                      ],
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Tap pool to swim Ruby • Tap Ruby to pet • Move cursor to guide hazel gaze',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 11, color: Colors.white54),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],

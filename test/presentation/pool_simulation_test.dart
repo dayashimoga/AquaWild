@@ -1,6 +1,7 @@
 import 'dart:ui';
 import 'package:aquawild/src/presentation/widgets/pool/floating_red_panda_painter.dart';
 import 'package:aquawild/src/presentation/widgets/pool/interactive_pool_view.dart';
+import 'package:aquawild/src/presentation/widgets/pool/mascot_kinematic_controller.dart';
 import 'package:aquawild/src/presentation/widgets/pool/pool_water_simulation_painter.dart';
 import 'package:aquawild/src/presentation/widgets/pool/ripple_emitter.dart';
 import 'package:flutter/material.dart';
@@ -191,6 +192,48 @@ void main() {
       await tester.pump(const Duration(milliseconds: 400)); // Landing & settling
 
       expect(tester.takeException(), isNull);
+    });
+
+    test('120 FPS raster and physics frame-budget benchmark (<8.3ms per frame)', () {
+      final kinematics = MascotKinematicController(
+        initialPosition: const Offset(200, 200),
+      );
+      kinematics.moveTo(
+        const Offset(400, 350),
+        boundaryRect: const Rect.fromLTRB(100, 100, 500, 500),
+      );
+
+      final painter = FloatingRedPandaPainter(
+        bobOffset: 4.0,
+        tiltAngle: 0.08,
+        glintPhase: 0.3,
+        breathPhase: 0.5,
+        blinkProgress: 0.2,
+        tailWagPhase: 1.2,
+        lookTarget: const Offset(0.3, -0.4),
+        earTwitchAngle: 0.05,
+        reactionPulse: 0.4,
+        verticalSquash: 1.02,
+      );
+
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      const size = Size(240, 240);
+
+      final stopwatch = Stopwatch()..start();
+
+      // Simulate 120 frames of kinematics updates and canvas paint passes
+      for (int frame = 0; frame < 120; frame++) {
+        kinematics.update(0.0083); // 120Hz frame delta (8.33ms)
+        painter.paint(canvas, size);
+      }
+
+      stopwatch.stop();
+      final elapsedMs = stopwatch.elapsedMilliseconds;
+      final avgFrameMs = elapsedMs / 120.0;
+
+      // Ensure execution is strictly well within the 8.3ms 120Hz frame budget
+      expect(avgFrameMs, lessThan(8.3));
     });
   });
 }

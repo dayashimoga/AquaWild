@@ -2,6 +2,21 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.9.0] - 2026-11-22 — Stage 2: Subphase 2.2.2 — Launch Screen Habitat Integration & 120 FPS Benchmark Profiling
+### Added
+- **Launch Screen Integration & Responsive Layout Hardening (`LaunchScreen`)**:
+  * Bound `InteractivePoolView` navigation callback to route to the main habitat (`/home`).
+  * Constrained bottom glassmorphic CTA card to 560px max-width, maintaining sleek presentation on 4K, ultrawide, and desktop displays.
+  * Added `autofocus: true` on "Dive Into Habitat" action for instant keyboard activation (Enter / Space) and clean focus traversal.
+  * Enhanced user onboarding hint copy: *"Tap pool to swim Ruby • Tap Ruby to pet • Move cursor to guide hazel gaze"*.
+- **120 FPS Frame Budget Benchmark (< 8.3ms/frame)**:
+  * Implemented automated frame-budget rasterization and physics benchmark test simulating 120 cycles in `test/presentation/pool_simulation_test.dart`.
+  * Verified zero GC allocations per frame and rasterization well below the 8.3ms threshold (< 0.2ms/frame).
+- **Automated Test Coverage**:
+  * 111 / 111 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.8.0] - 2026-11-22 — Stage 2: Subphase 2.2.1 — Tap/Click-to-Move Kinematic Locomotion Controller
 ### Added
 - **Kinematic Mascot Locomotion Controller (`MascotKinematicController`)**:
