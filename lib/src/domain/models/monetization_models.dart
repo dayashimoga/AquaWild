@@ -31,6 +31,8 @@ enum SubscriptionTier {
     }
   }
 
+  String get title => displayName;
+
   bool get isPro => this != SubscriptionTier.free;
 
   static SubscriptionTier fromId(String? id) {

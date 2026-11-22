@@ -1,11 +1,14 @@
+import 'dart:async';
 import 'package:aquawild/src/core/services/audio_haptics_service.dart';
 import 'package:aquawild/src/domain/models/exotic_animal.dart';
 import 'package:aquawild/src/domain/models/hydration_biome.dart';
+import 'package:aquawild/src/domain/models/monetization_models.dart';
 import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
 import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
 import 'package:aquawild/src/presentation/controllers/monetization_controller.dart';
 import 'package:aquawild/src/presentation/widgets/biomes/companion_avatar_renderer.dart';
 import 'package:aquawild/src/presentation/widgets/biomes/companion_evolution_modal.dart';
+import 'package:aquawild/src/presentation/widgets/monetization/premium_storefront_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -195,6 +198,60 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
 
+        // AquaWild Pro Promotional Banner
+        if (!monetization.isPro) ...[
+          InkWell(
+            borderRadius: BorderRadius.circular(16),
+            onTap: () {
+              unawaited(AudioHapticsService.playTap());
+              PremiumStorefrontModal.show(context);
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  colors: [Color(0xFF1B2C4B), Color(0xFF2E1B4B)],
+                ),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.amberAccent.withValues(alpha: 0.6)),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent, size: 22),
+                  const SizedBox(width: 10),
+                  const Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Unlock All 10 Companions with Pro',
+                          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 12),
+                        ),
+                        Text(
+                          'Instant sanctuary access, all biomes & premium themes',
+                          style: TextStyle(color: Colors.white60, fontSize: 10),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E5FF),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text(
+                      'UPGRADE',
+                      style: TextStyle(color: Colors.black, fontSize: 10, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 14),
+        ],
+
         // 10 Animal Companions Grid/List
         ...ExoticAnimal.allAnimals.map((animal) {
           final isSelected = animal.id == activeAnimal.id;
@@ -213,6 +270,19 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
               ),
             ),
             child: ListTile(
+              onTap: isUnlocked
+                  ? () {
+                      unawaited(AudioHapticsService.playTap());
+                      ref.read(animalHabitatProvider.notifier).selectAnimal(animal.id);
+                      ref.read(biomeProvider.notifier).selectBiome(animal.habitatBiomeId);
+                    }
+                  : () => _showCompanionUnlockDialog(
+                        context,
+                        ref,
+                        animal,
+                        habitat.userXp,
+                        monetization,
+                      ),
               leading: CompanionAvatarRenderer(
                 animal: animal,
                 stage: isSelected ? habitat.currentStage : animal.evolutionStages.first,
@@ -243,20 +313,220 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
                             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           ),
                           onPressed: () {
-                            AudioHapticsService.playTap();
+                            unawaited(AudioHapticsService.playTap());
                             ref.read(animalHabitatProvider.notifier).selectAnimal(animal.id);
                             ref.read(biomeProvider.notifier).selectBiome(animal.habitatBiomeId);
                           },
                           child: const Text('Select', style: TextStyle(fontSize: 11)),
                         )
-                      : Text(
-                          '🔒 ${animal.unlockXp} XP',
-                          style: const TextStyle(color: Colors.white38, fontSize: 11),
+                      : OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: const BorderSide(color: Color(0x66FFD700)),
+                            foregroundColor: Colors.amberAccent,
+                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          ),
+                          onPressed: () => _showCompanionUnlockDialog(
+                            context,
+                            ref,
+                            animal,
+                            habitat.userXp,
+                            monetization,
+                          ),
+                          child: Text(
+                            '🔒 ${animal.unlockXp} XP',
+                            style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                          ),
                         )),
             ),
           );
         }),
       ],
+    );
+  }
+
+  void _showCompanionUnlockDialog(
+    BuildContext context,
+    WidgetRef ref,
+    ExoticAnimal animal,
+    int userXp,
+    MonetizationState monetization,
+  ) {
+    final remainingXp = (animal.unlockXp - userXp).clamp(0, animal.unlockXp);
+    final progress = (userXp / animal.unlockXp).clamp(0.0, 1.0);
+
+    // Find if there is an IAP pack that unlocks this animal
+    ProductSKU? matchingPack;
+    try {
+      matchingPack = monetization.availableProducts.firstWhere(
+        (p) => p.unlockedAnimalIds.contains(animal.id),
+      );
+    } catch (_) {
+      matchingPack = null;
+    }
+
+    showDialog<void>(
+      context: context,
+      builder: (dialogCtx) {
+        return AlertDialog(
+          backgroundColor: const Color(0xFF0C192E),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+            side: BorderSide(color: animal.accentColor.withValues(alpha: 0.5)),
+          ),
+          title: Row(
+            children: [
+              CompanionAvatarRenderer(
+                animal: animal,
+                stage: animal.evolutionStages.first,
+                size: 44,
+                isUnlocked: false,
+                showBadge: false,
+                animate: false,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      animal.name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '${animal.scientificName} • ${animal.nativeHabitat}',
+                      style: const TextStyle(color: Colors.white60, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                animal.lore,
+                style: const TextStyle(color: Colors.white70, fontSize: 12),
+              ),
+              const SizedBox(height: 16),
+
+              // Path A: Earn via Hydration
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF14243C),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: Colors.white12),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Row(
+                      children: [
+                        Icon(Icons.water_drop_outlined, color: Color(0xFF00E5FF), size: 16),
+                        SizedBox(width: 6),
+                        Text(
+                          'Path A: Earn with Hydration',
+                          style: TextStyle(
+                            color: Color(0xFF00E5FF),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    LinearProgressIndicator(
+                      value: progress,
+                      backgroundColor: Colors.white12,
+                      color: const Color(0xFF00E5FF),
+                      minHeight: 6,
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      '$userXp / ${animal.unlockXp} XP ($remainingXp XP remaining)',
+                      style: const TextStyle(color: Colors.white60, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Path B: Instant Unlock
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1B1F3B),
+                  borderRadius: BorderRadius.circular(14),
+                  border: Border.all(color: const Color(0x669D4EDD)),
+                ),
+                child: const Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent, size: 16),
+                        SizedBox(width: 6),
+                        Text(
+                          'Path B: Instant Unlock',
+                          style: TextStyle(
+                            color: Colors.amberAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 6),
+                    Text(
+                      'Access immediately with AquaWild Pro, or unlock via an expedition pack.',
+                      style: TextStyle(color: Colors.white70, fontSize: 11),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogCtx).pop(),
+              child: const Text('Cancel', style: TextStyle(color: Colors.white60)),
+            ),
+            if (matchingPack != null)
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1E3A5F),
+                  foregroundColor: const Color(0xFF00E5FF),
+                ),
+                onPressed: () async {
+                  Navigator.of(dialogCtx).pop();
+                  unawaited(AudioHapticsService.playTap());
+                  await ref
+                      .read(monetizationProvider.notifier)
+                      .purchaseProduct(matchingPack!.id);
+                },
+                child: Text('Get ${matchingPack.title}', style: const TextStyle(fontSize: 11)),
+              ),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00E5FF),
+                foregroundColor: Colors.black,
+              ),
+              onPressed: () {
+                Navigator.of(dialogCtx).pop();
+                PremiumStorefrontModal.show(context);
+              },
+              child: const Text('Open Store', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+            ),
+          ],
+        );
+      },
     );
   }
 

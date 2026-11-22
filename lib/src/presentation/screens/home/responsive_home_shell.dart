@@ -18,6 +18,7 @@ import '../../widgets/biomes/companion_evolution_modal.dart';
 import '../../widgets/environmental/weather_activity_bar.dart';
 import '../../widgets/gamification/achievements_gallery_sheet.dart';
 import '../../widgets/gamification/streak_badge_chip.dart';
+import '../../widgets/monetization/premium_storefront_modal.dart';
 import '../../widgets/reminders/smart_reminders_sheet.dart';
 import '../../widgets/shortcuts/keyboard_shortcuts_modal.dart';
 import '../../widgets/sync/sync_status_indicator.dart';
@@ -98,19 +99,58 @@ class ResponsiveHomeShell extends ConsumerWidget {
           const StreakBadgeChip(),
           const ThemeSwitcherButton(),
           IconButton(
-            icon: const Icon(Icons.backup_outlined),
-            tooltip: 'Data Backup & Export',
-            onPressed: () => DataBackupModal.show(context),
+            icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
+            tooltip: 'AquaWild Pro Store',
+            onPressed: () => PremiumStorefrontModal.show(context),
           ),
-          IconButton(
-            icon: const Icon(Icons.bar_chart_rounded),
-            tooltip: 'Predictive Analytics',
-            onPressed: () => PredictiveAnalyticsSheet.show(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.keyboard_outlined),
-            tooltip: 'Keyboard Shortcuts',
-            onPressed: () => KeyboardShortcutsModal.show(context),
+          PopupMenuButton<String>(
+            tooltip: 'More Options',
+            icon: const Icon(Icons.more_vert_rounded),
+            onSelected: (val) {
+              switch (val) {
+                case 'backup':
+                  DataBackupModal.show(context);
+                  break;
+                case 'analytics':
+                  PredictiveAnalyticsSheet.show(context);
+                  break;
+                case 'shortcuts':
+                  KeyboardShortcutsModal.show(context);
+                  break;
+              }
+            },
+            itemBuilder: (context) => const [
+              PopupMenuItem(
+                value: 'analytics',
+                child: Row(
+                  children: [
+                    Icon(Icons.bar_chart_rounded, size: 18),
+                    SizedBox(width: 8),
+                    Text('Predictive Analytics'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'backup',
+                child: Row(
+                  children: [
+                    Icon(Icons.backup_outlined, size: 18),
+                    SizedBox(width: 8),
+                    Text('Backup & Export'),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                value: 'shortcuts',
+                child: Row(
+                  children: [
+                    Icon(Icons.keyboard_outlined, size: 18),
+                    SizedBox(width: 8),
+                    Text('Keyboard Shortcuts'),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -177,6 +217,11 @@ class ResponsiveHomeShell extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const ThemeSwitcherButton(),
+                    IconButton(
+                      icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
+                      tooltip: 'AquaWild Pro Store',
+                      onPressed: () => PremiumStorefrontModal.show(context),
+                    ),
                     IconButton(
                       icon: const Icon(Icons.keyboard_outlined),
                       tooltip: 'Shortcuts Guide',
@@ -465,6 +510,12 @@ class ResponsiveHomeShell extends ConsumerWidget {
                             title: 'Voice Logger',
                             shortcut: 'V',
                             onTap: () => VoiceCommandModal.show(context),
+                          ),
+                          _buildDesktopNavTile(
+                            icon: Icons.workspace_premium_rounded,
+                            title: 'AquaWild Store',
+                            shortcut: 'S',
+                            onTap: () => PremiumStorefrontModal.show(context),
                           ),
                           _buildDesktopNavTile(
                             icon: Icons.backup_outlined,

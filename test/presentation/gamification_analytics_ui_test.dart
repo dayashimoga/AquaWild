@@ -72,8 +72,8 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      expect(find.textContaining('Companions'), findsOneWidget);
-      expect(find.textContaining('Living Biomes'), findsOneWidget);
+      expect(find.textContaining('Companions'), findsWidgets);
+      expect(find.textContaining('Living Biomes'), findsWidgets);
     });
 
     testWidgets('PredictiveAnalyticsSheet renders risk meter and rolling charts', (tester) async {

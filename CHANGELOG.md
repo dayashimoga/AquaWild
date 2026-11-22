@@ -2,6 +2,27 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.20.0] - 2026-11-22 — Stage 5: Subphase 5.2.1 — Storefront UX, Instant Companion Unlocks & Dual-Path Triggers
+### Added
+- **Glassmorphic Premium Storefront Modal (`PremiumStorefrontModal`)**:
+  * Implemented flagship store sheet in `lib/src/presentation/widgets/monetization/premium_storefront_modal.dart`.
+  * Tab 1 (AquaWild Pro): Tier radio cards for Annual Pass (\$19.99/yr, 44% savings), Monthly Pass (\$2.99/mo), and Lifetime Access (\$49.99), plus 6-point Free vs Pro feature comparison matrix.
+  * Tab 2 (Packs & Passes): 6 commercial SKUs (`pack_deep_sea`, `pack_alpine_glacier`, `pack_neon_bioluminescence`, `pack_minimal_zen`, `pack_cyber_ocean`, `pass_summer_splash`) with real-time 'OWNED' badges and instant purchase actions.
+  * Bottom utility bar with Restore Purchases button and auto-renewal legal transparency.
+- **Dual-Path Companion Unlock System (`BiomeCompanionSelectorSheet`)**:
+  * Converted locked companion tiles into interactive triggers showing required XP alongside instant unlock buttons.
+  * Dual-path dialog offering Path A (Earn via daily hydration habit XP) and Path B (Instant unlock with AquaWild Pro or matching one-time IAP pack).
+  * Persistent top Pro upgrade banner with direct storefront launch button.
+- **Responsive Shell Storefront Navigation (`ResponsiveHomeShell`)**:
+  * Added storefront quick launcher across compact phone AppBar, medium tablet NavigationRail, and expanded desktop command deck.
+  * Consolidated auxiliary actions into mobile overflow `PopupMenuButton` to guarantee zero RenderFlex horizontal overflows on screens down to 320px.
+- **Automated Test Coverage**:
+  * Added `test/presentation/storefront_modal_test.dart` (7 tests covering storefront tabs, plan selection, IAP purchases, restore purchases, and dual-path unlocks).
+  * Updated `test/presentation/gamification_analytics_ui_test.dart` for updated companion selector counts.
+  * **158 / 158 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.19.0] - 2026-11-22 — Stage 5: Subphase 5.1.2 — Premium Themes, Particle Visual Effects, Exclusive Achievements & Content Plugin Architecture
 ### Added
 - **Flagship Premium Theme Engine & Mode Tokens**:

@@ -465,6 +465,36 @@
      * Project test suite: **151 / 151 passing tests**, **0 analyzer issues**.
 - **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 027 — 2026-11-22 (Stage 5: Subphase 5.2.1 — Storefront UX, Instant Companion Unlocks & Dual-Path Triggers)
+- **Context**: Delivering the commercial storefront user experience and non-coercive monetization triggers: `PremiumStorefrontModal`, dual-path companion unlock architecture in `BiomeCompanionSelectorSheet`, responsive storefront entry points across mobile, tablet, and desktop, and automated widget regression verification.
+- **Architectural Decisions & Deliverables**:
+  1. **Glassmorphic Premium Storefront Modal (`PremiumStorefrontModal`)**:
+     * Built full-featured commercial storefront sheet in [premium_storefront_modal.dart](file:///h:/water/lib/src/presentation/widgets/monetization/premium_storefront_modal.dart).
+     * Two-tab architecture: **AquaWild Pro** tab (Annual Pass with 44% savings badge, Monthly Pass, Lifetime Sanctuary Access, and feature comparison matrix) and **Packs & Passes** tab (Deep Sea Legends, Alpine Glacier, Neon FX, Zen Theme, Cyber Ocean, Summer Splash Pass).
+     * Real-time state reactivity: instantly reflects active subscription status, selected tiers, and 'OWNED' badges without modal reload.
+     * Integrated non-blocking Restore Purchases flow with instant visual `SnackBar` feedback.
+  2. **Dual-Path Companion Unlock Architecture (`BiomeCompanionSelectorSheet`)**:
+     * Replaced rigid locked text with interactive unlock buttons.
+     * When tapping a locked companion, users are presented with a clear dual-path dialog:
+       - **Path A (Earn Free)**: Continue daily hydration habits to earn required XP (e.g., 1,300 XP for Ollie the Sea Otter).
+       - **Path B (Instant Access)**: Unlock immediately with AquaWild Pro or the specific matching one-time IAP pack (e.g. 'Get Deep Sea Legends Pack').
+     * Added top promotional Pro upgrade banner with one-tap entry to the storefront.
+     * Pro members and pack owners immediately see active 'Select' buttons for all unlocked species.
+  3. **Responsive Shell Storefront Navigation**:
+     * Added prominent store button (`Icons.storefront_rounded`) to `ResponsiveHomeShell` across all 3 viewports:
+       - Mobile: Top AppBar action next to streak and theme switcher.
+       - Tablet: Dedicated `NavigationRailDestination` with badge.
+       - Desktop: Quick store access button within top utility deck.
+     * Consolidated auxiliary mobile AppBar actions (Analytics, Backup, Shortcuts) into an overflow `PopupMenuButton` to eliminate horizontal RenderFlex overflows on narrow screens (<400px).
+  4. **Tactile Feedback & Platform Channel Hardening**:
+     * Converted `await AudioHapticsService.playTap()` to `unawaited(AudioHapticsService.playTap())` across storefront actions and dialog buttons to prevent platform-channel latency or test-harness deadlocks during haptic feedback.
+  5. **Automated Test Coverage**:
+     * Authored comprehensive test suite in [storefront_modal_test.dart](file:///h:/water/test/presentation/storefront_modal_test.dart) (7 tests).
+     * Certified full project test suite: **158 / 158 passing tests**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
 
 
 
