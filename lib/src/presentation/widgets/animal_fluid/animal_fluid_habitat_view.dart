@@ -60,9 +60,9 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
       backgroundColor: Colors.transparent,
       builder: (_) => InteractivePourSheet(
         initialBeverage: beverage,
-        onPourConfirmed: (volumeMl) {
+        onBeveragePourConfirmed: (selectedBev, volumeMl) {
           ref.read(hydrationProvider.notifier).logDrink(
-                beverage: beverage,
+                beverage: selectedBev,
                 volumeMl: volumeMl,
               );
           ref.read(animalHabitatProvider.notifier).addXp(
@@ -70,6 +70,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
               );
           _triggerSplash(ref.read(hydrationProvider).goal.progressFraction);
         },
+        onPourConfirmed: (_) {},
       ),
     );
   }

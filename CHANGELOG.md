@@ -2,6 +2,14 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.4.0] - 2026-11-22 — Universal Beverage Carousel in Pour Studio & Showcase Production Documentation
+### Added
+- **Multi-Beverage Carousel Selector in Interactive Pour Studio**: Integrated horizontal scrolling filter chip carousel in `InteractivePourSheet` allowing users to switch between all 16 handcrafted beverages in real-time while adjusting the drag-to-pour fluid level.
+- **Beverage-Aware Pour Logging**: Added `onBeveragePourConfirmed` callback in `InteractivePourSheet` hooked into `AnimalFluidHabitatView` ensuring precise logging of the chosen beverage, its bioavailability index, and corresponding XP rewards.
+- **Showcase Production Documentation (`README.md`)**: Authored comprehensive production-grade documentation detailing brand philosophy, architecture topology (Mermaid diagram), 16 beverage science indices, 10 exotic companion silhouettes and custom physics, desktop keyboard accelerators cheat-sheet, Supabase backend schema with strict RLS, and 6-platform CI/CD pipelines.
+
+---
+
 ## [1.3.0] - 2026-11-22 — Privacy-First Data Portability, Backup/Restore Engine & Companion Evolution Celebration Modal
 ### Added
 - **Lossless Data Backup & Export Engine**: Engineered `DataBackupService` supporting:

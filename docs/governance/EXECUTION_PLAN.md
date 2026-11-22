@@ -184,6 +184,15 @@
 
 ---
 
+### Post-Release Enhancement 4 — Universal Beverage Carousel in Pour Studio & Showcase Production Documentation (v1.4.0)
+- **Status**: Completed (100% tests passing, 87/87 tests, 0 analyzer issues)
+- **Deliverables**:
+  - `lib/src/presentation/widgets/animal_fluid/interactive_pour_sheet.dart`: Multi-beverage horizontal carousel selector and beverage-specific pour confirmation callback.
+  - `lib/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart`: Wired `onBeveragePourConfirmed` to log the dynamically selected beverage.
+  - `README.md`: Complete production documentation package with system topology, keyboard shortcuts, and platform matrix.
+
+---
+
 ### Post-Release Enhancement 3 — Privacy-First Data Portability, Backup/Restore Engine & Companion Evolution Celebration Modal (v1.3.0)
 - **Status**: Completed (100% tests passing, 87/87 tests, 0 analyzer issues)
 - **Deliverables**:

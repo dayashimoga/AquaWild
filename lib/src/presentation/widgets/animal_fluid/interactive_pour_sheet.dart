@@ -11,11 +11,13 @@ import 'package:flutter/material.dart';
 class InteractivePourSheet extends StatefulWidget {
   final BeverageType initialBeverage;
   final ValueChanged<double> onPourConfirmed;
+  final void Function(BeverageType beverage, double volumeMl)? onBeveragePourConfirmed;
 
   const InteractivePourSheet({
     super.key,
     required this.initialBeverage,
     required this.onPourConfirmed,
+    this.onBeveragePourConfirmed,
   });
 
   @override
@@ -107,7 +109,52 @@ class _InteractivePourSheetState extends State<InteractivePourSheet> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 10),
+
+          // Horizontal Beverage Selector Carousel (16 Handcrafted Beverages)
+          SizedBox(
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: BeverageType.allBeverages.length,
+              separatorBuilder: (_, _) => const SizedBox(width: 8),
+              itemBuilder: (context, index) {
+                final bev = BeverageType.allBeverages[index];
+                final isSelected = bev.id == _selectedBeverage.id;
+                return FilterChip(
+                  avatar: CircleAvatar(
+                    backgroundColor: bev.primaryColor,
+                    radius: 6,
+                  ),
+                  label: Text(
+                    bev.name.split(' ').first,
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight:
+                          isSelected ? FontWeight.bold : FontWeight.normal,
+                      color: isSelected ? Colors.white : Colors.white70,
+                    ),
+                  ),
+                  selected: isSelected,
+                  selectedColor: bev.primaryColor.withValues(alpha: 0.35),
+                  backgroundColor: const Color(0xFF162947),
+                  checkmarkColor: Colors.white,
+                  side: BorderSide(
+                    color: isSelected ? bev.primaryColor : Colors.white12,
+                  ),
+                  onSelected: (val) {
+                    if (val) {
+                      AudioHapticsService.playTap();
+                      setState(() {
+                        _selectedBeverage = bev;
+                      });
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+          const SizedBox(height: 12),
 
           // Interactive Drag-to-Pour Vessel
           Expanded(
@@ -234,6 +281,7 @@ class _InteractivePourSheetState extends State<InteractivePourSheet> {
               onPressed: () {
                 AudioHapticsService.instance.onDrinkLogged();
                 widget.onPourConfirmed(_volumeMl);
+                widget.onBeveragePourConfirmed?.call(_selectedBeverage, _volumeMl);
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(
