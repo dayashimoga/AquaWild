@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../../domain/models/beverage_type.dart';
+import '../../../domain/models/hydration_biome.dart';
 import '../../../domain/models/hydration_entry.dart';
 import '../../controllers/ai_coach_controller.dart';
 import '../../controllers/animal_habitat_controller.dart';
@@ -33,18 +34,29 @@ class ResponsiveHomeShell extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final width = constraints.maxWidth;
+    final biomeState = ref.watch(biomeProvider);
+    final activeBiome = biomeState.activeBiome;
+    final isReducedMotion = MediaQuery.disableAnimationsOf(context);
 
-        if (width >= expandedBreakpoint) {
-          return _buildExpandedDesktopLayout(context, ref);
-        } else if (width >= compactBreakpoint) {
-          return _buildMediumTabletLayout(context, ref);
-        } else {
-          return _buildCompactMobileLayout(context, ref);
-        }
-      },
+    return AnimatedContainer(
+      duration: isReducedMotion
+          ? Duration.zero
+          : const Duration(milliseconds: 600),
+      curve: Curves.easeInOutCubic,
+      decoration: _buildBiomeBackgroundDecoration(activeBiome, context),
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+
+          if (width >= expandedBreakpoint) {
+            return _buildExpandedDesktopLayout(context, ref);
+          } else if (width >= compactBreakpoint) {
+            return _buildMediumTabletLayout(context, ref);
+          } else {
+            return _buildCompactMobileLayout(context, ref);
+          }
+        },
+      ),
     );
   }
 
@@ -58,7 +70,10 @@ class ResponsiveHomeShell extends ConsumerWidget {
     final activeBiome = biomeState.activeBiome;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.pets_rounded),
           tooltip: 'Companions & Biomes',
@@ -139,11 +154,13 @@ class ResponsiveHomeShell extends ConsumerWidget {
     final activeAnimal = habitatState.activeAnimal;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Row(
           children: [
             // Tablet Navigation Rail
             NavigationRail(
+              backgroundColor: Colors.transparent,
               selectedIndex: 0,
               labelType: NavigationRailLabelType.selected,
               leading: Padding(
@@ -317,6 +334,7 @@ class ResponsiveHomeShell extends ConsumerWidget {
     final activeBiome = biomeState.activeBiome;
 
     return Scaffold(
+      backgroundColor: Colors.transparent,
       body: SafeArea(
         child: Row(
           children: [
@@ -528,6 +546,36 @@ class ResponsiveHomeShell extends ConsumerWidget {
   // =========================================================================
   // REUSABLE SUB-COMPONENTS
   // =========================================================================
+
+  /// Generates a fluid ambient atmospheric background gradient derived from the
+  /// active biome's sky gradient and ambient colors, alpha-blended with the theme.
+  BoxDecoration _buildBiomeBackgroundDecoration(
+    HydrationBiome biome,
+    BuildContext context,
+  ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final topColor = biome.skyGradient.isNotEmpty
+        ? biome.skyGradient.first.withValues(alpha: isDark ? 0.35 : 0.12)
+        : biome.ambientColor.withValues(alpha: isDark ? 0.25 : 0.08);
+    final midColor = biome.skyGradient.length > 1
+        ? biome.skyGradient[1].withValues(alpha: isDark ? 0.20 : 0.06)
+        : biome.ambientColor.withValues(alpha: isDark ? 0.15 : 0.04);
+    final baseColor = theme.scaffoldBackgroundColor;
+
+    return BoxDecoration(
+      gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color.alphaBlend(topColor, baseColor),
+          Color.alphaBlend(midColor, baseColor),
+          baseColor,
+        ],
+        stops: const [0.0, 0.45, 1.0],
+      ),
+    );
+  }
 
   Widget _buildDesktopNavTile({
     required IconData icon,

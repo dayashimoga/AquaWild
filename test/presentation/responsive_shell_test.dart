@@ -183,5 +183,33 @@ void main() {
       expect(find.text('Space'), findsOneWidget);
       expect(find.text('AI Hydration Coach'), findsOneWidget);
     });
+
+    testWidgets('ResponsiveHomeShell applies dynamic biome ambient background decoration', (tester) async {
+      tester.view.physicalSize = const Size(400, 850);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+
+      final animatedContainerFinder = find.byWidgetPredicate(
+        (widget) => widget is AnimatedContainer && widget.decoration is BoxDecoration,
+      );
+      expect(animatedContainerFinder, findsAtLeastNWidgets(1));
+
+      final animatedContainer = tester.widget<AnimatedContainer>(animatedContainerFinder.first);
+      final boxDecoration = animatedContainer.decoration as BoxDecoration;
+      expect(boxDecoration.gradient, isNotNull);
+      expect(boxDecoration.gradient is LinearGradient, isTrue);
+    });
   });
 }

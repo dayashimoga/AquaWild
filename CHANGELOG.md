@@ -2,6 +2,16 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.6.0] - 2026-11-22 — Dynamic Biome Atmospheric Background & Adaptive Ambient Ecosystem
+### Added
+- **Dynamic Biome Ambient Atmospheric Backdrop**: Integrated living atmospheric background gradients into `ResponsiveHomeShell` across all 3 responsive breakpoints (Compact Mobile, Medium Tablet, and Expanded Desktop Command Center).
+- **Smooth 600ms Environmental Transitions**: Ambient gradients smoothly cross-fade when switching biomes or auto-pairing companions using cubic easing (`Curves.easeInOutCubic`), automatically disabling transitions when reduced motion is requested (`MediaQuery.disableAnimationsOf(context)`).
+- **Physiological Color-Blending**: Created `_buildBiomeBackgroundDecoration` utilizing `Color.alphaBlend` to harmonize active biome sky gradients and ambient tones with system light/dark theme backgrounds for maximum legibility and contrast compliance.
+- **Glassmorphic Surface Integration**: Translucent glass navigation decks, command rails, and floating cards allow the living biome backdrop to gently shine through without compromising WCAG 2.2 AA text contrast.
+- **Automated Test Coverage**: Added dedicated test in `test/presentation/responsive_shell_test.dart` verifying dynamic background decoration presence and linear gradient stops, maintaining 100% test pass rate (90/90 tests) and 0 analyzer issues.
+
+---
+
 ## [1.5.0] - 2026-11-22 — Custom Beverage Builder Studio & Dynamic Beverage Registry
 ### Added
 - **Dynamic Beverage Registry**: Extended `BeverageType` with dynamic registration (`registerCustom`, `removeCustom`) and dynamic queryability via `allBeverages` and `findById`, enabling user-crafted beverages to seamlessly appear across the entire application (Quick Dock, Pour Studio, Voice Logger, Shortcuts).
