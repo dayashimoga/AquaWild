@@ -284,6 +284,28 @@ class ProductSKU {
       badgeText: 'FX Shader',
     ),
     ProductSKU(
+      id: 'pack_minimal_zen',
+      title: 'Minimal Zen Theme Pack',
+      description:
+          'Warm organic bamboo, natural sand, stone caustics, and onsen thermal vapor aesthetics.',
+      priceFormatted: '\$2.99',
+      priceCents: 299,
+      kind: EntitlementKind.themePack,
+      unlockedThemeIds: ['minimal_zen'],
+      badgeText: 'Zen Theme',
+    ),
+    ProductSKU(
+      id: 'pack_cyber_ocean',
+      title: 'Cyber Ocean Synthwave Pack',
+      description:
+          'Synthwave oceanic deep tones, electric violet caustics, and cyber aqua glow.',
+      priceFormatted: '\$2.99',
+      priceCents: 299,
+      kind: EntitlementKind.themePack,
+      unlockedThemeIds: ['cyber_ocean'],
+      badgeText: 'Cyber Theme',
+    ),
+    ProductSKU(
       id: 'pass_summer_splash',
       title: 'Summer Splash Expedition Pass',
       description:

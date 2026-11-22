@@ -48,6 +48,15 @@ void main() {
       expect(container.read(themeModeProvider), equals(AppThemeMode.system));
 
       notifier.cycleTheme();
+      expect(container.read(themeModeProvider), equals(AppThemeMode.neonBioluminescence));
+
+      notifier.cycleTheme();
+      expect(container.read(themeModeProvider), equals(AppThemeMode.minimalZen));
+
+      notifier.cycleTheme();
+      expect(container.read(themeModeProvider), equals(AppThemeMode.cyberOcean));
+
+      notifier.cycleTheme();
       expect(container.read(themeModeProvider), equals(AppThemeMode.hydroGlass));
     });
 

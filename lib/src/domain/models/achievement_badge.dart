@@ -155,5 +155,37 @@ class AchievementBadge {
       iconEmoji: '✨',
       xpReward: 1500,
     ),
+    AchievementBadge(
+      id: 'pro_pioneer',
+      title: 'Apex Guardian',
+      description: 'Ascend to AquaWild Pro and unlock the boundless companion sanctuary.',
+      category: AchievementCategory.mastery,
+      iconEmoji: '👑',
+      xpReward: 500,
+    ),
+    AchievementBadge(
+      id: 'summer_splash_champion',
+      title: 'Summer Splash Legend',
+      description: 'Master the Summer Splash Seasonal Expedition Pass and discover all aquatic secrets.',
+      category: AchievementCategory.mastery,
+      iconEmoji: '🏖️',
+      xpReward: 750,
+    ),
+    AchievementBadge(
+      id: 'master_of_ten',
+      title: 'Wild Menagerie',
+      description: 'Befriend and hydrate alongside all 10 companions in the sanctuary.',
+      category: AchievementCategory.exploration,
+      iconEmoji: '🐾',
+      xpReward: 2000,
+    ),
+    AchievementBadge(
+      id: 'bioluminescence_diver',
+      title: 'Abyssal Glow',
+      description: 'Immerse into the dark depths with the Neon Bioluminescence effect activated.',
+      category: AchievementCategory.exploration,
+      iconEmoji: '🪼',
+      xpReward: 300,
+    ),
   ];
 }

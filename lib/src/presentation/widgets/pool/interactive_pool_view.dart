@@ -14,10 +14,12 @@ import 'ripple_emitter.dart';
 /// - Accessibility reduced-motion mode compliance
 class InteractivePoolView extends StatefulWidget {
   final VoidCallback? onDiveInPressed;
+  final ParticleEffectType? particleEffectType;
 
   const InteractivePoolView({
     super.key,
     this.onDiveInPressed,
+    this.particleEffectType,
   });
 
   @override
@@ -59,18 +61,15 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
     )..repeat();
 
     // Initialize 24 randomized ambient particles
-    for (int i = 0; i < 24; i++) {
-      _particles.add(
-        PoolParticle(
-          xRatio: _random.nextDouble(),
-          yRatio: _random.nextDouble(),
-          radius: 2.0 + _random.nextDouble() * 4.0,
-          speed: 0.6 + _random.nextDouble() * 0.8,
-          phase: _random.nextDouble() * math.pi * 2,
-          isSparkle: i % 4 == 0,
-        ),
-      );
-    }
+    final initialType =
+        widget.particleEffectType ?? ParticleEffectType.standardBubbles;
+    _particles.addAll(
+      PoolParticlesPainter.generateDefaultParticles(
+        count: 24,
+        random: _random,
+        type: initialType,
+      ),
+    );
   }
 
   @override
@@ -96,6 +95,21 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
       // Clean up expired ripples
       _ripples.removeWhere((r) => r.isExpired(currentTime));
     });
+  }
+
+  ParticleEffectType _resolveEffectType(BuildContext context) {
+    if (widget.particleEffectType != null) {
+      return widget.particleEffectType!;
+    }
+    final theme = Theme.of(context);
+    if (theme.colorScheme.secondary == const Color(0xFFFF007F)) {
+      return ParticleEffectType.bioluminescentPlankton;
+    } else if (theme.scaffoldBackgroundColor == const Color(0xFFF9F7F1)) {
+      return ParticleEffectType.onsenSteamBubbles;
+    } else if (theme.colorScheme.secondary == const Color(0xFF9D4EDD)) {
+      return ParticleEffectType.auroraDust;
+    }
+    return ParticleEffectType.standardBubbles;
   }
 
   @override
@@ -295,13 +309,14 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                       ),
                     ),
 
-                    // Layer 2: Rising Micro-bubbles & Star Specular Glints
+                    // Layer 2: Rising Dynamic Particles (Bubbles, Plankton, Aurora Dust, Onsen Steam)
                     if (!reducedMotion)
                       CustomPaint(
                         size: size,
                         painter: PoolParticlesPainter(
                           time: currentTime,
                           particles: _particles,
+                          effectType: _resolveEffectType(context),
                         ),
                       ),
 

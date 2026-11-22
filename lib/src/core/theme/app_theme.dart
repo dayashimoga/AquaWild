@@ -142,4 +142,136 @@ class AppTheme {
       ),
     );
   }
+
+  /// Neon Bioluminescence Premium Theme (PRO / IAP Pack)
+  /// Features deep electric midnight base, high-voltage cyan & magenta neon accents,
+  /// and radiant glowing hydro-glass surfaces.
+  static ThemeData get neonBioluminescenceTheme {
+    final baseTextTheme = Typography.material2021().white;
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFF050814),
+      colorScheme: const ColorScheme.dark(
+        primary: Color(0xFF00F0FF),
+        secondary: Color(0xFFFF007F),
+        tertiary: Color(0xFF39FF14),
+        surface: Color(0xFF0A1026),
+        error: Color(0xFFFF2A6D),
+        onPrimary: Colors.black,
+        onSecondary: Colors.white,
+        onSurface: Color(0xFFE0FFFF),
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: const Color(0x2600F0FF),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Color(0x6600F0FF), width: 1.5),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: const Color(0x2BFF007F),
+        labelStyle: const TextStyle(color: Color(0xFFE0FFFF)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0x66FF007F), width: 1.2),
+        ),
+      ),
+    );
+  }
+
+  /// Minimal Zen Premium Theme (PRO / IAP Pack)
+  /// Features warm Japanese washi paper aesthetics, natural moss green,
+  /// bamboo cedar accents, and calming earthy harmony.
+  static ThemeData get minimalZenTheme {
+    final baseTextTheme = Typography.material2021().black;
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.light,
+      scaffoldBackgroundColor: const Color(0xFFF9F7F1),
+      colorScheme: const ColorScheme.light(
+        primary: Color(0xFF4A6B53),
+        secondary: Color(0xFFC48B54),
+        tertiary: Color(0xFF8C7355),
+        surface: Colors.white,
+        error: Color(0xFFB33939),
+        onPrimary: Colors.white,
+        onSecondary: Colors.white,
+        onSurface: Color(0xFF2C3531),
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: Colors.white,
+        elevation: 1,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Color(0x334A6B53), width: 1.0),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: const Color(0xFFEDE8DD),
+        labelStyle: const TextStyle(color: Color(0xFF2C3531)),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0x444A6B53), width: 1.0),
+        ),
+      ),
+    );
+  }
+
+  /// Cyber Ocean Synthwave Premium Theme (PRO / IAP Pack)
+  /// Features deep oceanic trench midnight, synthetic ultraviolet glows,
+  /// electric cyan highlights, and sunset coral accents.
+  static ThemeData get cyberOceanTheme {
+    final baseTextTheme = Typography.material2021().white;
+    return ThemeData(
+      useMaterial3: true,
+      brightness: Brightness.dark,
+      scaffoldBackgroundColor: const Color(0xFF040B1A),
+      colorScheme: const ColorScheme.dark(
+        primary: Color(0xFF00E5FF),
+        secondary: Color(0xFF9D4EDD),
+        tertiary: Color(0xFFFF5E3A),
+        surface: Color(0xFF0D1B2A),
+        error: Color(0xFFFF4D6D),
+        onPrimary: Colors.black,
+        onSecondary: Colors.white,
+        onSurface: Color(0xFFF0F4F8),
+      ),
+      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      appBarTheme: const AppBarTheme(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+      ),
+      cardTheme: CardThemeData(
+        color: const Color(0x2B0D1B2A),
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+          side: const BorderSide(color: Color(0x559D4EDD), width: 1.4),
+        ),
+      ),
+      chipTheme: ChipThemeData(
+        backgroundColor: const Color(0x2B9D4EDD),
+        labelStyle: const TextStyle(color: Colors.white),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+          side: const BorderSide(color: Color(0x4400E5FF), width: 1.0),
+        ),
+      ),
+    );
+  }
 }

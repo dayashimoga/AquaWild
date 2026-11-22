@@ -2,6 +2,32 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.19.0] - 2026-11-22 — Stage 5: Subphase 5.1.2 — Premium Themes, Particle Visual Effects, Exclusive Achievements & Content Plugin Architecture
+### Added
+- **Flagship Premium Theme Engine & Mode Tokens**:
+  * Added `neonBioluminescence`, `minimalZen`, and `cyberOcean` to `AppThemeMode` with `isPremium` and `themeId` metadata.
+  * Implemented `AppTheme.neonBioluminescenceTheme`: electric midnight (`#050814`), high-voltage neon cyan (`#00F0FF`), and neon magenta (`#FF007F`) with glowing hydro-glass cards.
+  * Implemented `AppTheme.minimalZenTheme`: warm Japanese washi paper (`#F9F7F1`), deep moss/matcha green (`#4A6B53`), and cedar/bamboo accents (`#C48B54`).
+  * Implemented `AppTheme.cyberOceanTheme`: oceanic trench midnight (`#040B1A`), synthetic ultraviolet glows (`#9D4EDD`), and cyber aqua (`#00E5FF`).
+  * Synchronized Flutter `ThemeMode` in `lib/main.dart` based on resolved `ThemeData.brightness`.
+- **Monetization Theme Lock Integration (`ThemeSwitcherButton`)**:
+  * Display amber padlock badges (`Icons.lock_rounded`) for locked premium themes.
+  * Show non-blocking `SnackBar` explaining Pro requirement when Free users tap locked themes; enable instant switching for Pro and theme-pack owners.
+- **Dynamic Multi-Style Particle Effects System (`PoolParticlesPainter`)**:
+  * Added `ParticleEffectType` supporting `standardBubbles`, `bioluminescentPlankton`, `auroraDust`, and `onsenSteamBubbles`.
+  * Pre-allocated cached paints to guarantee 60/120 FPS frame budget without GC pressure inside `paint()`.
+  * Context-based theme particle auto-detection in `InteractivePoolView` with full reduced-motion accessibility support.
+- **Exclusive Milestone & Premium Achievements**:
+  * Added 4 exclusive achievements to `AchievementBadge.defaultAchievements`: `pro_pioneer` (Apex Guardian, 500 XP, 👑), `summer_splash_champion` (Summer Splash Legend, 750 XP, 🏖️), `master_of_ten` (Wild Menagerie, 2000 XP, 🐾), and `bioluminescence_diver` (Abyssal Glow, 300 XP, 🪼).
+- **Dynamic Content Expansion Plugin Architecture (`ContentPluginRegistry`)**:
+  * Created `ContentPlugin` and `ContentPluginRegistry` (`contentPluginRegistryProvider`) allowing dynamic registration/unregistration of future content drops, seasonal companions, and partner biomes.
+  * Pre-registered `CoreAquaWildPlugin` (`aquawild.core`) bundling 10 living companions, 6 biomes, science beverages, and store SKUs.
+- **Automated Test Coverage**:
+  * Added `test/presentation/premium_themes_test.dart` (8 tests) and updated `test/presentation/theme_notifier_test.dart`.
+  * 151 / 151 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.18.0] - 2026-11-22 — Stage 5: Subphase 5.1.1 — Monetization Domain & State Engine
 ### Added
 - **Monetization Domain & Repository (`MonetizationRepository`)**:

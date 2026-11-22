@@ -8,7 +8,36 @@ enum AppThemeMode {
   dark,
   light,
   highContrast,
-  system;
+  system,
+  neonBioluminescence,
+  minimalZen,
+  cyberOcean;
+
+  /// Whether this theme requires an active AquaWild Pro subscription or theme pack entitlement
+  bool get isPremium {
+    switch (this) {
+      case AppThemeMode.neonBioluminescence:
+      case AppThemeMode.minimalZen:
+      case AppThemeMode.cyberOcean:
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  /// Unique SKU identifier used in monetization entitlement resolution
+  String? get themeId {
+    switch (this) {
+      case AppThemeMode.neonBioluminescence:
+        return 'neon_bioluminescence';
+      case AppThemeMode.minimalZen:
+        return 'minimal_zen';
+      case AppThemeMode.cyberOcean:
+        return 'cyber_ocean';
+      default:
+        return null;
+    }
+  }
 
   String get displayName {
     switch (this) {
@@ -22,6 +51,12 @@ enum AppThemeMode {
         return 'High Contrast (WCAG AAA)';
       case AppThemeMode.system:
         return 'System Default';
+      case AppThemeMode.neonBioluminescence:
+        return 'Neon Bioluminescence (PRO)';
+      case AppThemeMode.minimalZen:
+        return 'Minimal Zen (PRO)';
+      case AppThemeMode.cyberOcean:
+        return 'Cyber Ocean (PRO)';
     }
   }
 
@@ -37,6 +72,12 @@ enum AppThemeMode {
         return Icons.contrast_rounded;
       case AppThemeMode.system:
         return Icons.brightness_auto_rounded;
+      case AppThemeMode.neonBioluminescence:
+        return Icons.auto_awesome_rounded;
+      case AppThemeMode.minimalZen:
+        return Icons.spa_rounded;
+      case AppThemeMode.cyberOcean:
+        return Icons.waves_rounded;
     }
   }
 }
@@ -71,6 +112,12 @@ class ThemeModeNotifier extends Notifier<AppThemeMode> {
         return AppTheme.lightTheme;
       case AppThemeMode.highContrast:
         return AppTheme.highContrastTheme;
+      case AppThemeMode.neonBioluminescence:
+        return AppTheme.neonBioluminescenceTheme;
+      case AppThemeMode.minimalZen:
+        return AppTheme.minimalZenTheme;
+      case AppThemeMode.cyberOcean:
+        return AppTheme.cyberOceanTheme;
       case AppThemeMode.system:
         return platformBrightness == Brightness.dark
             ? AppTheme.hydroGlassTheme

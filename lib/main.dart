@@ -31,7 +31,9 @@ class AquaWildApp extends ConsumerWidget {
       theme: effectiveTheme,
       themeMode: appThemeMode == AppThemeMode.system
           ? ThemeMode.system
-          : ThemeMode.dark,
+          : (effectiveTheme.brightness == Brightness.light
+              ? ThemeMode.light
+              : ThemeMode.dark),
       routerConfig: router,
     );
   }

@@ -430,6 +430,42 @@
      * Full project test suite: 143 / 143 passing tests, 0 analyzer issues.
 - **Sign-Off**: `solution-architect`, `backend-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 026 — 2026-11-22 (Stage 5: Subphase 5.1.2 — Premium Themes, Particle Visual Effects, Exclusive Achievements & Content Plugin Architecture)
+- **Context**: Delivering the visual and content tier of the monetization system, including 3 flagship premium themes (`neonBioluminescence`, `minimalZen`, `cyberOcean`), dynamic multi-style particle effects (`ParticleEffectType`), 4 exclusive premium & milestone achievements, and an extensible future content expansion plugin architecture (`ContentPluginRegistry`).
+- **Architectural Decisions & Deliverables**:
+  1. **Flagship Premium Theme Engine & Mode Tokens**:
+     * Extended `AppThemeMode` with `neonBioluminescence`, `minimalZen`, and `cyberOcean`, providing `isPremium` and `themeId` metadata.
+     * Engineered `AppTheme.neonBioluminescenceTheme`: deep electric midnight (`#050814`), high-voltage neon cyan (`#00F0FF`), neon magenta (`#FF007F`), and neon lime (`#39FF14`) with glowing hydro-glass cards.
+     * Engineered `AppTheme.minimalZenTheme`: warm Japanese washi paper (`#F9F7F1`), deep matcha green (`#4A6B53`), and bamboo cedar accents (`#C48B54`).
+     * Engineered `AppTheme.cyberOceanTheme`: deep oceanic trench midnight (`#040B1A`), synthetic ultraviolet glows (`#9D4EDD`), and cyber aqua highlights (`#00E5FF`).
+     * Upgraded `lib/main.dart` to dynamically synchronize `ThemeMode.light` vs `ThemeMode.dark` based on the resolved `ThemeData.brightness`.
+  2. **Monetization Theme Lock Integration (`ThemeSwitcherButton`)**:
+     * Wired `ThemeSwitcherButton` to `monetizationProvider`: premium themes display an amber lock icon (`Icons.lock_rounded`) when locked.
+     * Non-Pro users attempting to switch to locked themes receive a non-blocking floating `SnackBar` prompting them to upgrade to AquaWild Pro. Pro and theme-pack owners can switch instantly.
+  3. **Dynamic Particle Visual Effects System (`PoolParticlesPainter`)**:
+     * Added `ParticleEffectType` supporting `standardBubbles`, `bioluminescentPlankton`, `auroraDust`, and `onsenSteamBubbles`.
+     * Pre-allocated cached paints to guarantee 60/120 FPS frame budget without GC pressure inside `paint()`.
+     * Upgraded `InteractivePoolView` with optional `particleEffectType` parameter and context-based automatic theme detection.
+     * Respects `MediaQuery.disableAnimationsOf(context)` for accessibility compliance.
+  4. **Exclusive Milestone & Premium Achievements**:
+     * Expanded `AchievementBadge.defaultAchievements` with 4 exclusive badges:
+       - `pro_pioneer`: 'Apex Guardian' (500 XP, 👑) — Ascend to AquaWild Pro.
+       - `summer_splash_champion`: 'Summer Splash Legend' (750 XP, 🏖️) — Conquer the Summer Splash Expedition Pass.
+       - `master_of_ten`: 'Wild Menagerie' (2000 XP, 🐾) — Befriend and hydrate alongside all 10 companions.
+       - `bioluminescence_diver`: 'Abyssal Glow' (300 XP, 🪼) — Immerse into the depths with Neon Bioluminescence.
+  5. **Dynamic Content Expansion Plugin Architecture (`ContentPluginRegistry`)**:
+     * Created `ContentPlugin` and `ContentPluginRegistry` in `lib/src/core/plugins/content_plugin_registry.dart` (`contentPluginRegistryProvider`).
+     * Pre-registers `CoreAquaWildPlugin` (`aquawild.core`) bundling the 10 core companions, 6 biomes, beverages, and commercial SKUs.
+     * Allows modular registration/unregistration of future content drops, seasonal expansions, and partner biomes with zero modifications to core engines.
+  6. **Automated Test Coverage**:
+     * Authored comprehensive test suite in [premium_themes_test.dart](file:///h:/water/test/presentation/premium_themes_test.dart) (8 unit & widget tests).
+     * Updated [theme_notifier_test.dart](file:///h:/water/test/presentation/theme_notifier_test.dart) for 8-theme cycle verification.
+     * Project test suite: **151 / 151 passing tests**, **0 analyzer issues**.
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `animation-agent`, `product-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
 
 
 
