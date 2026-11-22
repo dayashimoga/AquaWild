@@ -234,6 +234,39 @@ class HydrationBudgetSummary {
   double get sugarBudgetRemainingG =>
       (50.0 - sugarConsumedG).clamp(0.0, 50.0);
 
+  /// Alias for target completion
+  bool get isTargetMet => isGoalAchieved;
+
+  /// Alias for caffeine safety status
+  CaffeineSafetyStatus get caffeineStatus => caffeineSafetyStatus;
+
+  /// Whether user has exceeded 50g daily added sugar guidance
+  bool get hasExceededSugarBudget => sugarConsumedG > 50.0;
+
+  HydrationBudgetSummary copyWith({
+    double? targetMl,
+    double? netConsumedMl,
+    double? grossConsumedMl,
+    double? caffeineConsumedMg,
+    double? electrolytesConsumedMg,
+    double? sugarConsumedG,
+    int? streakDays,
+    int? streakFreezesAvailable,
+  }) {
+    return HydrationBudgetSummary(
+      targetMl: targetMl ?? this.targetMl,
+      netConsumedMl: netConsumedMl ?? this.netConsumedMl,
+      grossConsumedMl: grossConsumedMl ?? this.grossConsumedMl,
+      caffeineConsumedMg: caffeineConsumedMg ?? this.caffeineConsumedMg,
+      electrolytesConsumedMg:
+          electrolytesConsumedMg ?? this.electrolytesConsumedMg,
+      sugarConsumedG: sugarConsumedG ?? this.sugarConsumedG,
+      streakDays: streakDays ?? this.streakDays,
+      streakFreezesAvailable:
+          streakFreezesAvailable ?? this.streakFreezesAvailable,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
         'target_ml': targetMl,
         'net_consumed_ml': netConsumedMl,
@@ -346,6 +379,45 @@ class OutOfAppTelemetrySnapshot {
   /// Secondary widget subheadline
   String get widgetSubheadline =>
       '${circadianContext.paceStatus.label} • ${budget.caffeineSafetyStatus.label} Caffeine';
+
+  OutOfAppTelemetrySnapshot copyWith({
+    DateTime? timestamp,
+    HydrationBudgetSummary? budget,
+    String? activeCompanionId,
+    String? activeCompanionName,
+    String? companionEmoji,
+    int? companionCapacityMl,
+    String? companionStageTitle,
+    int? evolutionStageIndex,
+    int? userXp,
+    int? xpUntilNextStage,
+    String? activeBiomeId,
+    String? activeBiomeName,
+    NextUnlockProgression? nextUnlock,
+    CircadianContext? circadianContext,
+    int? unclaimedAchievementsCount,
+    List<int>? quickLogPresetMl,
+  }) {
+    return OutOfAppTelemetrySnapshot(
+      timestamp: timestamp ?? this.timestamp,
+      budget: budget ?? this.budget,
+      activeCompanionId: activeCompanionId ?? this.activeCompanionId,
+      activeCompanionName: activeCompanionName ?? this.activeCompanionName,
+      companionEmoji: companionEmoji ?? this.companionEmoji,
+      companionCapacityMl: companionCapacityMl ?? this.companionCapacityMl,
+      companionStageTitle: companionStageTitle ?? this.companionStageTitle,
+      evolutionStageIndex: evolutionStageIndex ?? this.evolutionStageIndex,
+      userXp: userXp ?? this.userXp,
+      xpUntilNextStage: xpUntilNextStage ?? this.xpUntilNextStage,
+      activeBiomeId: activeBiomeId ?? this.activeBiomeId,
+      activeBiomeName: activeBiomeName ?? this.activeBiomeName,
+      nextUnlock: nextUnlock ?? this.nextUnlock,
+      circadianContext: circadianContext ?? this.circadianContext,
+      unclaimedAchievementsCount:
+          unclaimedAchievementsCount ?? this.unclaimedAchievementsCount,
+      quickLogPresetMl: quickLogPresetMl ?? this.quickLogPresetMl,
+    );
+  }
 
   Map<String, dynamic> toJson() => {
         'timestamp': timestamp.toIso8601String(),

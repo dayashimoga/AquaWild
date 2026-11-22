@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.23.0] - 2026-11-22 — Stage 6: Subphase 6.1.2 — Interactive Rich Notification Payload Generator & Actionable Quick-Log Notification Handlers
+### Added
+- **Interactive Rich Notification Payload Engine**:
+  * Implemented `RichNotificationPayload` and `NotificationAction` in `lib/src/domain/models/notification_payload.dart`.
+  * Dynamic titles and progress subtitles reflecting net hydration, circadian phase, and target status.
+  * Multi-nutrient clinical safety warnings in notification body for caffeine limits (400mg), added sugar guidance (50g), and electrolyte depletion.
+  * Companion personality quote engine tailored to lore and circadian pace (Red Panda, Capybara, Axolotl, Sea Otter, Dolphin, and companions).
+- **Actionable Background Quick-Log & Snooze Handlers**:
+  * Implemented `RichNotificationService.handleNotificationAction` in `lib/src/core/services/rich_notification_service.dart`.
+  * Allows logging +250ml or +500ml Pure Water headlessly directly from system notifications without opening the app.
+  * Automatically calculates XP earned (1 XP per 10ml) and synchronizes with local widget telemetry cache.
+  * Supports 30-minute reminder snoozing and deep-link routing (`/home`).
+- **Riverpod Notification Integration**:
+  * Created `latestNotificationPayloadProvider` and `notificationActionDispatcherProvider` in `lib/src/presentation/controllers/notification_controller.dart`.
+- **Automated Rich Notification Test Suite (`rich_notification_test.dart`)**:
+  * Added 15 tests covering models, payload generator, nutrient alerts, companion quotes, background action handlers, and Riverpod dispatcher.
+  * **201 / 201 passing tests**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.22.0] - 2026-11-22 — Stage 6: Subphase 6.1.1 — Out-of-App Hydration & Budget Telemetry Service
 ### Added
 - **Out-of-App Hydration & Multi-Nutrient Budget Engine**:
