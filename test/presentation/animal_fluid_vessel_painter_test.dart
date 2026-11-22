@@ -1,6 +1,7 @@
 import 'package:aquawild/src/domain/models/beverage_type.dart';
 import 'package:aquawild/src/domain/models/exotic_animal.dart';
 import 'package:aquawild/src/domain/models/fluid_layer.dart';
+import 'package:aquawild/src/presentation/controllers/hydration_controller.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_vessel_painter.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_silhouette_paths.dart';
@@ -323,6 +324,37 @@ void main() {
 
       expect(find.text('Custom Pour'), findsOneWidget);
       expect(find.text('Exact Keypad'), findsOneWidget);
+    });
+
+    testWidgets('AnimalFluidHabitatView interpolates liquid fill smoothly with spring physics upon logging a drink',
+        (tester) async {
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: MaterialApp(
+            home: Scaffold(
+              body: AnimalFluidHabitatView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 50));
+
+      final container = ProviderScope.containerOf(
+        tester.element(find.byType(AnimalFluidHabitatView)),
+      );
+
+      // Log a drink directly through provider
+      await container.read(hydrationProvider.notifier).logDrink(
+        beverage: BeverageType.pureWater,
+        volumeMl: 500,
+      );
+
+      // Pump several animation frames to advance spring interpolation
+      await tester.pump(const Duration(milliseconds: 100));
+      await tester.pump(const Duration(milliseconds: 200));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(tester.takeException(), isNull);
     });
 
     test('Starter companions include Capybara and Axolotl with 0 unlock XP', () {

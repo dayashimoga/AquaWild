@@ -31,6 +31,9 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
   double _timeSeconds = 0.0;
   int _lastEntryCount = 0;
   double _interactionPulse = 0.0;
+  double _displayedFillFraction = 0.0;
+  double _fillVelocity = 0.0;
+  bool _hasInitializedFill = false;
 
   @override
   void initState() {
@@ -104,6 +107,12 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
     final progressFraction = hydrationState.goal.progressFraction;
     final bool reducedMotion = MediaQuery.disableAnimationsOf(context);
 
+    // Initial sync of fill level
+    if (!_hasInitializedFill) {
+      _displayedFillFraction = progressFraction;
+      _hasInitializedFill = true;
+    }
+
     // Trigger splash wave whenever a new drink is logged
     if (hydrationState.entries.length > _lastEntryCount) {
       _lastEntryCount = hydrationState.entries.length;
@@ -121,9 +130,34 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
           animation: _ticker,
           builder: (context, child) {
             _timeSeconds += 0.016;
-            if (!reducedMotion) {
+            const double dt = 0.016;
+
+            if (reducedMotion) {
+              _displayedFillFraction = progressFraction;
+              _fillVelocity = 0.0;
+            } else {
               _waveSolver.step(dt: 1.0);
               _interactionPulse = math.max(0.0, _interactionPulse - 0.04);
+
+              // Smooth critically-damped spring-damper interpolation for fill level
+              final double fillDelta = progressFraction - _displayedFillFraction;
+              if (fillDelta.abs() > 0.0005) {
+                // Hooke's spring constant k=16.0, damping c=8.5 for smooth zero-overshoot rise
+                final double springAcc =
+                    (fillDelta * 16.0) - (_fillVelocity * 8.5);
+                _fillVelocity += springAcc * dt;
+                _displayedFillFraction += _fillVelocity * dt;
+
+                // Continuous pour stream ripple excitation during active liquid level rise
+                if (_fillVelocity.abs() > 0.02) {
+                  final int rippleCol =
+                      24 + ((_timeSeconds * 12).floor() % 16);
+                  _waveSolver.splash(rippleCol, _fillVelocity * 2.8);
+                }
+              } else {
+                _displayedFillFraction = progressFraction;
+                _fillVelocity = 0.0;
+              }
             }
 
             return Column(
@@ -148,7 +182,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                         size: Size(vesselWidth, vesselHeight),
                         painter: AnimalFluidVesselPainter(
                           animalId: activeAnimal.id,
-                          fillFraction: progressFraction,
+                          fillFraction: _displayedFillFraction,
                           stratifiedLayers: hydrationState.stratifiedLayers,
                           waveSolver: _waveSolver,
                           time: _timeSeconds,

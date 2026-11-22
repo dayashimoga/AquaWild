@@ -279,3 +279,20 @@
   4. **Automated Test Coverage**:
      * Expanded `test/presentation/wave_solver_test.dart` with extreme impulse perturbation tests verifying zero NaNs, bounded displacements, and smooth viscous energy decay (114/114 passing tests, 0 analyzer issues).
 - **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 019 — 2026-11-22 (Stage 3: Subphase 3.2.1 — Fill-Level Spring Interpolation & Pour Stream Ripple Excitation)
+- **Context**: Eliminating instantaneous jarring fill height jumps when drinks are logged into the centerpiece animal habitat vessel.
+- **Architectural Decisions & Deliverables**:
+  1. **Critically-Damped Spring-Damper Fill Interpolation (`AnimalFluidHabitatView`)**:
+     * Replaced raw instantaneous `progressFraction` assignment with a physical spring-damper equation ($k = 16.0$, $c = 8.5$, $a = k\Delta h - cv$).
+     * New beverage logs cause the fluid level to smoothly glide and rise over ~500ms with natural deceleration and zero overshoot.
+  2. **Continuous Pour Stream Ripple Excitation**:
+     * While liquid is dynamically rising ($\vert v_{fill}\vert > 0.02$), the wave solver continuously excites the surface columns ($col \in [24, 40]$) with pour stream impact impulses ($v_{splash} = 2.8 v_{fill}$), simulating the physical disturbance of liquid cascading into the vessel.
+  3. **Reduced-Motion Mode**:
+     * Respects `MediaQuery.disableAnimationsOf(context)`: instantly synchronizes `_displayedFillFraction = progressFraction` with zero delays or camera shaking.
+  4. **Automated Test Coverage**:
+     * Added `AnimalFluidHabitatView interpolates liquid fill smoothly with spring physics upon logging a drink` in `test/presentation/animal_fluid_vessel_painter_test.dart` (115/115 passing tests, 0 analyzer issues).
+- **Sign-Off**: `animation-agent`, `solution-architect`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.

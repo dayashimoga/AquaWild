@@ -2,6 +2,20 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.12.0] - 2026-11-22 — Stage 3: Subphase 3.2.1 — Smooth Fill-Level Spring-Damper Interpolation & Pour Stream Ripple Excitation
+### Added
+- **Critically-Damped Spring-Damper Fill Level Interpolation (`AnimalFluidHabitatView`)**:
+  * Replaced instantaneous progress fraction jumps with a physical spring-damper solver ($k = 16.0$, $c = 8.5$), smoothly elevating the fluid level over ~500ms without overshoot.
+- **Continuous Pour Stream Ripple Excitation**:
+  * Active fluid rise dynamically injects splash impulses across central columns ($col \in [24, 40]$), simulating the physical disturbance of pouring liquid.
+- **Reduced-Motion Mode**:
+  * Immediate synchronization with target fill level when `MediaQuery.disableAnimationsOf(context)` is enabled.
+- **Automated Test Coverage**:
+  * Added smooth spring interpolation widget test upon logging drinks in `test/presentation/animal_fluid_vessel_painter_test.dart`.
+  * 115 / 115 passing tests across all test suites, 0 analyzer issues.
+
+---
+
 ## [1.11.0] - 2026-11-22 — Stage 3: Subphase 3.1.2 — Coupled Shallow-Water Sub-Step Stability & Carbonation Effervescence
 ### Added
 - **Sub-Step Wave Integration & Pre-Allocated Scratch Buffers in `WaveColumnSolver`**:
