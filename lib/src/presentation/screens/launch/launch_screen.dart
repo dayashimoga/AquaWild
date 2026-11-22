@@ -48,12 +48,15 @@ class LaunchScreen extends StatelessWidget {
                           color: AppColors.cyanPrimary,
                         ),
                         SizedBox(width: 8),
-                        Text(
-                          'Bamboo Misty Springs • Relax Mode',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white,
+                        Flexible(
+                          child: Text(
+                            'Bamboo Misty Springs • Relax Mode',
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],

@@ -1,6 +1,7 @@
 import 'package:aquawild/main.dart';
 import 'package:aquawild/src/core/constants/app_constants.dart';
 import 'package:aquawild/src/core/theme/app_colors.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -33,15 +34,21 @@ void main() {
       expect(find.text('Dive Into Habitat'), findsOneWidget);
       expect(find.text('Bamboo Misty Springs • Relax Mode'), findsOneWidget);
 
-      // Verify Red Panda mascot semantics is accessible
       final mascot = find.bySemanticsLabel(
         RegExp(r'Ruby the Red Panda wearing aviator sunglasses'),
       );
       expect(mascot, findsOneWidget);
     });
 
-    testWidgets('Navigating to HomeScreen displays active companion and quick dock',
+    testWidgets('Navigating to HomeScreen displays active companion, fluid habitat, and quick dock',
         (tester) async {
+      tester.view.physicalSize = const Size(800, 1200);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(() {
+        tester.view.resetPhysicalSize();
+        tester.view.resetDevicePixelRatio();
+      });
+
       await tester.pumpWidget(
         const ProviderScope(
           child: AquaWildApp(),
@@ -53,16 +60,21 @@ void main() {
       expect(diveInButton, findsOneWidget);
 
       await tester.tap(diveInButton);
-      await tester.pumpAndSettle();
+      // Wait for GoRouter route transition (300ms) to complete
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump(const Duration(milliseconds: 100));
 
       expect(find.text('Ruby the Red Panda'), findsOneWidget);
-      expect(find.text('Net Hydration'), findsOneWidget);
+      expect(find.text('Net Hydration Today'), findsOneWidget);
+      expect(find.text('Custom Pour'), findsOneWidget);
+      expect(find.text('Exact Keypad'), findsOneWidget);
       expect(find.text('Quick Log Beverage'), findsOneWidget);
 
-      // Tap quick log water button
+      // Tap quick log water button (+250ml)
       final quickLogButton = find.text('+250ml').first;
+      await tester.ensureVisible(quickLogButton);
       await tester.tap(quickLogButton);
-      await tester.pumpAndSettle();
+      await tester.pump(const Duration(milliseconds: 200));
 
       expect(find.textContaining('250 / 2500 ml'), findsOneWidget);
     });

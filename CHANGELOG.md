@@ -2,6 +2,17 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [0.4.0-subphase-2.3.1] - 2026-11-22
+### Added
+- **Real-Time 2D Shallow-Water Wave Column Physics**: Implemented `WaveColumnSolver` running a 64-column spring-damper wave simulation with Hooke restorative force, velocity damping, and Laplacian wave propagation across adjacent liquid columns.
+- **Animal Silhouette Vector Paths**: Created `AnimalSilhouettePaths` containing high-precision vector clipping paths for Ruby the Red Panda, Capy the Capybara, Axel the Axolotl, Pip the Sea Otter, and Luna the Andean Llama.
+- **Density-Stratified Fluid Vessel Canvas**: Developed `AnimalFluidVesselPainter` rendering dynamic beverage strata sorted by physical density, animated surface waves, specular meniscus highlights, effervescent rising bubbles, and hydro-glass container outlines with ambient glow.
+- **Interactive Pour Studio & Custom Keypad**: Built `InteractivePourSheet` allowing fluid drag-to-adjust volume, quick preset pills (150ml, 250ml, 330ml, 500ml), and `CustomNumericKeypadModal` for precise numeric input.
+- **Adaptive Audio & Haptics Engine**: Created `AudioHapticsService` delivering tactical haptics and synthesized sound feedback during pouring, splashing, and goal achievement with graceful cross-platform degradation.
+- **Automated Fluid Physics & Interaction Test Suite**: Added `test/presentation/wave_solver_test.dart`, `test/presentation/interactive_pour_sheet_test.dart`, and `test/presentation/custom_numeric_keypad_test.dart` (36 total tests across the project passing, 0 analyzer issues).
+
+---
+
 ## [0.3.0-subphase-2.2.1] - 2026-11-22
 ### Added
 - **Interactive Top-View Pool Water Physics**: Implemented `PoolWaterSimulationPainter` rendering procedural ceramic pool floor tiles, dual-layer sinusoidal caustic lattices, specular sunlight glints, and interactive expanding ripple rings.

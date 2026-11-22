@@ -1,12 +1,12 @@
+import 'package:aquawild/src/core/theme/app_colors.dart';
+import 'package:aquawild/src/domain/models/beverage_type.dart';
+import 'package:aquawild/src/domain/models/hydration_entry.dart';
+import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
+import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
+import 'package:aquawild/src/presentation/controllers/hydration_controller.dart';
+import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/app_colors.dart';
-import '../../../domain/models/beverage_type.dart';
-import '../../../domain/models/fluid_layer.dart';
-import '../../../domain/models/hydration_entry.dart';
-import '../../controllers/animal_habitat_controller.dart';
-import '../../controllers/biome_controller.dart';
-import '../../controllers/hydration_controller.dart';
 
 /// Main Hydration & Exotic Animal Habitat Dashboard
 class HomeScreen extends ConsumerWidget {
@@ -61,102 +61,72 @@ class HomeScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              // Main Interactive Progress & Animal Habitat Card
+              // Main Interactive Progress Card
               Semantics(
                 label:
                     '${activeAnimal.name} hydration status: $netMl of $targetMl milliliters, $progressPct percent complete',
                 child: Card(
                   child: Padding(
-                    padding: const EdgeInsets.all(20.0),
-                    child: Column(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Net Hydration',
-                                  style: TextStyle(color: Colors.white70),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  '$netMl / $targetMl ml',
-                                  style: const TextStyle(
-                                    fontSize: 26,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColors.cyanPrimary,
-                                  ),
-                                ),
-                              ],
+                            const Text(
+                              'Net Hydration Today',
+                              style: TextStyle(color: Colors.white70),
                             ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                SizedBox(
-                                  width: 64,
-                                  height: 64,
-                                  child: CircularProgressIndicator(
-                                    value: goal.progressFraction,
-                                    strokeWidth: 6,
-                                    backgroundColor: AppColors.oceanDeep,
-                                    color: AppColors.cyanPrimary,
-                                  ),
-                                ),
-                                Text(
-                                  '$progressPct%',
-                                  style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
+                            const SizedBox(height: 4),
+                            Text(
+                              '$netMl / $targetMl ml',
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.cyanPrimary,
+                              ),
+                            ),
+                            Text(
+                              '${goal.remainingMl.toStringAsFixed(0)} ml remaining',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                color: Colors.white54,
+                              ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
-                        // Stratified fluid layer summary bar
-                        if (hydrationState.stratifiedLayers.isNotEmpty) ...[
-                          const Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(
-                              'Fluid Stratification (Density Layered):',
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.white60,
+                        Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            SizedBox(
+                              width: 60,
+                              height: 60,
+                              child: CircularProgressIndicator(
+                                value: goal.progressFraction,
+                                strokeWidth: 5.5,
+                                backgroundColor: AppColors.oceanDeep,
+                                color: AppColors.cyanPrimary,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 8),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(8),
-                            child: SizedBox(
-                              height: 16,
-                              child: Row(
-                                children: hydrationState.stratifiedLayers.map((FluidLayer layer) {
-                                  return Expanded(
-                                    flex: (layer.volumeMl * 10).round().clamp(1, 10000),
-                                    child: Container(
-                                      color: layer.beverage.primaryColor,
-                                      margin: const EdgeInsets.symmetric(horizontal: 0.5),
-                                    ),
-                                  );
-                                }).toList(),
+                            Text(
+                              '$progressPct%',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 13,
                               ),
                             ),
-                          ),
-                        ] else ...[
-                          const Text(
-                            'Companion vessel is empty. Log your first drink below!',
-                            style: TextStyle(fontSize: 13, color: Colors.white38),
-                          ),
-                        ],
+                          ],
+                        ),
                       ],
                     ),
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+
+              // Hero Feature: Animated Exotic Animal Fluid Habitat Vessel
+              const AnimalFluidHabitatView(),
               const SizedBox(height: 20),
 
               // Quick Log Beverage Dock
@@ -166,7 +136,7 @@ class HomeScreen extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
               SizedBox(
-                height: 110,
+                height: 104,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: BeverageType.allBeverages.length,
@@ -180,7 +150,6 @@ class HomeScreen extends ConsumerWidget {
                               beverage: bev,
                               volumeMl: defaultVol,
                             );
-                        // Also sync XP to animal habitat
                         ref.read(animalHabitatProvider.notifier).addXp(
                               (defaultVol / 10).round(),
                             );
@@ -200,11 +169,11 @@ class HomeScreen extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             CircleAvatar(
-                              radius: 18,
+                              radius: 17,
                               backgroundColor: bev.primaryColor.withValues(alpha: 0.2),
                               child: Icon(
                                 Icons.local_drink_rounded,
-                                size: 20,
+                                size: 18,
                                 color: bev.primaryColor,
                               ),
                             ),
@@ -232,9 +201,9 @@ class HomeScreen extends ConsumerWidget {
                   },
                 ),
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 20),
 
-              // Companion Evolution & Habitat Preview
+              // Companion Evolution & Habitat Card
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
