@@ -85,3 +85,16 @@
   3. **Biomes & Evolution Unlocks**: Animal companions advance through 4 evolution tiers (Hatchling -> Explorer -> Guardian -> Mythic Spirit) unlocked by earned hydration XP, while 6 living biomes (Bamboo Misty Springs, Thermal Yuzu Onsen, etc.) can be traversed with dynamic background environmental gradients.
   4. **Responsive Layout Hardening**: All modal sheet headers and bar charts were wrapped in responsive `Expanded` and flex bounds, ensuring zero pixel overflows down to 280px screen widths and scalable text up to 200%.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `animation-agent`, `qa-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 008 — 2026-11-22 (Subphase 4.1.1)
+- **Context**: Responsive cross-platform shell (Mobile, Tablet, Desktop/Web), dynamic theme engine (Hydro-Glass, Dark, Light, High-Contrast WCAG AAA), voice logging NLP simulation, and global keyboard shortcuts.
+- **Course-Correction & Observations**:
+  1. **Three-Tier Adaptive Breakpoint Architecture**: Standard mobile hydration apps stretch clumsily on tablets and desktop monitors. We engineered `ResponsiveHomeShell` with 3 discrete responsive modes: Compact (<700px, phone-optimized with floating voice action and bottom sheets), Medium (700px-1100px, dual-column tablet workspace with `NavigationRail`), and Expanded (>=1100px, 3-column command center with Navigation/Biome deck, Center Animal Fluid Canvas, and Right Telemetry HUD).
+  2. **Multimodal Keyboard Accelerators**: Desktop and web users demand rapid keyboard input. We introduced `AquaWildShortcutsWrapper` using Flutter `CallbackShortcuts` mapping `1-9` to immediate beverage logging, `Space` to 250ml water pour, `A` for AI Coach, `R` for Reminders, `B` for Biomes, `P` for Analytics, `G` for Achievements, `T` for theme cycling, `V` for voice logging, and `?` for a keycap shortcuts guide modal.
+  3. **Natural Language Speech-to-Intent Logging**: Implemented `VoiceCommandService` parsing natural speech transcriptions (e.g., "Drank 350ml green tea", "Logged 16 oz water", "Had 60ml espresso") with automated unit conversion (oz to ml, l to ml) and beverage alias resolution, integrated into a glassmorphic `VoiceCommandModal` with an animated pulsing visualizer.
+  4. **Dynamic Theme Engine & WCAG 2.2 AAA Mode**: Created `ThemeModeNotifier` managing flagship `hydroGlassTheme` (neon cyan bioluminescence and frosted borders), OLED `darkTheme`, Day `lightTheme`, and an ultra-legible `highContrastTheme` designed specifically for low-vision accessibility with high-contrast yellow/white accents (>7:1 contrast ratio).
+  5. **Flex Layout Overflow Defense**: Replaced rigid horizontal rows with responsive `Wrap` widgets and `Expanded` titles across card headers, button bars, and entry lists, completely eliminating RenderFlex overflows on screens from 320px up to 4K displays.
+- **Sign-Off**: `solution-architect`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.

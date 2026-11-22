@@ -133,3 +133,26 @@
 - **Risk Level**: Medium
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Verified PostgreSQL schema with zero exposed cross-user data, functional offline queue flushing, and seamless cloud indicator UX.
+
+
+---
+
+### Subphase 4.1.1 — Responsive Cross-Platform Shell, Multimodal Accessibility & Dynamic Themes
+- **Complexity**: Medium
+- **Dependencies**: Subphase 3.3.1, Subphase 2.3.1
+- **Deliverables**:
+  - `lib/src/core/theme/theme_mode_notifier.dart`: Riverpod 3 `Notifier<AppThemeMode>` supporting `hydroGlass`, `dark`, `light`, `highContrast`, and `system` modes with dynamic brightness resolution.
+  - `lib/src/core/theme/app_theme.dart`: Flagship `hydroGlassTheme` with frosted borders, glass cards, and neon cyan bioluminescence alongside Dark, Light, and High Contrast WCAG AAA themes.
+  - `lib/src/presentation/widgets/theme/theme_switcher_button.dart`: Quick-cycle and dropdown selection popup menu for seamless in-app theme switching.
+  - `lib/src/core/services/voice_command_service.dart`: Speech-to-intent natural language regex/heuristic parser converting utterances (e.g. "Drank 350ml green tea", "16 oz water") into structured hydration entries.
+  - `lib/src/presentation/widgets/voice/voice_command_modal.dart`: Glassmorphic bottom sheet with pulsing microphone visualizer, speech preset chips, auto-parse preview, and instant drink logging.
+  - `lib/src/presentation/widgets/shortcuts/keyboard_shortcuts_modal.dart`: Stylized keycap reference dialog displaying desktop keyboard accelerators (`1-9`, `Space`, `A`, `R`, `B`, `P`, `G`, `T`, `V`, `?`).
+  - `lib/src/presentation/widgets/shortcuts/aqua_wild_shortcuts_wrapper.dart`: Global `CallbackShortcuts` wrapper intercepting key events for rapid logging, navigation, and modal triggers.
+  - `lib/src/presentation/screens/home/responsive_home_shell.dart`: Adaptive cross-platform shell rendering Compact Mobile (<700px), Medium Tablet (700px-1100px) with `NavigationRail`, and Expanded Desktop (>=1100px) 3-column command center.
+  - Refactored `lib/src/presentation/screens/home/home_screen.dart` into `AquaWildShortcutsWrapper` + `ResponsiveHomeShell`.
+  - Automated test suites: `test/domain/voice_command_service_test.dart`, `test/presentation/theme_notifier_test.dart`, `test/presentation/responsive_shell_test.dart` (70 total tests passing, 0 analyzer issues).
+- **Validation Criteria**: Zero analyzer warnings; 100% test pass rate; WCAG 2.2 AAA contrast; fluid responsive resizing from 320px to 4K.
+- **Maximum Execution Time**: 35 minutes
+- **Risk Level**: Low
+- **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
+- **Success Metrics**: Seamless 3-breakpoint adaptive layouts, instant theme transitions, natural language voice parsing, and fully keyboard-traversable navigation.

@@ -2,6 +2,19 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [0.8.0-subphase-4.1.1] - 2026-11-22
+### Added
+- **Responsive 3-Breakpoint Adaptive Shell**: Engineered `ResponsiveHomeShell` delivering tailored layouts across Compact (<700px phone), Medium (700px-1100px tablet with `NavigationRail`), and Expanded (>=1100px desktop/web 3-pane command center).
+- **Dynamic Theme Engine (4 Distinct Modes)**: Created `ThemeModeNotifier` managing `hydroGlassTheme` (neon cyan bioluminescence and glass borders), OLED `darkTheme`, Day `lightTheme`, and WCAG 2.2 AAA `highContrastTheme` with dynamic brightness and system integration.
+- **In-App Theme Switcher**: Built `ThemeSwitcherButton` supporting one-tap cycle and popup menu dropdown theme selection.
+- **Multimodal Keyboard Accelerators**: Implemented `AquaWildShortcutsWrapper` intercepting keybindings (`1-9` for instant beverage logging, `Space` for 250ml water, `A` for AI Coach, `R` for Reminders, `B` for Biomes, `P` for Analytics, `G` for Achievements, `T` for theme, `V` for voice, `?` for shortcuts modal).
+- **Interactive Keyboard Shortcuts Guide**: Developed `KeyboardShortcutsModal` displaying stylish keycap badges and descriptions for desktop and web keyboard navigation.
+- **Natural Language Speech-to-Intent Voice Logger**: Created `VoiceCommandService` parsing natural utterances with automatic unit conversion (oz, l to ml) and beverage alias mapping.
+- **Pulsing Voice Logger UI**: Implemented `VoiceCommandModal` featuring an animated microphone visualizer, speech preset chips, real-time intent extraction preview, and instant logging.
+- **Automated Responsive, Theme & NLP Test Suite**: Added `test/domain/voice_command_service_test.dart`, `test/presentation/theme_notifier_test.dart`, and `test/presentation/responsive_shell_test.dart` (70 total tests across the project passing, 0 analyzer issues).
+
+---
+
 ## [0.7.0-subphase-3.3.1] - 2026-11-22
 ### Added
 - **Production Supabase PostgreSQL Schema**: Created `20261122000000_create_aquawild_schema.sql` defining `profiles`, `hydration_entries`, `user_streaks`, `user_achievements`, and `activity_sessions` with indexing and constraints.
