@@ -702,6 +702,42 @@
      - Certified full project test suite: **248 / 248 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `backend-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 036 — 2026-11-22 (Stage 7: Subphase 7.2.2 — Supabase Admin Schema Migration, RLS Admin Policies & Full Admin Portal Integration Tests)
+- **Context**: Constructing the production-grade PostgreSQL administrative schema migration, multi-tenant Row-Level Security (RLS) policies, administrative repository layer, and full end-to-end integration test suite for the Admin Mission Control Portal in compliance with ADR-008 and ADR-009.
+- **Architectural Decisions & Deliverables**:
+  1. **PostgreSQL Migration (`supabase/migrations/20261122000002_create_admin_portal_schema.sql`)**:
+     - Defined 5 production tables with strict constraints and foreign keys:
+       * `public.admin_user_roles`: Maps user UUID to RBAC roles (`standard`, `pro`, `moderator`, `admin`, `super_admin`) and account status (`active`, `suspended`, `pending_verification`), tracking granted privileges and last operator modification.
+       * `public.admin_catalog_beverages`: Runtime dynamic content override catalog for hydration coefficients, caffeine, electrolytes, calories, and active flags.
+       * `public.admin_catalog_animals`: Runtime dynamic companion catalog for species, biomes, unlock thresholds, rarity tiers, and premium status flags.
+       * `public.admin_broadcast_messages`: Multi-channel push notification broadcasts with segmented targeting and scheduling status.
+       * `public.admin_audit_entries`: Append-only, cryptographically chained audit ledger storing operator UUID, email, action type, target entity, JSON metadata, payload hash, and previous block hash.
+     - Security-Definer Functions:
+       * `public.is_admin()`: Verifies whether the calling `auth.uid()` possesses `admin` or `super_admin` in `admin_user_roles` or carries `service_role` in `auth.jwt()`.
+       * `public.is_moderator()`: Verifies whether the caller holds `moderator`, `admin`, or `super_admin`.
+     - Strict Row-Level Security (RLS) Enforcement:
+       * `admin_user_roles`: Read allowed for authenticated users for their own record; mutations strictly restricted to `is_admin()`.
+       * `admin_catalog_beverages` & `admin_catalog_animals`: Public read access for active items; mutations strictly restricted to `is_admin()`.
+       * `admin_broadcast_messages`: Read and write strictly restricted to `is_admin()`.
+       * `admin_audit_entries`: Strictly append-only. Only `SELECT` and `INSERT` policies are defined (for `is_admin()`). Zero `UPDATE` or `DELETE` policies exist, making historical ledger tampering mathematically and procedurally impossible.
+  2. **Admin Portal Data Repository Layer**:
+     - Defined abstract contract [admin_portal_repository.dart](file:///h:/water/lib/src/data/repositories/admin_portal_repository.dart) with `adminPortalRepositoryProvider`.
+     - Implemented [supabase_admin_repository.dart](file:///h:/water/lib/src/data/repositories/supabase_admin_repository.dart) providing offline caching, real-time reactive sync, RLS permission simulation, and cryptographic hash verification.
+     - Wired repository persistence into [admin_portal_controller.dart](file:///h:/water/lib/src/presentation/controllers/admin_portal_controller.dart) via `_recordAudit()` helper, guaranteeing that every state mutation is accompanied by an unbroken cryptographic audit block.
+  3. **Full Admin Portal Integration Test Suite**:
+     - Authored comprehensive integration test suite in [admin_portal_supabase_integration_test.dart](file:///h:/water/test/integration/admin_portal_supabase_integration_test.dart) (6 extensive tests):
+       * User directory mutations propagate to `SupabaseAdminRepository` and generate verifiable audit logs.
+       * Content catalog mutations (beverage hydration factors, animal unlock levels) propagate cleanly.
+       * Feature flags and environment switcher synchronize bidirectionally with the repository.
+       * Cryptographic audit trail maintains an unbroken SHA-256 hash chain with strict tamper rejection.
+       * Notification broadcast campaigns execute immediate dispatch and scheduled state transitions.
+       * Row-Level Security (RLS) simulation rejects unauthorized caller roles (`standard`, `pro`) attempting administrative mutations with `SecurityException`.
+     - Certified full project test suite: **254 / 254 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `security-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+
 
 ---
 
@@ -766,6 +802,42 @@
      - Verified desktop sidebar navigation, module tab switches, God-Mode activation, user search, content catalog toggles, feature flags, environment switching, cryptographic chain verification, broadcast dispatching, and mobile choice-chip responsiveness.
      - Certified full project test suite: **248 / 248 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `backend-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+---
+
+## Entry 036 — 2026-11-22 (Stage 7: Subphase 7.2.2 — Supabase Admin Schema Migration, RLS Admin Policies & Full Admin Portal Integration Tests)
+- **Context**: Constructing the production-grade PostgreSQL administrative schema migration, multi-tenant Row-Level Security (RLS) policies, administrative repository layer, and full end-to-end integration test suite for the Admin Mission Control Portal in compliance with ADR-008 and ADR-009.
+- **Architectural Decisions & Deliverables**:
+  1. **PostgreSQL Migration (`supabase/migrations/20261122000002_create_admin_portal_schema.sql`)**:
+     - Defined 5 production tables with strict constraints and foreign keys:
+       * `public.admin_user_roles`: Maps user UUID to RBAC roles (`standard`, `pro`, `moderator`, `admin`, `super_admin`) and account status (`active`, `suspended`, `pending_verification`), tracking granted privileges and last operator modification.
+       * `public.admin_catalog_beverages`: Runtime dynamic content override catalog for hydration coefficients, caffeine, electrolytes, calories, and active flags.
+       * `public.admin_catalog_animals`: Runtime dynamic companion catalog for species, biomes, unlock thresholds, rarity tiers, and premium status flags.
+       * `public.admin_broadcast_messages`: Multi-channel push notification broadcasts with segmented targeting and scheduling status.
+       * `public.admin_audit_entries`: Append-only, cryptographically chained audit ledger storing operator UUID, email, action type, target entity, JSON metadata, payload hash, and previous block hash.
+     - Security-Definer Functions:
+       * `public.is_admin()`: Verifies whether the calling `auth.uid()` possesses `admin` or `super_admin` in `admin_user_roles` or carries `service_role` in `auth.jwt()`.
+       * `public.is_moderator()`: Verifies whether the caller holds `moderator`, `admin`, or `super_admin`.
+     - Strict Row-Level Security (RLS) Enforcement:
+       * `admin_user_roles`: Read allowed for authenticated users for their own record; mutations strictly restricted to `is_admin()`.
+       * `admin_catalog_beverages` & `admin_catalog_animals`: Public read access for active items; mutations strictly restricted to `is_admin()`.
+       * `admin_broadcast_messages`: Read and write strictly restricted to `is_admin()`.
+       * `admin_audit_entries`: Strictly append-only. Only `SELECT` and `INSERT` policies are defined (for `is_admin()`). Zero `UPDATE` or `DELETE` policies exist, making historical ledger tampering mathematically and procedurally impossible.
+  2. **Admin Portal Data Repository Layer**:
+     - Defined abstract contract [admin_portal_repository.dart](file:///h:/water/lib/src/data/repositories/admin_portal_repository.dart) with `adminPortalRepositoryProvider`.
+     - Implemented [supabase_admin_repository.dart](file:///h:/water/lib/src/data/repositories/supabase_admin_repository.dart) providing offline caching, real-time reactive sync, RLS permission simulation, and cryptographic hash verification.
+     - Wired repository persistence into [admin_portal_controller.dart](file:///h:/water/lib/src/presentation/controllers/admin_portal_controller.dart) via `_recordAudit()` helper, guaranteeing that every state mutation is accompanied by an unbroken cryptographic audit block.
+  3. **Full Admin Portal Integration Test Suite**:
+     - Authored comprehensive integration test suite in [admin_portal_supabase_integration_test.dart](file:///h:/water/test/integration/admin_portal_supabase_integration_test.dart) (6 extensive tests):
+       * User directory mutations propagate to `SupabaseAdminRepository` and generate verifiable audit logs.
+       * Content catalog mutations (beverage hydration factors, animal unlock levels) propagate cleanly.
+       * Feature flags and environment switcher synchronize bidirectionally with the repository.
+       * Cryptographic audit trail maintains an unbroken SHA-256 hash chain with strict tamper rejection.
+       * Notification broadcast campaigns execute immediate dispatch and scheduled state transitions.
+       * Row-Level Security (RLS) simulation rejects unauthorized caller roles (`standard`, `pro`) attempting administrative mutations with `SecurityException`.
+     - Certified full project test suite: **254 / 254 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `security-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
 
 
 

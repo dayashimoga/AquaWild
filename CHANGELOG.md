@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.29.0] - 2026-11-22 — Stage 7: Subphase 7.2.2 — Supabase Admin Schema Migration, RLS Admin Policies & Full Admin Portal Integration Tests
+### Added
+- **PostgreSQL Admin Schema Migration (`20261122000002_create_admin_portal_schema.sql`)**:
+  * Created `public.admin_user_roles` with enum constraints for RBAC roles (`standard`, `pro`, `moderator`, `admin`, `super_admin`) and statuses (`active`, `suspended`, `pending_verification`).
+  * Created `public.admin_catalog_beverages` and `public.admin_catalog_animals` for runtime content parameter overrides and active toggle flags.
+  * Created `public.admin_broadcast_messages` for multi-channel push notification campaigns and audience segmentation targeting.
+  * Created `public.admin_audit_entries` append-only cryptographic ledger storing operator UUID, action type, target entity, metadata, payload hash, and previous block hash.
+  * Added security-definer helper functions `public.is_admin()` and `public.is_moderator()` evaluating JWT claims and database-backed roles.
+  * Implemented strict Row-Level Security (RLS) policies for all 5 tables, enforcing append-only immutability on audit logs (zero `UPDATE` or `DELETE` policies).
+- **Admin Portal Data Repository Layer**:
+  * Defined `AdminPortalRepository` abstract contract in `lib/src/data/repositories/admin_portal_repository.dart` (`adminPortalRepositoryProvider`).
+  * Implemented `SupabaseAdminRepository` in `lib/src/data/repositories/supabase_admin_repository.dart` with offline fallback caching, real-time sync, and RLS permission validation.
+  * Connected `_recordAudit` helper into `AdminPortalNotifier` in `lib/src/presentation/controllers/admin_portal_controller.dart`.
+- **Full Admin Portal Integration Test Suite**:
+  * Created `test/integration/admin_portal_supabase_integration_test.dart` (6 extensive integration tests).
+  * Validated user directory modifications, content catalog mutations, feature flag and environment synchronization, cryptographic SHA-256 hash chaining, push broadcast dispatching, and RLS unauthorized role rejection.
+  * Certified full project test suite: **254 / 254 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.28.0] - 2026-11-22 — Stage 7: Subphase 7.2.1 — Multi-Module Admin Portal UI (`/admin`), Navigation Deck & Cross-Platform Command Center
 ### Added
 - **Multi-Module Admin Portal Screen (`AdminPortalScreen`)**:

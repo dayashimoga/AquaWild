@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/services/admin_audit_log_service.dart';
 import '../../core/services/admin_broadcast_service.dart';
 import '../../core/services/admin_monetization_analytics_service.dart';
+import '../../data/repositories/admin_portal_repository.dart';
 import '../../domain/models/admin_analytics_models.dart';
 import '../../domain/models/admin_audit_models.dart';
 import '../../domain/models/admin_broadcast_models.dart';
@@ -129,12 +130,14 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   late final AdminAuditLogService _auditService;
   late final AdminMonetizationTelemetryService _telemetryService;
   late final AdminNotificationBroadcastService _broadcastService;
+  late final AdminPortalRepository _repository;
 
   @override
   AdminPortalState build() {
     _auditService = ref.read(adminAuditLogServiceProvider);
     _telemetryService = ref.read(adminMonetizationTelemetryServiceProvider);
     _broadcastService = ref.read(adminNotificationBroadcastServiceProvider);
+    _repository = ref.read(adminPortalRepositoryProvider);
 
     final seedUsers = AdminUserProfile.defaultSeedUsers;
     final kpis = _telemetryService.calculateKpis(
@@ -256,20 +259,46 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
     }
   }
 
+  Future<AdminAuditEntry> _recordAudit({
+    required AdminActionType actionType,
+    required String targetEntityId,
+    required String description,
+    String? previousValue,
+    String? newValue,
+  }) async {
+    final entry = await _auditService.recordAction(
+      operatorId: 'operator_root',
+      operatorEmail: 'daya@aquawild.internal',
+      actionType: actionType,
+      targetEntityId: targetEntityId,
+      description: description,
+      previousValue: previousValue,
+      newValue: newValue,
+    );
+    try {
+      await _repository.appendAuditEntry(entry);
+    } catch (_) {}
+    return entry;
+  }
+
   /// Adjusts a user's hydration XP in the directory.
   Future<void> updateUserXp(String userId, int newXp) async {
     int prevXp = 0;
+    AdminUserProfile? target;
     final updatedUsers = state.users.map((u) {
       if (u.id == userId) {
         prevXp = u.currentXp;
-        return u.copyWith(currentXp: newXp.clamp(0, 1000000));
+        target = u.copyWith(currentXp: newXp.clamp(0, 1000000));
+        return target!;
       }
       return u;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveUserProfile(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.userXpAdjusted,
       targetEntityId: userId,
       description: 'Adjusted hydration XP for user $userId',
@@ -289,19 +318,23 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   Future<void> grantUserFreezeTokens(String userId, int tokensToAdd) async {
     int prevTokens = 0;
     int newTokens = 0;
+    AdminUserProfile? target;
 
     final updatedUsers = state.users.map((u) {
       if (u.id == userId) {
         prevTokens = u.freezeTokens;
         newTokens = (prevTokens + tokensToAdd).clamp(0, 99);
-        return u.copyWith(freezeTokens: newTokens);
+        target = u.copyWith(freezeTokens: newTokens);
+        return target!;
       }
       return u;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveUserProfile(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.freezeTokensGranted,
       targetEntityId: userId,
       description: 'Granted $tokensToAdd freeze tokens to $userId',
@@ -320,17 +353,21 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   /// Modifies a user's account status (active, suspended, pendingVerification).
   Future<void> updateUserStatus(String userId, UserAccountStatus status) async {
     String? prevStatus;
+    AdminUserProfile? target;
     final updatedUsers = state.users.map((u) {
       if (u.id == userId) {
         prevStatus = u.status.name;
-        return u.copyWith(status: status);
+        target = u.copyWith(status: status);
+        return target!;
       }
       return u;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveUserProfile(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.userStatusChanged,
       targetEntityId: userId,
       description: 'Account status updated to ${status.displayName} for user $userId',
@@ -349,20 +386,24 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   /// Modifies a user's role-based access control level.
   Future<void> updateUserRole(String userId, UserRole role) async {
     String? prevRole;
+    AdminUserProfile? target;
     final updatedUsers = state.users.map((u) {
       if (u.id == userId) {
         prevRole = u.role.name;
-        return u.copyWith(
+        target = u.copyWith(
           role: role,
           isPro: role == UserRole.pro || role == UserRole.superAdmin,
         );
+        return target!;
       }
       return u;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveUserProfile(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.userRoleChanged,
       targetEntityId: userId,
       description: 'User role updated to ${role.displayName} for $userId',
@@ -388,9 +429,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       final updated = List<AdminBeverageItem>.from(state.beverages);
       updated[index] = item;
 
-      await _auditService.recordAction(
-        operatorId: 'operator_root',
-        operatorEmail: 'daya@aquawild.internal',
+      await _repository.saveBeverageItem(item);
+
+      await _recordAudit(
         actionType: AdminActionType.beverageUpdated,
         targetEntityId: item.id,
         description: 'Updated beverage parameter profile for ${item.name}',
@@ -415,11 +456,12 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       );
       return;
     }
-    final updated = [...state.beverages, item.copyWith(isCustom: true)];
+    final newItem = item.copyWith(isCustom: true);
+    final updated = [...state.beverages, newItem];
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    await _repository.saveBeverageItem(newItem);
+
+    await _recordAudit(
       actionType: AdminActionType.beverageCreated,
       targetEntityId: item.id,
       description: 'Created custom beverage "${item.name}" (${item.category})',
@@ -443,9 +485,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
     if (target.isCustom) {
       final updated = state.beverages.where((b) => b.id != beverageId).toList();
 
-      await _auditService.recordAction(
-        operatorId: 'operator_root',
-        operatorEmail: 'daya@aquawild.internal',
+      await _repository.deleteBeverageItem(beverageId);
+
+      await _recordAudit(
         actionType: AdminActionType.beverageDeleted,
         targetEntityId: beverageId,
         description: 'Deleted custom beverage "${target.name}"',
@@ -467,17 +509,21 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   /// Toggles whether a beverage is available in client pour decks.
   Future<void> toggleBeverageEnabled(String beverageId) async {
     bool? newStatus;
+    AdminBeverageItem? target;
     final updated = state.beverages.map((b) {
       if (b.id == beverageId) {
         newStatus = !b.isEnabled;
-        return b.copyWith(isEnabled: newStatus);
+        target = b.copyWith(isEnabled: newStatus);
+        return target!;
       }
       return b;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveBeverageItem(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.beverageUpdated,
       targetEntityId: beverageId,
       description: 'Toggled beverage availability for $beverageId to $newStatus',
@@ -501,9 +547,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       final updated = List<AdminAnimalItem>.from(state.animals);
       updated[index] = item;
 
-      await _auditService.recordAction(
-        operatorId: 'operator_root',
-        operatorEmail: 'daya@aquawild.internal',
+      await _repository.saveAnimalItem(item);
+
+      await _recordAudit(
         actionType: AdminActionType.animalUpdated,
         targetEntityId: item.id,
         description: 'Updated animal companion metadata for ${item.name}',
@@ -523,17 +569,21 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   /// Toggles companion availability in sanctuary selector.
   Future<void> toggleAnimalEnabled(String animalId) async {
     bool? newStatus;
+    AdminAnimalItem? target;
     final updated = state.animals.map((a) {
       if (a.id == animalId) {
         newStatus = !a.isEnabled;
-        return a.copyWith(isEnabled: newStatus);
+        target = a.copyWith(isEnabled: newStatus);
+        return target!;
       }
       return a;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveAnimalItem(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.animalUpdated,
       targetEntityId: animalId,
       description: 'Toggled companion availability for $animalId to $newStatus',
@@ -551,16 +601,20 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
 
   /// Toggles a dynamic feature flag at runtime.
   Future<void> toggleFeatureFlag(String flagKey, bool isEnabled) async {
+    AdminFeatureFlag? target;
     final updated = state.featureFlags.map((f) {
       if (f.key == flagKey) {
-        return f.copyWith(isEnabled: isEnabled);
+        target = f.copyWith(isEnabled: isEnabled);
+        return target!;
       }
       return f;
     }).toList();
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    if (target != null) {
+      await _repository.saveFeatureFlag(target!);
+    }
+
+    await _recordAudit(
       actionType: AdminActionType.featureFlagToggled,
       targetEntityId: flagKey,
       description: 'Feature flag "$flagKey" set to $isEnabled',
@@ -581,9 +635,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
     final prevEnv = state.environmentConfig.environment.name;
     final preset = AdminEnvironmentConfig.presetFor(newEnv);
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    await _repository.saveEnvironmentConfig(preset);
+
+    await _recordAudit(
       actionType: AdminActionType.environmentSwitched,
       targetEntityId: newEnv.name,
       description: 'Switched environment to ${newEnv.displayName}',
@@ -625,9 +679,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       userDirectory: state.users,
     );
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    await _repository.saveBroadcast(message);
+
+    await _recordAudit(
       actionType: AdminActionType.notificationBroadcasted,
       targetEntityId: message.id,
       description: 'Dispatched broadcast "$title" to ${audience.displayName} (${message.totalRecipients} recipients)',
@@ -665,9 +719,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       userDirectory: state.users,
     );
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    await _repository.saveBroadcast(message);
+
+    await _recordAudit(
       actionType: AdminActionType.notificationBroadcasted,
       targetEntityId: message.id,
       description: 'Scheduled broadcast "$title" for ${scheduledAt.toIso8601String()}',
@@ -690,9 +744,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
   Future<bool> cancelScheduledBroadcast(String broadcastId) async {
     final success = await _broadcastService.cancelScheduled(broadcastId);
     if (success) {
-      await _auditService.recordAction(
-        operatorId: 'operator_root',
-        operatorEmail: 'daya@aquawild.internal',
+      await _repository.cancelBroadcast(broadcastId);
+
+      await _recordAudit(
         actionType: AdminActionType.notificationBroadcasted,
         targetEntityId: broadcastId,
         description: 'Cancelled scheduled broadcast $broadcastId',
@@ -747,9 +801,9 @@ class AdminPortalNotifier extends Notifier<AdminPortalState> {
       activeLocalSubscription: ref.read(monetizationProvider).subscription,
     );
 
-    await _auditService.recordAction(
-      operatorId: 'operator_root',
-      operatorEmail: 'daya@aquawild.internal',
+    await _repository.resetToDefaults();
+
+    await _recordAudit(
       actionType: AdminActionType.configurationReset,
       targetEntityId: 'admin_portal_all',
       description: 'Restored admin portal catalogs, feature flags, and environments to factory defaults',
