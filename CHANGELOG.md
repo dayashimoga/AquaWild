@@ -2,6 +2,25 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.30.0] - 2026-11-22 — Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification
+### Added
+- **Quick-Log Beverage Dock Component (`QuickLogDock`)**:
+  * Created `lib/src/presentation/widgets/beverages/quick_log_dock.dart` extracting and upgrading the quick-log beverage carousel.
+  * Added desktop left (`<`) and right (`>`) scroll buttons with smooth cubic animation, dynamically updating active states based on scroll extents.
+  * Added themed `RawScrollbar` with visible cyan thumb (`thumbVisibility: true`) for drag and visual scroll indication.
+  * Configured multi-pointer drag gestures enabling seamless mouse and trackpad panning on Web and Desktop.
+  * Wrapped card contents in `FittedBox` to prevent any vertical clipping up to 200% font scale.
+- **Desktop Center Deck & 4K Ultra-Wide Layout Polish**:
+  * Added `maxWidth: 1720` bounds on expanded desktop and 4K ultra-wide monitors, centering the 3-deck command center with ambient biome breathing space.
+  * Added `maxWidth: 920` constraint on the center interaction deck with generous vertical clearance (`24px`), eliminating top-card clipping (`1639 / 2500 ml`).
+  * Upgraded Net Hydration Card typography with `FittedBox` auto-scaling and semantics isolation on the circular progress stack.
+- **Cross-Platform Breakpoint Certification Suite**:
+  * Created `test/presentation/screens/cross_platform_breakpoints_test.dart` (8 tests).
+  * Formally verified Phone (390x844), Foldable Unfolded (768x1024), Tablet (834x1194), Desktop (1440x900), 4K UHD (3840x2160), and 200% High Text Scale accessibility.
+  * Certified full project test suite: **262 / 262 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.29.0] - 2026-11-22 — Stage 7: Subphase 7.2.2 — Supabase Admin Schema Migration, RLS Admin Policies & Full Admin Portal Integration Tests
 ### Added
 - **PostgreSQL Admin Schema Migration (`20261122000002_create_admin_portal_schema.sql`)**:

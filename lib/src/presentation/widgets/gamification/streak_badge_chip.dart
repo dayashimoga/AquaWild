@@ -38,38 +38,41 @@ class StreakBadgeChip extends ConsumerWidget {
               ),
             ],
           ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(streak.fireEmoji, style: const TextStyle(fontSize: 16)),
-              const SizedBox(width: 6),
-              Text(
-                '${streak.currentStreakDays}d Streak',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 12,
-                ),
-              ),
-              if (streak.streakFreezesAvailable > 0) ...[
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(streak.fireEmoji, style: const TextStyle(fontSize: 16)),
                 const SizedBox(width: 6),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF00E5FF).withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(6),
+                Text(
+                  '${streak.currentStreakDays}d Streak',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12,
                   ),
-                  child: Text(
-                    '❄️${streak.streakFreezesAvailable}',
-                    style: const TextStyle(
-                      color: Color(0xFF00E5FF),
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+                ),
+                if (streak.streakFreezesAvailable > 0) ...[
+                  const SizedBox(width: 6),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF00E5FF).withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    child: Text(
+                      '❄️${streak.streakFreezesAvailable}',
+                      style: const TextStyle(
+                        color: Color(0xFF00E5FF),
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

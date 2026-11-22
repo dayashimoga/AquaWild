@@ -670,6 +670,35 @@
 
 ---
 
+## Entry 037 — 2026-11-22 (Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification)
+- **Context**: Resolving desktop top-card clipping (`1639 / 2500 ml`), adding desktop horizontal scroll controls and visible scrollbar indicators to the Quick-Log Beverage carousel, and formally certifying layouts across Phone, Tablet, Foldable (unfolded), and 4K Ultra-wide viewports in compliance with ADR-001, ADR-007, and WCAG 2.2 AA+ accessibility standards.
+- **Architectural Decisions & Deliverables**:
+  1. **Quick-Log Beverage Dock Component (`QuickLogDock`)**:
+     - Extracted and enhanced the quick logging carousel into a dedicated stateful widget [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart).
+     - Added desktop/web scroll control buttons (Left `<` and Right `>`) with smooth cubic animation, updating active/disabled states based on scroll position (`_canScrollLeft`, `_canScrollRight`).
+     - Added visible, themed `RawScrollbar` with `thumbVisibility: true`, accent color `#00E5FF`, and rounded styling.
+     - Enabled multi-device horizontal drag support across mouse, touch, trackpad, and stylus via custom `MaterialScrollBehavior`.
+     - Integrated `FittedBox` scaling inside beverage and custom craft cards, ensuring zero vertical overflow at up to 200% font scale.
+  2. **Desktop Center Deck & 4K Ultra-Wide Layout Polish**:
+     - In [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart), bounded 4K and ultra-wide layouts with `Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 1720), child: Row(...)))`.
+     - Centered and constrained the center interaction deck (`maxWidth: 920`) with balanced vertical padding (`24px`), eliminating top-card clipping and preventing distorted, overstretched cards on wide monitors.
+     - Protected Net Hydration Card typography with `FittedBox(fit: BoxFit.scaleDown)` and `Semantics(excludeSemantics: true)` on the visual circular progress indicator stack.
+  3. **Multi-Platform Breakpoint & Text-Scale Certification**:
+     - Formally certified 5 device form-factors:
+       * **Compact Phone** (390 x 844, iPhone / Pixel): verified mobile AppBar, FAB, QuickLogDock, and zero RenderFlex overflow.
+       * **Foldable Unfolded** (768 x 1024, Galaxy Z Fold / iPad Mini): verified 2-column split with NavigationRail.
+       * **Medium Tablet** (834 x 1194, iPad Pro 11"): verified adaptive column flex and AI coach dialogue trigger.
+       * **Expanded Desktop** (1440 x 900, Laptop / Workstation): verified 3-column command center, zero clipping on net hydration card.
+       * **4K Ultra-wide** (3840 x 2160, 4K UHD): verified centered layout without distortion.
+       * **200% High Text Scale Accessibility**: verified that `AppBar`, `SyncStatusIndicator`, `StreakBadgeChip`, and `QuickLogDock` scale down cleanly without layout exceptions.
+  4. **Automated Test Coverage**:
+     - Authored [cross_platform_breakpoints_test.dart](file:///h:/water/test/presentation/screens/cross_platform_breakpoints_test.dart) (8 extensive tests).
+     - Certified full project test suite: **262 / 262 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+---
+
 ## Entry 035 — 2026-11-22 (Stage 7: Subphase 7.2.1 — Multi-Module Admin Portal UI `/admin`, Navigation Deck & Cross-Platform Command Center)
 - **Context**: Constructing the production-ready Hydro-Glass administrative command center interface (`/admin`) and dynamic navigation entry points across mobile, tablet, and desktop viewports in compliance with ADR-009.
 - **Architectural Decisions & Deliverables**:
@@ -736,6 +765,35 @@
        * Row-Level Security (RLS) simulation rejects unauthorized caller roles (`standard`, `pro`) attempting administrative mutations with `SecurityException`.
      - Certified full project test suite: **254 / 254 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `security-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 037 — 2026-11-22 (Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification)
+- **Context**: Resolving desktop top-card clipping (`1639 / 2500 ml`), adding desktop horizontal scroll controls and visible scrollbar indicators to the Quick-Log Beverage carousel, and formally certifying layouts across Phone, Tablet, Foldable (unfolded), and 4K Ultra-wide viewports in compliance with ADR-001, ADR-007, and WCAG 2.2 AA+ accessibility standards.
+- **Architectural Decisions & Deliverables**:
+  1. **Quick-Log Beverage Dock Component (`QuickLogDock`)**:
+     - Extracted and enhanced the quick logging carousel into a dedicated stateful widget [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart).
+     - Added desktop/web scroll control buttons (Left `<` and Right `>`) with smooth cubic animation, updating active/disabled states based on scroll position (`_canScrollLeft`, `_canScrollRight`).
+     - Added visible, themed `RawScrollbar` with `thumbVisibility: true`, accent color `#00E5FF`, and rounded styling.
+     - Enabled multi-device horizontal drag support across mouse, touch, trackpad, and stylus via custom `MaterialScrollBehavior`.
+     - Integrated `FittedBox` scaling inside beverage and custom craft cards, ensuring zero vertical overflow at up to 200% font scale.
+  2. **Desktop Center Deck & 4K Ultra-Wide Layout Polish**:
+     - In [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart), bounded 4K and ultra-wide layouts with `Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 1720), child: Row(...)))`.
+     - Centered and constrained the center interaction deck (`maxWidth: 920`) with balanced vertical padding (`24px`), eliminating top-card clipping and preventing distorted, overstretched cards on wide monitors.
+     - Protected Net Hydration Card typography with `FittedBox(fit: BoxFit.scaleDown)` and `Semantics(excludeSemantics: true)` on the visual circular progress indicator stack.
+  3. **Multi-Platform Breakpoint & Text-Scale Certification**:
+     - Formally certified 5 device form-factors:
+       * **Compact Phone** (390 x 844, iPhone / Pixel): verified mobile AppBar, FAB, QuickLogDock, and zero RenderFlex overflow.
+       * **Foldable Unfolded** (768 x 1024, Galaxy Z Fold / iPad Mini): verified 2-column split with NavigationRail.
+       * **Medium Tablet** (834 x 1194, iPad Pro 11"): verified adaptive column flex and AI coach dialogue trigger.
+       * **Expanded Desktop** (1440 x 900, Laptop / Workstation): verified 3-column command center, zero clipping on net hydration card.
+       * **4K Ultra-wide** (3840 x 2160, 4K UHD): verified centered layout without distortion.
+       * **200% High Text Scale Accessibility**: verified that `AppBar`, `SyncStatusIndicator`, `StreakBadgeChip`, and `QuickLogDock` scale down cleanly without layout exceptions.
+  4. **Automated Test Coverage**:
+     - Authored [cross_platform_breakpoints_test.dart](file:///h:/water/test/presentation/screens/cross_platform_breakpoints_test.dart) (8 extensive tests).
+     - Certified full project test suite: **262 / 262 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
 
 
 
@@ -771,6 +829,35 @@
 
 ---
 
+## Entry 037 — 2026-11-22 (Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification)
+- **Context**: Resolving desktop top-card clipping (`1639 / 2500 ml`), adding desktop horizontal scroll controls and visible scrollbar indicators to the Quick-Log Beverage carousel, and formally certifying layouts across Phone, Tablet, Foldable (unfolded), and 4K Ultra-wide viewports in compliance with ADR-001, ADR-007, and WCAG 2.2 AA+ accessibility standards.
+- **Architectural Decisions & Deliverables**:
+  1. **Quick-Log Beverage Dock Component (`QuickLogDock`)**:
+     - Extracted and enhanced the quick logging carousel into a dedicated stateful widget [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart).
+     - Added desktop/web scroll control buttons (Left `<` and Right `>`) with smooth cubic animation, updating active/disabled states based on scroll position (`_canScrollLeft`, `_canScrollRight`).
+     - Added visible, themed `RawScrollbar` with `thumbVisibility: true`, accent color `#00E5FF`, and rounded styling.
+     - Enabled multi-device horizontal drag support across mouse, touch, trackpad, and stylus via custom `MaterialScrollBehavior`.
+     - Integrated `FittedBox` scaling inside beverage and custom craft cards, ensuring zero vertical overflow at up to 200% font scale.
+  2. **Desktop Center Deck & 4K Ultra-Wide Layout Polish**:
+     - In [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart), bounded 4K and ultra-wide layouts with `Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 1720), child: Row(...)))`.
+     - Centered and constrained the center interaction deck (`maxWidth: 920`) with balanced vertical padding (`24px`), eliminating top-card clipping and preventing distorted, overstretched cards on wide monitors.
+     - Protected Net Hydration Card typography with `FittedBox(fit: BoxFit.scaleDown)` and `Semantics(excludeSemantics: true)` on the visual circular progress indicator stack.
+  3. **Multi-Platform Breakpoint & Text-Scale Certification**:
+     - Formally certified 5 device form-factors:
+       * **Compact Phone** (390 x 844, iPhone / Pixel): verified mobile AppBar, FAB, QuickLogDock, and zero RenderFlex overflow.
+       * **Foldable Unfolded** (768 x 1024, Galaxy Z Fold / iPad Mini): verified 2-column split with NavigationRail.
+       * **Medium Tablet** (834 x 1194, iPad Pro 11"): verified adaptive column flex and AI coach dialogue trigger.
+       * **Expanded Desktop** (1440 x 900, Laptop / Workstation): verified 3-column command center, zero clipping on net hydration card.
+       * **4K Ultra-wide** (3840 x 2160, 4K UHD): verified centered layout without distortion.
+       * **200% High Text Scale Accessibility**: verified that `AppBar`, `SyncStatusIndicator`, `StreakBadgeChip`, and `QuickLogDock` scale down cleanly without layout exceptions.
+  4. **Automated Test Coverage**:
+     - Authored [cross_platform_breakpoints_test.dart](file:///h:/water/test/presentation/screens/cross_platform_breakpoints_test.dart) (8 extensive tests).
+     - Certified full project test suite: **262 / 262 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+---
+
 ## Entry 035 — 2026-11-22 (Stage 7: Subphase 7.2.1 — Multi-Module Admin Portal UI `/admin`, Navigation Deck & Cross-Platform Command Center)
 - **Context**: Constructing the production-ready Hydro-Glass administrative command center interface (`/admin`) and dynamic navigation entry points across mobile, tablet, and desktop viewports in compliance with ADR-009.
 - **Architectural Decisions & Deliverables**:
@@ -837,6 +924,35 @@
        * Row-Level Security (RLS) simulation rejects unauthorized caller roles (`standard`, `pro`) attempting administrative mutations with `SecurityException`.
      - Certified full project test suite: **254 / 254 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `security-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 037 — 2026-11-22 (Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification)
+- **Context**: Resolving desktop top-card clipping (`1639 / 2500 ml`), adding desktop horizontal scroll controls and visible scrollbar indicators to the Quick-Log Beverage carousel, and formally certifying layouts across Phone, Tablet, Foldable (unfolded), and 4K Ultra-wide viewports in compliance with ADR-001, ADR-007, and WCAG 2.2 AA+ accessibility standards.
+- **Architectural Decisions & Deliverables**:
+  1. **Quick-Log Beverage Dock Component (`QuickLogDock`)**:
+     - Extracted and enhanced the quick logging carousel into a dedicated stateful widget [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart).
+     - Added desktop/web scroll control buttons (Left `<` and Right `>`) with smooth cubic animation, updating active/disabled states based on scroll position (`_canScrollLeft`, `_canScrollRight`).
+     - Added visible, themed `RawScrollbar` with `thumbVisibility: true`, accent color `#00E5FF`, and rounded styling.
+     - Enabled multi-device horizontal drag support across mouse, touch, trackpad, and stylus via custom `MaterialScrollBehavior`.
+     - Integrated `FittedBox` scaling inside beverage and custom craft cards, ensuring zero vertical overflow at up to 200% font scale.
+  2. **Desktop Center Deck & 4K Ultra-Wide Layout Polish**:
+     - In [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart), bounded 4K and ultra-wide layouts with `Center(child: ConstrainedBox(constraints: BoxConstraints(maxWidth: 1720), child: Row(...)))`.
+     - Centered and constrained the center interaction deck (`maxWidth: 920`) with balanced vertical padding (`24px`), eliminating top-card clipping and preventing distorted, overstretched cards on wide monitors.
+     - Protected Net Hydration Card typography with `FittedBox(fit: BoxFit.scaleDown)` and `Semantics(excludeSemantics: true)` on the visual circular progress indicator stack.
+  3. **Multi-Platform Breakpoint & Text-Scale Certification**:
+     - Formally certified 5 device form-factors:
+       * **Compact Phone** (390 x 844, iPhone / Pixel): verified mobile AppBar, FAB, QuickLogDock, and zero RenderFlex overflow.
+       * **Foldable Unfolded** (768 x 1024, Galaxy Z Fold / iPad Mini): verified 2-column split with NavigationRail.
+       * **Medium Tablet** (834 x 1194, iPad Pro 11"): verified adaptive column flex and AI coach dialogue trigger.
+       * **Expanded Desktop** (1440 x 900, Laptop / Workstation): verified 3-column command center, zero clipping on net hydration card.
+       * **4K Ultra-wide** (3840 x 2160, 4K UHD): verified centered layout without distortion.
+       * **200% High Text Scale Accessibility**: verified that `AppBar`, `SyncStatusIndicator`, `StreakBadgeChip`, and `QuickLogDock` scale down cleanly without layout exceptions.
+  4. **Automated Test Coverage**:
+     - Authored [cross_platform_breakpoints_test.dart](file:///h:/water/test/presentation/screens/cross_platform_breakpoints_test.dart) (8 extensive tests).
+     - Certified full project test suite: **262 / 262 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
 
 
 

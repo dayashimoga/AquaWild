@@ -12,7 +12,7 @@ import '../../widgets/ai/ai_coach_sheet.dart';
 import '../../widgets/analytics/predictive_analytics_sheet.dart';
 import '../../widgets/animal_fluid/animal_fluid_habitat_view.dart';
 import '../../widgets/backup/data_backup_modal.dart';
-import '../../widgets/beverages/beverage_customizer_modal.dart';
+import '../../widgets/beverages/quick_log_dock.dart';
 import '../../widgets/biomes/biome_companion_selector_sheet.dart';
 import '../../widgets/biomes/companion_evolution_modal.dart';
 import '../../widgets/environmental/weather_activity_bar.dart';
@@ -82,23 +82,34 @@ class ResponsiveHomeShell extends ConsumerWidget {
           tooltip: 'Companions & Biomes',
           onPressed: () => BiomeCompanionSelectorSheet.show(context),
         ),
-        title: Column(
-          children: [
-            Text(
-              activeAnimal.name,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            Text(
-              '${activeBiome.name} • ${habitatState.currentStage.title}',
-              style: TextStyle(
-                fontSize: 12,
-                color: activeAnimal.accentColor,
+        titleSpacing: 4.0,
+        title: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                activeAnimal.name,
+                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-            ),
-          ],
+              Text(
+                '${activeBiome.name} • ${habitatState.currentStage.title}',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: activeAnimal.accentColor,
+                ),
+              ),
+            ],
+          ),
         ),
         actions: [
-          const StreakBadgeChip(),
+          const SizedBox(
+            width: 95,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: StreakBadgeChip(),
+            ),
+          ),
           const ThemeSwitcherButton(),
           IconButton(
             icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
@@ -201,7 +212,7 @@ class ResponsiveHomeShell extends ConsumerWidget {
               const SizedBox(height: 12),
               const AnimalFluidHabitatView(),
               const SizedBox(height: 18),
-              _buildQuickLogDock(context, ref),
+              const QuickLogDock(),
               const SizedBox(height: 18),
               _buildCompanionEvolutionCard(context, ref),
               const SizedBox(height: 16),
@@ -372,7 +383,7 @@ class ResponsiveHomeShell extends ConsumerWidget {
                           const SizedBox(height: 16),
                           const AnimalFluidHabitatView(),
                           const SizedBox(height: 16),
-                          _buildQuickLogDock(context, ref),
+                          const QuickLogDock(),
                         ],
                       ),
                     ),
@@ -419,11 +430,15 @@ class ResponsiveHomeShell extends ConsumerWidget {
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: SafeArea(
-        child: Row(
-          children: [
-            // Left Command Deck (260px)
-            SizedBox(
-              width: 260,
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1720),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Left Command Deck (260px)
+                SizedBox(
+                  width: 260,
               child: Container(
                 color: Theme.of(context).cardColor.withValues(alpha: 0.3),
                 padding:
@@ -599,21 +614,28 @@ class ResponsiveHomeShell extends ConsumerWidget {
             ),
             const VerticalDivider(width: 1, thickness: 1),
 
-            // Center Interaction Deck (Flex: 6)
+            // Center Interaction Deck (Flex: 6, max 920px)
             Expanded(
               flex: 6,
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    _buildNetHydrationCard(context, ref),
-                    const SizedBox(height: 20),
-                    const AnimalFluidHabitatView(),
-                    const SizedBox(height: 24),
-                    _buildQuickLogDock(context, ref),
-                  ],
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 920),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 24,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _buildNetHydrationCard(context, ref),
+                        const SizedBox(height: 20),
+                        const AnimalFluidHabitatView(),
+                        const SizedBox(height: 24),
+                        const QuickLogDock(),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -623,7 +645,10 @@ class ResponsiveHomeShell extends ConsumerWidget {
             SizedBox(
               width: 380,
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 24,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
@@ -641,7 +666,9 @@ class ResponsiveHomeShell extends ConsumerWidget {
           ],
         ),
       ),
-    );
+    ),
+  ),
+);
   }
 
   // =========================================================================
@@ -721,14 +748,17 @@ class ResponsiveHomeShell extends ConsumerWidget {
       label:
           '${activeAnimal.name} hydration status: $netMl of $targetMl milliliters, $progressPct percent complete',
       child: Card(
+        margin: EdgeInsets.zero,
         child: Padding(
-          padding: const EdgeInsets.all(18.0),
+          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Wrap(
                       crossAxisAlignment: WrapCrossAlignment.center,
@@ -742,233 +772,62 @@ class ResponsiveHomeShell extends ConsumerWidget {
                         SyncStatusIndicator(),
                       ],
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '$netMl / $targetMl ml',
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: AppColors.cyanPrimary,
+                    const SizedBox(height: 6),
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        '$netMl / $targetMl ml',
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: AppColors.cyanPrimary,
+                        ),
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       '${goal.remainingMl.toStringAsFixed(0)} ml remaining',
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.white54,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Stack(
-                alignment: Alignment.center,
-                children: [
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(
-                      value: goal.progressFraction,
-                      strokeWidth: 5.5,
-                      backgroundColor: AppColors.oceanDeep,
-                      color: AppColors.cyanPrimary,
+              const SizedBox(width: 12),
+              Semantics(
+                excludeSemantics: true,
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    SizedBox(
+                      width: 62,
+                      height: 62,
+                      child: CircularProgressIndicator(
+                        value: goal.progressFraction,
+                        strokeWidth: 5.5,
+                        backgroundColor: AppColors.oceanDeep,
+                        color: AppColors.cyanPrimary,
+                      ),
                     ),
-                  ),
-                  Text(
-                    '$progressPct%',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 13,
+                    Text(
+                      '$progressPct%',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildQuickLogDock(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Expanded(
-              child: Text(
-                'Quick Log Beverage',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.add_circle_outline, size: 20),
-              tooltip: 'Craft Custom Beverage',
-              onPressed: () => BeverageCustomizerModal.show(context),
-            ),
-            Text(
-              'Keys [1-9]',
-              style: TextStyle(
-                fontSize: 11,
-                color: Theme.of(context).colorScheme.primary,
-                fontFamily: 'monospace',
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        SizedBox(
-          height: 104,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: BeverageType.allBeverages.length + 1,
-            separatorBuilder: (context, index) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              if (index == BeverageType.allBeverages.length) {
-                return InkWell(
-                  onTap: () => BeverageCustomizerModal.show(context),
-                  borderRadius: BorderRadius.circular(16),
-                  child: Container(
-                    width: 90,
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: AppColors.cardGlassDark,
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(
-                        color: Colors.white24,
-                        style: BorderStyle.solid,
-                      ),
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircleAvatar(
-                          radius: 16,
-                          backgroundColor: Colors.white12,
-                          child: Icon(
-                            Icons.add_rounded,
-                            size: 18,
-                            color: AppColors.cyanPrimary,
-                          ),
-                        ),
-                        SizedBox(height: 6),
-                        Text(
-                          'Custom',
-                          style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        Text(
-                          'Craft Drink',
-                          style: TextStyle(
-                            fontSize: 9,
-                            color: Colors.white54,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              }
-
-              final bev = BeverageType.allBeverages[index];
-              final hasShortcut = index < 9;
-
-              return InkWell(
-                onTap: () {
-                  final defaultVol = bev.presetVolumesMl.first.toDouble();
-                  ref.read(hydrationProvider.notifier).logDrink(
-                        beverage: bev,
-                        volumeMl: defaultVol,
-                      );
-                  ref.read(animalHabitatProvider.notifier).addXp(
-                        (defaultVol / 10).round(),
-                      );
-                },
-                borderRadius: BorderRadius.circular(16),
-                child: Container(
-                  width: 90,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: AppColors.cardGlassDark,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: bev.primaryColor.withValues(alpha: 0.4),
-                    ),
-                  ),
-                  child: Stack(
-                    children: [
-                      if (hasShortcut)
-                        Positioned(
-                          top: 0,
-                          right: 0,
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 4,
-                              vertical: 1,
-                            ),
-                            decoration: BoxDecoration(
-                              color: Colors.black45,
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: Text(
-                              '${index + 1}',
-                              style: const TextStyle(
-                                fontSize: 9,
-                                fontFamily: 'monospace',
-                                color: Colors.white70,
-                              ),
-                            ),
-                          ),
-                        ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          CircleAvatar(
-                            radius: 16,
-                            backgroundColor:
-                                bev.primaryColor.withValues(alpha: 0.2),
-                            child: Icon(
-                              Icons.local_drink_rounded,
-                              size: 16,
-                              color: bev.primaryColor,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            bev.name.split(' ').first,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 11,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            '+${bev.presetVolumesMl.first}ml',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 9,
-                              color: bev.primaryColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 
@@ -1028,6 +887,8 @@ class ResponsiveHomeShell extends ConsumerWidget {
               label: Text(
                 'Log ${suggestedVolume.toStringAsFixed(0)}ml ${suggestedBeverage.name}',
                 style: const TextStyle(fontSize: 12),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
               ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: suggestedBeverage.primaryColor,
