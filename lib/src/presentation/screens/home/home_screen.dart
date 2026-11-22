@@ -5,6 +5,7 @@ import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.
 import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
 import 'package:aquawild/src/presentation/controllers/hydration_controller.dart';
 import 'package:aquawild/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart';
+import 'package:aquawild/src/presentation/widgets/environmental/weather_activity_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -123,7 +124,11 @@ class HomeScreen extends ConsumerWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 16),
+              const SizedBox(height: 12),
+
+              // Environmental Biome, Workout, AI Coach & Reminders Status Bar
+              const WeatherActivityBar(),
+              const SizedBox(height: 12),
 
               // Hero Feature: Animated Exotic Animal Fluid Habitat Vessel
               const AnimalFluidHabitatView(),

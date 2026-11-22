@@ -6,6 +6,15 @@ class AudioHapticsService {
 
   static final AudioHapticsService instance = AudioHapticsService._();
 
+  /// Static helper for light tap feedback
+  static Future<void> playTap() => instance.onKeypadPress();
+
+  /// Static helper for drink logged/poured feedback
+  static Future<void> playPour() => instance.onDrinkLogged();
+
+  /// Static helper for goal achievement/milestone feedback
+  static Future<void> playGoalCelebration() => instance.onEvolutionAchieved();
+
   /// Gentle haptic pulse during pour slider adjustment
   Future<void> onSliderTick() async {
     try {

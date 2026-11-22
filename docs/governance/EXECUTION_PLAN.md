@@ -12,8 +12,8 @@
 | Stage 1 | **Phase 1.2: Universal Cross-Platform Flutter Workspace & DevContainer Bootstrap** | **Subphase 1.2.1** | Git Repository Strategy (`main`, `develop`, `feature/stage-1-bootstrap`), Flutter 6-Platform Scaffold (Android, iOS, Web, Windows, macOS, Linux), Strict Linting, Docker & DevContainer Setup | Medium | Low | 30 min | ✅ **COMPLETED (Approved)** |
 | **Stage 2: Core Domain, Fluid Physics & Launch Experience** | **Phase 2.1: Hydration Science Domain, Exotic Animal Catalog & Biome Models** | **Subphase 2.1.1** | Beverage Bio-Availability Engine (16+ Beverages), 10 Exotic Animals (Red Panda, Capybara, Axolotl, Otter, Llama, Fox, Penguin, Dolphin, Octopus, Snow Leopard), Evolution Stages, Hydration Biomes & Riverpod Offline-First State | Medium | Low | 30 min | ✅ **COMPLETED (Approved)** |
 | Stage 2 | **Phase 2.2: Launch Screen — Animated SVG Red Panda Floating Pool Physics Engine** | **Subphase 2.2.1** | Interactive Top-View Pool Water Shader/Canvas (Caustics, Procedural Waves, Ripples, Parallax Shadows, Particles) + Detailed Animated SVG Red Panda on Floating Tube + Seamless Hero Transition | High | Medium | 35 min | ✅ **COMPLETED (Approved)** |
-| Stage 2 | **Phase 2.3: Animal Silhouette Fluid Simulation, Multi-Drink Stratification & Micro-Interactions** | **Subphase 2.3.1** | Real-Time 2D Shallow-Water Wave & Meniscus Solver Inside Exotic Animal Silhouettes, Multi-Beverage Colored Density Layers, Splash Particles, Pour Slider, Adaptive Haptics & Synthesized Audio | High | Medium | 40 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
-| **Stage 3: AI Intelligence, Biometrics, Gamification & Backend** | **Phase 3.1: AI Hydration Coach, Weather/Activity Engine & Health Integrations** | **Subphase 3.1.1** | OpenAI-Compatible AI Hydration Advisor, Dynamic Weather/Activity/Altitude Goal Calculator, Smart Circadian Reminders, Apple HealthKit / Google Health Connect Bridges & Electrolyte Balance | High | Medium | 35 min | ⏳ Pending |
+| Stage 2 | **Phase 2.3: Animal Silhouette Fluid Simulation, Multi-Drink Stratification & Micro-Interactions** | **Subphase 2.3.1** | Real-Time 2D Shallow-Water Wave & Meniscus Solver Inside Exotic Animal Silhouettes, Multi-Beverage Colored Density Layers, Splash Particles, Pour Slider, Adaptive Haptics & Synthesized Audio | High | Medium | 40 min | ✅ **COMPLETED (Approved)** |
+| **Stage 3: AI Intelligence, Biometrics, Gamification & Backend** | **Phase 3.1: AI Hydration Coach, Weather/Activity Engine & Health Integrations** | **Subphase 3.1.1** | OpenAI-Compatible AI Hydration Advisor, Dynamic Weather/Activity/Altitude Goal Calculator, Smart Circadian Reminders, Apple HealthKit / Google Health Connect Bridges & Electrolyte Balance | High | Medium | 35 min | ✅ **COMPLETED (Awaiting Approval Gate)** |
 | Stage 3 | **Phase 3.2: Gamification, Habit Engine, Biomes, Evolution & Predictive Analytics** | **Subphase 3.2.1** | Habit-Building Engine, XP/Leveling, Streaks, Seasonal Challenges, Animal Evolution Unlock System, Interactive World Biomes & Predictive Analytics Reports | Medium | Low | 35 min | ⏳ Pending |
 | Stage 3 | **Phase 3.3: Supabase Backend Schema, Row-Level Security, Realtime & Edge Functions** | **Subphase 3.3.1** | Production Supabase PostgreSQL Migrations, RLS Policies, Realtime Sync Queue, Edge Functions (`ai-hydration-coach`, `weather-hydration-goal`) & Security Audit | Medium | Medium | 30 min | ⏳ Pending |
 | **Stage 4: Multi-Platform UX, Accessibility & CI/CD Release Automation** | **Phase 4.1: Responsive Cross-Platform Shell, Multimodal Accessibility & Dynamic Themes** | **Subphase 4.1.1** | Adaptive Mobile/Tablet/Desktop/Web Layouts, Light/Dark/Hydro-Glass/High-Contrast Themes, Voice Command Logging, Full Keyboard Navigation, Screen Reader Semantics & Reduced-Motion Mode | Medium | Low | 35 min | ⏳ Pending |
@@ -59,3 +59,30 @@
 - **Risk Level**: Medium
 - **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
 - **Success Metrics**: Realistic density-sorted sloshing fluids, tactile pour sheet interaction, and responsive multi-platform layout.
+
+---
+
+### Subphase 3.1.1 — AI Hydration Coach, Weather/Activity Engine & Health Integrations
+- **Complexity**: High
+- **Dependencies**: Subphase 2.3.1, Subphase 2.1.1
+- **Deliverables**:
+  - `lib/src/domain/models/weather_condition.dart`: Ambient heat, humidity, UV, altitude calculations, and Rothfusz heat index estimation.
+  - `lib/src/domain/models/activity_session.dart`: Workout types (Running, Cycling, Swimming, HIIT, Walking, Strength, Yoga), duration, intensity, sweat loss rate, and replenishment factor.
+  - `lib/src/domain/models/ai_recommendation.dart`: AI advice model with headline, companion message, suggested volume, beverage recommendation, urgency badge, and reasoning tags.
+  - `lib/src/domain/models/smart_reminder.dart`: Circadian schedule anchor model with TimeOfDay, category, target volume, and status.
+  - `lib/src/core/services/ai_coach_service.dart`: OpenAI-compatible `/chat/completions` client with JSON schema enforcement, prompt sanitization, custom endpoint configuration, and deterministic offline clinical heuristic fallback.
+  - `lib/src/core/services/weather_activity_service.dart`: Comprehensive hydration target formula combining baseline requirement, heat/humidity/altitude offsets, and workout sweat compensation.
+  - `lib/src/core/services/health_platform_service.dart`: Cross-platform abstract health interface (`HealthPlatformService`) with `LocalMockHealthPlatformService` for deterministic execution across all 6 platforms.
+  - `lib/src/core/services/smart_reminder_service.dart`: Circadian schedule builder generating 5 metabolic anchor reminders aligned with waking hours.
+  - `lib/src/presentation/controllers/ai_coach_controller.dart`: Riverpod 3 `Notifier<AiCoachState>` managing advice fetching, provider configuration, and state.
+  - `lib/src/presentation/controllers/weather_activity_controller.dart`: Riverpod 3 `Notifier<WeatherActivityState>` managing environmental conditions and workout sessions.
+  - `lib/src/presentation/widgets/ai/ai_coach_sheet.dart`: Modern-futuristic glassmorphic AI coach dialogue sheet with companion avatar, advice card, quick-log action, and provider settings.
+  - `lib/src/presentation/widgets/environmental/weather_activity_bar.dart`: Status HUD bar displaying weather impact, workout status, AI coach trigger, and reminders.
+  - `lib/src/presentation/widgets/environmental/activity_logger_modal.dart`: Tactile workout logger modal with activity chips, duration slider, and sweat preview.
+  - `lib/src/presentation/widgets/reminders/smart_reminders_sheet.dart`: Circadian schedule timeline sheet with completion tracking and one-tap logging.
+  - Automated test suites: `test/domain/weather_activity_test.dart`, `test/domain/ai_coach_service_test.dart`, `test/domain/smart_reminder_test.dart`, `test/presentation/ai_coach_bar_test.dart` (47 total tests across the project passing, 0 analyzer issues).
+- **Validation Criteria**: Zero analyzer warnings; 100% test pass rate; resilient offline fallback; WCAG 2.2 AA+ contrast.
+- **Maximum Execution Time**: 35 minutes
+- **Risk Level**: Medium
+- **Rollback Strategy**: `git reset --hard` to previous commit on `main`.
+- **Success Metrics**: Personalized companion guidance, dynamic weather/workout target adjustments, circadian schedule generation, and 0 compiler warnings.

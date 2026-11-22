@@ -52,3 +52,14 @@
   4. **Tactile Pour Studio & Keypad**: Replaced standard OS bottom sheets with an interactive Hydro-Glass pour studio supporting vertical drag fill, quick volume preset chips (150ml, 250ml, 330ml, 500ml), a custom glass keypad with backspace and clear, and synthesized audio-haptic feedback.
   5. **Universal Platform Audio/Haptic Degradation**: Ensured `AudioHapticsService` degrades gracefully across platforms without crashing on Web, Windows, macOS, or Linux where hardware vibrators are absent.
 - **Sign-Off**: `solution-architect`, `animation-agent`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 006 — 2026-11-22 (Subphase 3.1.1)
+- **Context**: OpenAI-compatible AI Hydration Coach, environmental weather/altitude goal engine, physical workout sweat replenishment, and circadian smart reminders.
+- **Course-Correction & Observations**:
+  1. **Dual-Engine AI Architecture (OpenAI-Compatible + Deterministic Clinical Fallback)**: User request mandated OpenAI-compatible AI architecture. Implemented `AiCoachService` supporting any standard OpenAI `/chat/completions` endpoint (OpenAI, Groq, Ollama, LocalAI). To ensure zero downtime and 100% offline functionality across flights, tunnels, and mobile connectivity drops, implemented a deterministic clinical heuristic expert rule system that evaluates current hydration deficit, companion personality lore, ambient heat/humidity, circadian hours, and workout sweat loss when no API key or network is present.
+  2. **Multi-Factor Environmental & Metabolic Goal Calculation**: Rather than static body-weight multipliers, implemented a dynamic formula integrating Rothfusz Steadman heat index (+25ml/°C above 22°C + humidity multiplier), high altitude respiratory compensation (+150ml/500m above 1500m), and exercise-specific sweat loss replenishment (125% of sweat rate × duration) which dynamically updates the daily target.
+  3. **Universal Health Platform Abstraction**: Built `HealthPlatformService` and `LocalMockHealthPlatformService` to allow seamless health sync development across all 6 target platforms without crashes on platforms lacking native HealthKit or Health Connect SDKs.
+  4. **Circadian Metabolic Scheduler**: Replaced uniform timer reminders with 5 circadian anchors (Morning Awakening, Midday Focus, Post-Lunch, Afternoon Rejuvenation, Evening Taper) that respect human melatonin and renal filtration cycles.
+- **Sign-Off**: `solution-architect`, `product-agent`, `backend-agent`, `mobile-agent`, `ux-ui-agent`, `qa-agent`, `release-devops-agent`.

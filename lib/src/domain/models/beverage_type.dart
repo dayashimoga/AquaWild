@@ -58,6 +58,26 @@ class BeverageType {
     return net > 0 ? net : 0.0;
   }
 
+  /// Contextual emoji icon for compact presentation
+  String get iconEmoji {
+    switch (category) {
+      case BeverageCategory.water:
+        return '💧';
+      case BeverageCategory.tea:
+        return '🍵';
+      case BeverageCategory.coffee:
+        return '☕';
+      case BeverageCategory.juice:
+        return '🍊';
+      case BeverageCategory.electrolyte:
+        return '⚡';
+      case BeverageCategory.dairy:
+        return '🥛';
+      case BeverageCategory.wellness:
+        return '🌿';
+    }
+  }
+
   // --- Comprehensive 16-Beverage Global Catalog ---
 
   static const BeverageType pureWater = BeverageType(

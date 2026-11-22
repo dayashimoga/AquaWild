@@ -27,6 +27,38 @@ class ExoticAnimal {
     required this.nativeHabitat,
   });
 
+  String get species => scientificName;
+  String get description => lore;
+  int get primaryColorHex => accentColor.toARGB32();
+
+  /// Mascot avatar emoji based on species
+  String get avatarEmoji {
+    switch (id) {
+      case 'red_panda':
+        return '🦊';
+      case 'capybara':
+        return '🦫';
+      case 'axolotl':
+        return '🦎';
+      case 'sea_otter':
+        return '🦦';
+      case 'andean_llama':
+        return '🦙';
+      case 'arctic_fox':
+        return '🐺';
+      case 'emperor_penguin':
+        return '🐧';
+      case 'pink_river_dolphin':
+        return '🐬';
+      case 'bioluminescent_octopus':
+        return '🐙';
+      case 'snow_leopard':
+        return '🐆';
+      default:
+        return '🐾';
+    }
+  }
+
   /// Catalog of 10 handcrafted exotic animal companions
   static const List<ExoticAnimal> allAnimals = [
     ExoticAnimal(

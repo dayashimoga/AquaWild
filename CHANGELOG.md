@@ -2,6 +2,19 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [0.5.0-subphase-3.1.1] - 2026-11-22
+### Added
+- **OpenAI-Compatible AI Hydration Coach Client**: Implemented `AiCoachService` connecting to any OpenAI-compatible API (`/chat/completions`) with configurable base URL, API key, model selection, prompt sanitization, and structured JSON schema enforcement.
+- **Deterministic Offline Clinical Heuristic Fallback**: Added a comprehensive rule-based heuristic advisor generating personalized clinical recommendations tailored to companion personality, circadian time, hydration deficit, and environmental stressors without network dependencies.
+- **Dynamic Weather, Heat Index & Altitude Goal Engine**: Built `WeatherCondition` and `WeatherActivityService` calculating perspiration offsets for ambient heat, Steadman heat index, high humidity, and high altitude (>1500m).
+- **Physical Workout Sweat Replenishment**: Created `ActivitySession` and `ActivityLoggerModal` computing sweat loss across 8 activities and 4 intensities with automatic +125% target replenishment.
+- **Universal Health Platform Bridge**: Added abstract `HealthPlatformService` and deterministic `LocalMockHealthPlatformService` enabling bi-directional health telemetry across Android, iOS, Web, Windows, macOS, and Linux.
+- **Circadian Smart Reminder Scheduler**: Implemented `SmartReminderService` and `SmartRemindersSheet` distributing hydration targets into 5 metabolic circadian anchors.
+- **Environmental & AI Status Bar**: Created `WeatherActivityBar` on `HomeScreen` offering one-tap access to weather simulation, workout logger, AI coach, and circadian schedule.
+- **Automated AI & Environmental Test Suites**: Added `test/domain/weather_activity_test.dart`, `test/domain/ai_coach_service_test.dart`, `test/domain/smart_reminder_test.dart`, and `test/presentation/ai_coach_bar_test.dart` (47 total tests across the project passing, 0 analyzer issues).
+
+---
+
 ## [0.4.0-subphase-2.3.1] - 2026-11-22
 ### Added
 - **Real-Time 2D Shallow-Water Wave Column Physics**: Implemented `WaveColumnSolver` running a 64-column spring-damper wave simulation with Hooke restorative force, velocity damping, and Laplacian wave propagation across adjacent liquid columns.
