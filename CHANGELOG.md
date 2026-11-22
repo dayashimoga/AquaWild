@@ -2,6 +2,23 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.3.0] - 2026-11-22 — Privacy-First Data Portability, Backup/Restore Engine & Companion Evolution Celebration Modal
+### Added
+- **Lossless Data Backup & Export Engine**: Engineered `DataBackupService` supporting:
+  * Lossless JSON backup archive containing complete profile state, daily goals, user XP, active companions, habit streaks, streak freeze counts, unlocked badges, and full hydration log history.
+  * Spreadsheet-compatible RFC 4180 CSV export formatted with entry IDs, ISO timestamps, dates, times, beverage IDs, names, volumes, bioavailability hydration indices, net milliliters, caffeine, and electrolytes for health/clinical reviews.
+  * Schema-validated JSON backup restoration with checksums, conflict guards, and instant state rehydration.
+- **Data Portability & Backup Modal (`DataBackupModal`)**: Developed glassmorphic modal with instant one-tap copy-to-clipboard for JSON and CSV exports, text-field restore portal with real-time validation, and live telemetry summary (Total Entries, Current Streak, Total XP).
+- **Interactive Companion Evolution Celebration Modal (`CompanionEvolutionModal`)**:
+  * Rotating 12-second radiant sunburst aura and glowing energy halos behind the companion mascot avatar.
+  * Stage mastery perk breakdown, level badge, and cosmetic title banner.
+  * Jubilant audio/haptic celebration fanfare (`AudioHapticsService.playGoalCelebration()`).
+  * Seamless interactive inspection directly from `HomeScreen` evolution card and `BiomeCompanionSelectorSheet`.
+- **Keyboard Shortcut Accelerator**: Registered keybinding `X` to instantly invoke the Data Backup & Portability modal.
+- **Automated Test Coverage**: Added `test/core/data_backup_test.dart` bringing the automated test suite to 87 tests (100% pass rate, 0 analyzer issues).
+
+---
+
 ## [1.2.0] - 2026-11-22 — Complete 10-Companion Handcrafted Silhouette & Interactive Animation Ecosystem
 ### Added
 - **Full 10-Companion Vector Silhouette Suite**: Handcrafted precise, anatomically tailored bezier vector clipping paths for all 10 companions in `AnimalSilhouettePaths`:

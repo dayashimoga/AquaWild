@@ -3,6 +3,7 @@ import 'package:aquawild/src/domain/models/exotic_animal.dart';
 import 'package:aquawild/src/domain/models/hydration_biome.dart';
 import 'package:aquawild/src/presentation/controllers/animal_habitat_controller.dart';
 import 'package:aquawild/src/presentation/controllers/biome_controller.dart';
+import 'package:aquawild/src/presentation/widgets/biomes/companion_evolution_modal.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -101,63 +102,72 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
       physics: const BouncingScrollPhysics(),
       children: [
         // Evolution Stage Banner for Active Companion
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: activeAnimal.accentColor.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: activeAnimal.accentColor.withValues(alpha: 0.4)),
+        InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => CompanionEvolutionModal.show(
+            context,
+            animal: activeAnimal,
+            stage: habitat.currentStage,
+            totalXp: habitat.userXp,
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      'Active: ${activeAnimal.name}',
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: activeAnimal.accentColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: activeAnimal.accentColor.withValues(alpha: 0.4)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Active: ${activeAnimal.name}',
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 8),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                    decoration: BoxDecoration(
-                      color: activeAnimal.accentColor.withValues(alpha: 0.3),
-                      borderRadius: BorderRadius.circular(8),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      decoration: BoxDecoration(
+                        color: activeAnimal.accentColor.withValues(alpha: 0.3),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        habitat.currentStage.title,
+                        style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: Text(
-                      habitat.currentStage.title,
-                      style: const TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                activeAnimal.lore,
-                style: const TextStyle(color: Colors.white70, fontSize: 12),
-              ),
-              const SizedBox(height: 10),
-              LinearProgressIndicator(
-                value: habitat.stageProgressFraction,
-                backgroundColor: Colors.white12,
-                color: activeAnimal.accentColor,
-                minHeight: 5,
-                borderRadius: BorderRadius.circular(3),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '${habitat.userXp} XP • ${habitat.xpUntilNextStage > 0 ? "${habitat.xpUntilNextStage} XP until next evolution" : "Max Evolution Stage Reached!"}',
-                style: const TextStyle(color: Colors.white60, fontSize: 11),
-              ),
-            ],
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  activeAnimal.lore,
+                  style: const TextStyle(color: Colors.white70, fontSize: 12),
+                ),
+                const SizedBox(height: 10),
+                LinearProgressIndicator(
+                  value: habitat.stageProgressFraction,
+                  backgroundColor: Colors.white12,
+                  color: activeAnimal.accentColor,
+                  minHeight: 5,
+                  borderRadius: BorderRadius.circular(3),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '${habitat.userXp} XP • ${habitat.xpUntilNextStage > 0 ? "${habitat.xpUntilNextStage} XP until next evolution" : "Max Evolution Stage Reached!"} • Tap to view perks',
+                  style: const TextStyle(color: Colors.white60, fontSize: 11),
+                ),
+              ],
+            ),
           ),
         ),
         const SizedBox(height: 16),

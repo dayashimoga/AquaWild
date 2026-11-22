@@ -10,7 +10,9 @@ import '../../controllers/hydration_controller.dart';
 import '../../widgets/ai/ai_coach_sheet.dart';
 import '../../widgets/analytics/predictive_analytics_sheet.dart';
 import '../../widgets/animal_fluid/animal_fluid_habitat_view.dart';
+import '../../widgets/backup/data_backup_modal.dart';
 import '../../widgets/biomes/biome_companion_selector_sheet.dart';
+import '../../widgets/biomes/companion_evolution_modal.dart';
 import '../../widgets/environmental/weather_activity_bar.dart';
 import '../../widgets/gamification/achievements_gallery_sheet.dart';
 import '../../widgets/gamification/streak_badge_chip.dart';
@@ -79,6 +81,11 @@ class ResponsiveHomeShell extends ConsumerWidget {
         actions: [
           const StreakBadgeChip(),
           const ThemeSwitcherButton(),
+          IconButton(
+            icon: const Icon(Icons.backup_outlined),
+            tooltip: 'Data Backup & Export',
+            onPressed: () => DataBackupModal.show(context),
+          ),
           IconButton(
             icon: const Icon(Icons.bar_chart_rounded),
             tooltip: 'Predictive Analytics',
@@ -439,6 +446,12 @@ class ResponsiveHomeShell extends ConsumerWidget {
                             title: 'Voice Logger',
                             shortcut: 'V',
                             onTap: () => VoiceCommandModal.show(context),
+                          ),
+                          _buildDesktopNavTile(
+                            icon: Icons.backup_outlined,
+                            title: 'Backup & Export',
+                            shortcut: 'X',
+                            onTap: () => DataBackupModal.show(context),
                           ),
                           _buildDesktopNavTile(
                             icon: Icons.keyboard_outlined,
@@ -833,45 +846,59 @@ class ResponsiveHomeShell extends ConsumerWidget {
     final activeAnimal = habitatState.activeAnimal;
 
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  Icons.pets,
-                  color: activeAnimal.accentColor,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    'Evolution Stage: ${habitatState.currentStage.title}',
-                    style: const TextStyle(fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () => CompanionEvolutionModal.show(
+          context,
+          animal: activeAnimal,
+          stage: habitatState.currentStage,
+          totalXp: habitatState.userXp,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    Icons.pets,
+                    color: activeAnimal.accentColor,
+                    size: 20,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              habitatState.currentStage.cosmeticPerk,
-              style: const TextStyle(fontSize: 13, color: Colors.white70),
-            ),
-            const SizedBox(height: 12),
-            LinearProgressIndicator(
-              value: habitatState.stageProgressFraction,
-              backgroundColor: AppColors.oceanDeep,
-              color: activeAnimal.accentColor,
-            ),
-            const SizedBox(height: 6),
-            Text(
-              '${habitatState.xpUntilNextStage} XP needed for next stage',
-              style: const TextStyle(fontSize: 11, color: Colors.white54),
-            ),
-          ],
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Evolution Stage: ${habitatState.currentStage.title}',
+                      style: const TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  Icon(
+                    Icons.auto_awesome,
+                    size: 16,
+                    color: activeAnimal.accentColor,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                habitatState.currentStage.cosmeticPerk,
+                style: const TextStyle(fontSize: 13, color: Colors.white70),
+              ),
+              const SizedBox(height: 12),
+              LinearProgressIndicator(
+                value: habitatState.stageProgressFraction,
+                backgroundColor: AppColors.oceanDeep,
+                color: activeAnimal.accentColor,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '${habitatState.xpUntilNextStage} XP needed for next stage • Tap to view perks',
+                style: const TextStyle(fontSize: 11, color: Colors.white54),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -8,6 +8,7 @@ import '../../controllers/animal_habitat_controller.dart';
 import '../../controllers/hydration_controller.dart';
 import '../ai/ai_coach_sheet.dart';
 import '../analytics/predictive_analytics_sheet.dart';
+import '../backup/data_backup_modal.dart';
 import '../biomes/biome_companion_selector_sheet.dart';
 import '../gamification/achievements_gallery_sheet.dart';
 import '../reminders/smart_reminders_sheet.dart';
@@ -107,6 +108,8 @@ class AquaWildShortcutsWrapper extends ConsumerWidget {
             ref.read(themeModeProvider.notifier).cycleTheme(),
         const SingleActivator(LogicalKeyboardKey.keyV): () =>
             VoiceCommandModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.keyX): () =>
+            DataBackupModal.show(context),
         const SingleActivator(LogicalKeyboardKey.slash): () =>
             KeyboardShortcutsModal.show(context),
         const SingleActivator(LogicalKeyboardKey.f1): () =>
