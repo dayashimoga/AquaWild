@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:aquawild/src/presentation/widgets/pool/floating_red_panda_painter.dart';
 import 'package:aquawild/src/presentation/widgets/pool/interactive_pool_view.dart';
 import 'package:aquawild/src/presentation/widgets/pool/pool_water_simulation_painter.dart';
@@ -55,6 +56,34 @@ void main() {
         breathPhase: 0.5,
       );
       expect(painter1.shouldRepaint(painter3), isTrue);
+
+      // Verify ear twitch, reaction pulse, lookTarget triggers repaint
+      final painterTwitch = FloatingRedPandaPainter(
+        bobOffset: 5.0,
+        tiltAngle: 0.05,
+        glintPhase: 0.2,
+        breathPhase: 0.1,
+        earTwitchAngle: 0.15,
+      );
+      expect(painter1.shouldRepaint(painterTwitch), isTrue);
+
+      final painterReaction = FloatingRedPandaPainter(
+        bobOffset: 5.0,
+        tiltAngle: 0.05,
+        glintPhase: 0.2,
+        breathPhase: 0.1,
+        reactionPulse: 0.8,
+      );
+      expect(painter1.shouldRepaint(painterReaction), isTrue);
+
+      final painterLook = FloatingRedPandaPainter(
+        bobOffset: 5.0,
+        tiltAngle: 0.05,
+        glintPhase: 0.2,
+        breathPhase: 0.1,
+        lookTarget: const Offset(0.5, -0.2),
+      );
+      expect(painter1.shouldRepaint(painterLook), isTrue);
     });
 
     test('PoolWaterSimulationPainter repaints when ripples or time changes', () {
@@ -90,6 +119,48 @@ void main() {
       await tester.tapAt(const Offset(200, 200));
       await tester.pump(const Duration(milliseconds: 100));
 
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('InteractivePoolView handles mouse hover for eye-tracking gaze',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: InteractivePoolView(),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // Simulate mouse hover moving across the pool
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: const Offset(150, 150));
+      await gesture.moveTo(const Offset(250, 250));
+      await tester.pump(const Duration(milliseconds: 100));
+
+      await gesture.removePointer();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('InteractivePoolView respects reduced-motion accessibility preference',
+        (tester) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: MediaQuery(
+            data: MediaQueryData(disableAnimations: true),
+            child: Scaffold(
+              body: InteractivePoolView(),
+            ),
+          ),
+        ),
+      );
+      await tester.pump(const Duration(milliseconds: 100));
+
+      // With reduced motion, particles are omitted and physics bob is frozen
+      expect(find.byType(InteractivePoolView), findsOneWidget);
       expect(tester.takeException(), isNull);
     });
   });

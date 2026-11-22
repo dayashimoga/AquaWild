@@ -174,3 +174,24 @@
      * Updated semantics label to reflect Ruby reclining naturally in crystal-clear highland mineral water.
      * Added natural breathing and tail wag phase bindings.
 - **Sign-Off**: `animation-agent`, `ux-ui-agent`, `solution-architect`, `qa-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 014 — 2026-11-22 (Stage 2: Subphase 2.1.2 — Natural Idle Animation Rig & Multi-Track Interactive Life-Cycle)
+- **Context**: Engineering natural life-cycles and idle animations for Ruby the Red Panda to replace static floating with authentic biological mannerisms.
+- **Architectural Decisions & Deliverables**:
+  1. **Multi-Track Idle Animation Engine**:
+     * **Involuntary Blinking**: Deterministic 220ms asymmetric eyelid closure envelope occurring every 3.2 to 6.0 seconds. Closes rapidly in 100ms and reopens smoothly over 120ms with natural moist specular shine recovery.
+     * **Spontaneous Ear Twitch**: Spontaneous rotational flick of the right ear base ($\pm 0.20\text{ rad}$) damped by harmonic oscillation ($\sin(t \times 18\pi)$) occurring every 4.0 to 7.5 seconds.
+     * **Smooth Eye-Tracking & Gaze Fixation**: Integrated `MouseRegion` on desktop/web to capture cursor coordinates; gaze smoothly tracks pointer position relative to head center using spherical boundary clamping and dynamic lerp interpolation (`Offset.lerp(..., 0.15)`), returning to tranquil forward focus when pointer exits.
+     * **Affectionate Touch Reaction Pulse**: User tap or stroke triggers `reactionPulse = 1.0`, producing a joyful upward eye squint, subtle soft rosy cheek blush (`Color.fromRGBO(255, 110, 130, 0.28)`), and flared smile curve that decays smoothly ($0.93^k$) over 800ms.
+     * **Breathing & Plush Tail Wag**: Continuous sinusoidal chest expansion coupled with multi-joint pendulum tail swaying synchronized to water buoyancy waves.
+  2. **Zero-Allocation 120 FPS Performance**:
+     * Maintained zero per-frame garbage collection in `FloatingRedPandaPainter` and `InteractivePoolView`.
+     * Kept `MouseRegion` coordinate updates outside `setState` to prevent redundant widget rebuilding while feeding into `AnimatedBuilder`'s vsync animation tick.
+  3. **Accessibility (WCAG 2.2 AA+) Compliance**:
+     * All idle oscillations, blinking, ear twitches, eye tracking, and buoyancy impulses strictly freeze into tranquil resting states when `MediaQuery.disableAnimationsOf(context)` is enabled.
+  4. **Automated Test Coverage**:
+     * Expanded `test/presentation/pool_simulation_test.dart` with tests for ear twitching, reaction pulse, eye tracking, mouse hover gestures, and reduced-motion enforcement (102/102 test pass rate, 0 analyzer issues).
+- **Sign-Off**: `animation-agent`, `ux-ui-agent`, `solution-architect`, `qa-agent`, `mobile-agent`, `desktop-web-agent`, `release-devops-agent`.

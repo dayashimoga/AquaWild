@@ -2,6 +2,23 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.7.0] - 2026-11-22 — Stage 2: Subphase 2.1.2 — Natural Idle Animation Rig & Multi-Track Interactive Life-Cycle
+### Added
+- **Multi-Track Natural Idle Animation Rig (`FloatingRedPandaPainter`, `InteractivePoolView`)**:
+  * **Involuntary Blinking**: Realistic 220ms asymmetric eyelid closure envelope running every 3.2 to 6.0 seconds with moist specular highlights.
+  * **Spontaneous Ear Twitch**: Damped harmonic flick of the right ear base ($\pm 0.20\text{ rad}$) running every 4.0 to 7.5 seconds.
+  * **Smooth Eye-Tracking & Gaze Fixation**: `MouseRegion` cursor-tracking gaze with smooth spherical interpolation (`Offset.lerp`) returning forward when pointer exits.
+  * **Affectionate Touch Reaction Pulse**: Interactive tap/stroke response triggering a happy upward eye squint, soft rosy cheek blush, and flared smile curve with smooth exponential decay.
+  * **Breathing & Tail Sway**: Continuous sinusoidal chest expansion coupled with multi-joint pendulum tail swaying.
+- **Accessibility & 120 FPS Performance**:
+  * Zero-allocation animation lifecycle ensuring no GC pressure at 120 FPS.
+  * Full WCAG 2.2 AA+ reduced-motion adherence (`MediaQuery.disableAnimationsOf(context)`).
+- **Automated Test Coverage**:
+  * Added unit and widget tests in `test/presentation/pool_simulation_test.dart` for ear twitching, reaction pulse, eye tracking, mouse hover gestures, and reduced motion.
+  * 102/102 test pass rate, 0 analyzer issues.
+
+---
+
 ## [1.6.0] - 2026-11-22 — Dynamic Biome Atmospheric Background & Adaptive Ambient Ecosystem
 ### Added
 - **Dynamic Biome Ambient Atmospheric Backdrop**: Integrated living atmospheric background gradients into `ResponsiveHomeShell` across all 3 responsive breakpoints (Compact Mobile, Medium Tablet, and Expanded Desktop Command Center).

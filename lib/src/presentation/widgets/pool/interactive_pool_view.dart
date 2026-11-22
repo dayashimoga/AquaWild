@@ -33,6 +33,17 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
   double _lastAmbientRippleTime = 0.0;
   double _touchImpulse = 0.0;
   double _touchTilt = 0.0;
+  double _reactionPulse = 0.0;
+
+  // Involuntary blinking & spontaneous ear twitch timing clocks
+  double _nextBlinkTime = 2.5;
+  double _blinkStartTime = -10.0;
+  double _nextEarTwitchTime = 3.8;
+  double _twitchStartTime = -10.0;
+
+  // Eye-tracking target & smoothed gaze position
+  Offset? _pointerPosition;
+  Offset _currentLookTarget = Offset.zero;
 
   @override
   void initState() {
@@ -119,70 +130,133 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             // Decay touch impulses smoothly
             _touchImpulse *= 0.92;
             _touchTilt *= 0.92;
+            _reactionPulse *= 0.93;
+            if (_reactionPulse < 0.005) _reactionPulse = 0.0;
 
             final double totalBob = naturalBob + _touchImpulse;
             final double totalTilt = naturalTilt + _touchTilt;
             final double glintPhase = (_controller.value * 3.0) % 1.0;
 
-            return GestureDetector(
-              onTapDown: (details) {
-                _addRipple(details.localPosition, amplitude: 1.2, maxRadius: 220.0);
-                setState(() {
-                  _touchImpulse = 14.0;
-                  _touchTilt = (details.localPosition.dx > center.dx) ? 0.12 : -0.12;
-                });
-              },
-              onPanUpdate: (details) {
-                if (_random.nextDouble() < 0.25) {
-                  _addRipple(details.localPosition, amplitude: 0.8, maxRadius: 120.0);
+            // Involuntary Blinking calculation
+            double blinkProgress = 0.0;
+            if (!reducedMotion) {
+              if (currentTime >= _nextBlinkTime) {
+                _blinkStartTime = currentTime;
+                _nextBlinkTime = currentTime + 3.2 + _random.nextDouble() * 2.8;
+              }
+              final double blinkElapsed = currentTime - _blinkStartTime;
+              if (blinkElapsed >= 0.0 && blinkElapsed < 0.22) {
+                if (blinkElapsed < 0.10) {
+                  blinkProgress = blinkElapsed / 0.10;
+                } else {
+                  blinkProgress = 1.0 - ((blinkElapsed - 0.10) / 0.12);
                 }
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  // Layer 1: Procedural Water Caustics, Tiles, and Ripples
-                  CustomPaint(
-                    size: size,
-                    painter: PoolWaterSimulationPainter(
-                      time: currentTime,
-                      ripples: _ripples,
-                      reducedMotion: reducedMotion,
-                    ),
-                  ),
+              }
+            }
 
-                  // Layer 2: Rising Micro-bubbles & Star Specular Glints
-                  if (!reducedMotion)
+            // Spontaneous Ear Twitch calculation
+            double earTwitchAngle = 0.0;
+            if (!reducedMotion) {
+              if (currentTime >= _nextEarTwitchTime) {
+                _twitchStartTime = currentTime;
+                _nextEarTwitchTime = currentTime + 4.0 + _random.nextDouble() * 3.5;
+              }
+              final double twitchElapsed = currentTime - _twitchStartTime;
+              if (twitchElapsed >= 0.0 && twitchElapsed < 0.24) {
+                earTwitchAngle = math.sin(twitchElapsed * math.pi * 18.0) *
+                    0.20 *
+                    (1.0 - twitchElapsed / 0.24);
+              }
+            }
+
+            // Gaze eye tracking towards pointer hover
+            if (!reducedMotion && _pointerPosition != null) {
+              final double dx =
+                  ((_pointerPosition!.dx - center.dx) / 160.0).clamp(-1.0, 1.0);
+              final double dy =
+                  ((_pointerPosition!.dy - (center.dy - 32)) / 160.0).clamp(-1.0, 1.0);
+              final Offset targetLook = Offset(dx, dy);
+              _currentLookTarget =
+                  Offset.lerp(_currentLookTarget, targetLook, 0.15) ?? Offset.zero;
+            } else {
+              _currentLookTarget =
+                  Offset.lerp(_currentLookTarget, Offset.zero, 0.08) ?? Offset.zero;
+            }
+
+            return MouseRegion(
+              onHover: (event) {
+                _pointerPosition = event.localPosition;
+              },
+              onExit: (_) {
+                _pointerPosition = null;
+              },
+              child: GestureDetector(
+                onTapDown: (details) {
+                  _addRipple(details.localPosition, amplitude: 1.2, maxRadius: 220.0);
+                  setState(() {
+                    _touchImpulse = 14.0;
+                    _touchTilt = (details.localPosition.dx > center.dx) ? 0.12 : -0.12;
+                    _reactionPulse = 1.0;
+                    _pointerPosition = details.localPosition;
+                  });
+                },
+                onPanUpdate: (details) {
+                  if (_random.nextDouble() < 0.25) {
+                    _addRipple(details.localPosition, amplitude: 0.8, maxRadius: 120.0);
+                  }
+                  _pointerPosition = details.localPosition;
+                },
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    // Layer 1: Procedural Water Caustics, Tiles, and Ripples
                     CustomPaint(
                       size: size,
-                      painter: PoolParticlesPainter(
+                      painter: PoolWaterSimulationPainter(
                         time: currentTime,
-                        particles: _particles,
+                        ripples: _ripples,
+                        reducedMotion: reducedMotion,
                       ),
                     ),
 
-                  // Layer 3: Anatomically Accurate Red Panda Reclining Naturally in Water
-                  Positioned(
-                    left: center.dx - 120,
-                    top: center.dy - 120,
-                    width: 240,
-                    height: 240,
-                    child: Semantics(
-                      label:
-                          'Ruby the Red Panda reclining naturally in crystal-clear highland mineral water. Tap anywhere to splash and create ripples.',
-                      button: true,
-                      child: CustomPaint(
-                        size: const Size(240, 240),
-                        painter: FloatingRedPandaPainter(
-                          bobOffset: totalBob,
-                          tiltAngle: totalTilt,
-                          glintPhase: glintPhase,
-                          breathPhase: _controller.value,
-                          tailWagPhase: t * 1.4,
+                    // Layer 2: Rising Micro-bubbles & Star Specular Glints
+                    if (!reducedMotion)
+                      CustomPaint(
+                        size: size,
+                        painter: PoolParticlesPainter(
+                          time: currentTime,
+                          particles: _particles,
+                        ),
+                      ),
+
+                    // Layer 3: Anatomically Accurate Red Panda Reclining Naturally in Water
+                    Positioned(
+                      left: center.dx - 120,
+                      top: center.dy - 120,
+                      width: 240,
+                      height: 240,
+                      child: Semantics(
+                        label:
+                            'Ruby the Red Panda reclining naturally in crystal-clear highland mineral water. Tap anywhere to splash and create ripples.',
+                        button: true,
+                        child: CustomPaint(
+                          size: const Size(240, 240),
+                          painter: FloatingRedPandaPainter(
+                            bobOffset: totalBob,
+                            tiltAngle: totalTilt,
+                            glintPhase: glintPhase,
+                            breathPhase: _controller.value,
+                            blinkProgress: blinkProgress,
+                            tailWagPhase: t * 1.4,
+                            lookTarget: _currentLookTarget,
+                            earTwitchAngle: earTwitchAngle,
+                            reactionPulse: _reactionPulse,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             );
           },

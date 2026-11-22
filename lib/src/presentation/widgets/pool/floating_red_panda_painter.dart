@@ -19,6 +19,8 @@ class FloatingRedPandaPainter extends CustomPainter {
   final double blinkProgress; // Eyelid blink progress (0.0 = open, 1.0 = closed)
   final double tailWagPhase; // Tail pendulum wagging phase
   final Offset lookTarget; // Pupil eye-tracking offset (-1.0 to 1.0)
+  final double earTwitchAngle; // Radians for spontaneous ear twitch flick
+  final double reactionPulse; // 0.0 to 1.0 for affectionate squint & smile flare
 
   // Reusable paints to ensure 120 FPS performance with zero per-frame GC allocations
   final Paint _shadowPaint = Paint()
@@ -66,6 +68,8 @@ class FloatingRedPandaPainter extends CustomPainter {
     this.blinkProgress = 0.0,
     this.tailWagPhase = 0.0,
     this.lookTarget = Offset.zero,
+    this.earTwitchAngle = 0.0,
+    this.reactionPulse = 0.0,
   });
 
   @override
@@ -324,7 +328,14 @@ class FloatingRedPandaPainter extends CustomPainter {
       ..close();
     canvas.drawPath(leftEarTuft, earFurPaint);
 
-    // Right Ear
+    // Right Ear (with spontaneous ear twitch flick support)
+    canvas.save();
+    if (earTwitchAngle.abs() > 0.001) {
+      canvas.translate(headCenter.dx + 22, headCenter.dy - 20);
+      canvas.rotate(earTwitchAngle);
+      canvas.translate(-(headCenter.dx + 22), -(headCenter.dy - 20));
+    }
+
     final Path rightEarOuter = Path()
       ..moveTo(headCenter.dx + 22, headCenter.dy - 20)
       ..lineTo(headCenter.dx + 48, headCenter.dy - 50)
@@ -343,6 +354,7 @@ class FloatingRedPandaPainter extends CustomPainter {
       ..lineTo(headCenter.dx + 18, headCenter.dy - 30)
       ..close();
     canvas.drawPath(rightEarTuft, earFurPaint);
+    canvas.restore();
   }
 
   void _drawFacialWhiteMarkings(Canvas canvas, Offset headCenter) {
@@ -422,7 +434,9 @@ class FloatingRedPandaPainter extends CustomPainter {
     final double eyeY = headCenter.dy - 5;
 
     final double clampedBlink = blinkProgress.clamp(0.0, 1.0);
-    final double eyeHeight = 11.0 * (1.0 - clampedBlink * 0.95);
+    final double reactionSquint = (reactionPulse * 0.5).clamp(0.0, 0.7);
+    final double effectiveBlink = math.max(clampedBlink, reactionSquint);
+    final double eyeHeight = 11.0 * (1.0 - effectiveBlink * 0.95);
 
     // If eyes are mostly open, draw iris, pupils and specular shine
     if (eyeHeight > 2.0) {
@@ -450,7 +464,7 @@ class FloatingRedPandaPainter extends CustomPainter {
       canvas.drawOval(leftEyeRect, irisPaint);
       canvas.drawCircle(
         Offset(leftEyeX + pupilDx, eyeY + pupilDy),
-        3.5 * (1.0 - clampedBlink * 0.5),
+        3.5 * (1.0 - effectiveBlink * 0.5),
         _eyePupilPaint,
       );
       // Dual Specular Catchlights for life and moisture
@@ -474,7 +488,7 @@ class FloatingRedPandaPainter extends CustomPainter {
       canvas.drawOval(rightEyeRect, irisPaint);
       canvas.drawCircle(
         Offset(rightEyeX + pupilDx, eyeY + pupilDy),
-        3.5 * (1.0 - clampedBlink * 0.5),
+        3.5 * (1.0 - effectiveBlink * 0.5),
         _eyePupilPaint,
       );
       canvas.drawCircle(
@@ -488,26 +502,36 @@ class FloatingRedPandaPainter extends CustomPainter {
         _specularHighlightPaint,
       );
     } else {
-      // Eyelid line when closed / blinking
+      // Eyelid line when closed / blinking or squinting happily
       final Paint closedEyePaint = Paint()
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0
         ..strokeCap = StrokeCap.round
         ..color = const Color(0xFF2E170F);
 
+      final double curveSag = reactionPulse > 0.2 ? -2.2 : 2.0;
       final Path leftClosed = Path()
         ..moveTo(leftEyeX - 6, eyeY)
-        ..quadraticBezierTo(leftEyeX, eyeY + 2, leftEyeX + 6, eyeY);
+        ..quadraticBezierTo(leftEyeX, eyeY + curveSag, leftEyeX + 6, eyeY);
       canvas.drawPath(leftClosed, closedEyePaint);
 
       final Path rightClosed = Path()
         ..moveTo(rightEyeX - 6, eyeY)
-        ..quadraticBezierTo(rightEyeX, eyeY + 2, rightEyeX + 6, eyeY);
+        ..quadraticBezierTo(rightEyeX, eyeY + curveSag, rightEyeX + 6, eyeY);
       canvas.drawPath(rightClosed, closedEyePaint);
     }
   }
 
   void _drawMuzzleAndMouth(Canvas canvas, Offset headCenter) {
+    // Affectionate cheek blush when stroked or reacted
+    if (reactionPulse > 0.05) {
+      final Paint blushPaint = Paint()
+        ..color = Color.fromRGBO(255, 110, 130, 0.28 * reactionPulse.clamp(0.0, 1.0))
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 6.0);
+      canvas.drawCircle(Offset(headCenter.dx - 22, headCenter.dy + 8), 7.5, blushPaint);
+      canvas.drawCircle(Offset(headCenter.dx + 22, headCenter.dy + 8), 7.5, blushPaint);
+    }
+
     // Dark button nose with nostrils
     final Offset nosePos = Offset(headCenter.dx, headCenter.dy + 6);
     final Paint nosePaint = Paint()..color = const Color(0xFF1E140F);
@@ -529,18 +553,19 @@ class FloatingRedPandaPainter extends CustomPainter {
       _mouthPaint,
     );
 
-    // Content smiling mouth
+    // Content smiling mouth (flares wider when stroked)
+    final double smileSag = 14.0 + reactionPulse * 2.5;
     final Path mouthPath = Path();
     mouthPath.moveTo(nosePos.dx - 8, nosePos.dy + 11);
     mouthPath.quadraticBezierTo(
       nosePos.dx - 4,
-      nosePos.dy + 14,
+      nosePos.dy + smileSag,
       nosePos.dx,
       nosePos.dy + 11,
     );
     mouthPath.quadraticBezierTo(
       nosePos.dx + 4,
-      nosePos.dy + 14,
+      nosePos.dy + smileSag,
       nosePos.dx + 8,
       nosePos.dy + 11,
     );
@@ -600,6 +625,8 @@ class FloatingRedPandaPainter extends CustomPainter {
         oldDelegate.breathPhase != breathPhase ||
         oldDelegate.blinkProgress != blinkProgress ||
         oldDelegate.tailWagPhase != tailWagPhase ||
-        oldDelegate.lookTarget != lookTarget;
+        oldDelegate.lookTarget != lookTarget ||
+        oldDelegate.earTwitchAngle != earTwitchAngle ||
+        oldDelegate.reactionPulse != reactionPulse;
   }
 }
