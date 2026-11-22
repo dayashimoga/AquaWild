@@ -11,6 +11,7 @@ import '../../widgets/ai/ai_coach_sheet.dart';
 import '../../widgets/analytics/predictive_analytics_sheet.dart';
 import '../../widgets/animal_fluid/animal_fluid_habitat_view.dart';
 import '../../widgets/backup/data_backup_modal.dart';
+import '../../widgets/beverages/beverage_customizer_modal.dart';
 import '../../widgets/biomes/biome_companion_selector_sheet.dart';
 import '../../widgets/biomes/companion_evolution_modal.dart';
 import '../../widgets/environmental/weather_activity_bar.dart';
@@ -655,6 +656,11 @@ class ResponsiveHomeShell extends ConsumerWidget {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
+            IconButton(
+              icon: const Icon(Icons.add_circle_outline, size: 20),
+              tooltip: 'Craft Custom Beverage',
+              onPressed: () => BeverageCustomizerModal.show(context),
+            ),
             Text(
               'Keys [1-9]',
               style: TextStyle(
@@ -670,9 +676,57 @@ class ResponsiveHomeShell extends ConsumerWidget {
           height: 104,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: BeverageType.allBeverages.length,
+            itemCount: BeverageType.allBeverages.length + 1,
             separatorBuilder: (context, index) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
+              if (index == BeverageType.allBeverages.length) {
+                return InkWell(
+                  onTap: () => BeverageCustomizerModal.show(context),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(
+                    width: 90,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: AppColors.cardGlassDark,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: Colors.white24,
+                        style: BorderStyle.solid,
+                      ),
+                    ),
+                    child: const Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 16,
+                          backgroundColor: Colors.white12,
+                          child: Icon(
+                            Icons.add_rounded,
+                            size: 18,
+                            color: AppColors.cyanPrimary,
+                          ),
+                        ),
+                        SizedBox(height: 6),
+                        Text(
+                          'Custom',
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          'Craft Drink',
+                          style: TextStyle(
+                            fontSize: 9,
+                            color: Colors.white54,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+
               final bev = BeverageType.allBeverages[index];
               final hasShortcut = index < 9;
 

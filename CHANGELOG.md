@@ -2,6 +2,21 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.5.0] - 2026-11-22 — Custom Beverage Builder Studio & Dynamic Beverage Registry
+### Added
+- **Dynamic Beverage Registry**: Extended `BeverageType` with dynamic registration (`registerCustom`, `removeCustom`) and dynamic queryability via `allBeverages` and `findById`, enabling user-crafted beverages to seamlessly appear across the entire application (Quick Dock, Pour Studio, Voice Logger, Shortcuts).
+- **Custom Beverage Studio (`BeverageCustomizerModal`)**: Built interactive glassmorphic modal studio allowing users to:
+  * Name custom beverages with sanitized IDs.
+  * Assign physiological categories (Water, Tea, Coffee, Juice, Electrolyte, Dairy, Wellness).
+  * Adjust bioavailability hydration index sliders ($0.50 \to 1.50$) with real-time net hydration calculations.
+  * Parameterize caffeine ($0 \to 120$ mg/100ml) and electrolyte ($0 \to 150$ mg/100ml) concentrations with automatic diuretic offsetting.
+  * Pick fluid theme colors from an 8-color neon Hydro-Glass palette.
+  * Instantly craft, register into catalog, and log customized volume with haptics.
+- **Quick Dock Integration**: Added "Craft Custom Beverage" action button and dedicated "Custom" tile to the dashboard quick dock in `ResponsiveHomeShell`.
+- **Automated Test Coverage**: Added `test/presentation/beverage_customizer_test.dart` bringing the project test suite to 89 passing tests (100% pass rate, 0 analyzer issues).
+
+---
+
 ## [1.4.0] - 2026-11-22 — Universal Beverage Carousel in Pour Studio & Showcase Production Documentation
 ### Added
 - **Multi-Beverage Carousel Selector in Interactive Pour Studio**: Integrated horizontal scrolling filter chip carousel in `InteractivePourSheet` allowing users to switch between all 16 handcrafted beverages in real-time while adjusting the drag-to-pour fluid level.

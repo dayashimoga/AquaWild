@@ -359,7 +359,7 @@ class BeverageType {
     description: 'Spinach, cucumber, green apple, and celery blended cellular hydration.',
   );
 
-  static const List<BeverageType> allBeverages = [
+  static const List<BeverageType> defaultBeverages = [
     pureWater,
     sparklingWater,
     coconutWater,
@@ -377,6 +377,25 @@ class BeverageType {
     boneBroth,
     greenSmoothie,
   ];
+
+  static final List<BeverageType> _customBeverages = [];
+
+  static List<BeverageType> get allBeverages => [
+        ...defaultBeverages,
+        ..._customBeverages,
+      ];
+
+  /// Dynamically registers a user-crafted custom beverage
+  static void registerCustom(BeverageType custom) {
+    if (!_customBeverages.any((b) => b.id == custom.id)) {
+      _customBeverages.add(custom);
+    }
+  }
+
+  /// Removes a custom beverage by id
+  static void removeCustom(String id) {
+    _customBeverages.removeWhere((b) => b.id == id);
+  }
 
   static BeverageType findById(String id) {
     return allBeverages.firstWhere(

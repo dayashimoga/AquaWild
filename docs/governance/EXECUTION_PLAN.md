@@ -184,6 +184,16 @@
 
 ---
 
+### Post-Release Enhancement 5 — Custom Beverage Builder Studio & Dynamic Beverage Registry (v1.5.0)
+- **Status**: Completed (100% tests passing, 89/89 tests, 0 analyzer issues)
+- **Deliverables**:
+  - `lib/src/domain/models/beverage_type.dart`: Dynamic custom beverage registration (`registerCustom`, `removeCustom`) and dynamic `allBeverages` getter.
+  - `lib/src/presentation/widgets/beverages/beverage_customizer_modal.dart`: Interactive modal studio for parameterizing custom drink recipes (name, category, bioavailability, caffeine, electrolytes, color palette, volume).
+  - `lib/src/presentation/screens/home/responsive_home_shell.dart`: Added "Craft Custom" icon and quick dock tile.
+  - `test/presentation/beverage_customizer_test.dart`: Complete unit & widget test suite for custom beverage crafting and registration.
+
+---
+
 ### Post-Release Enhancement 4 — Universal Beverage Carousel in Pour Studio & Showcase Production Documentation (v1.4.0)
 - **Status**: Completed (100% tests passing, 87/87 tests, 0 analyzer issues)
 - **Deliverables**:
