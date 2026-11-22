@@ -35,7 +35,7 @@ void main() {
       expect(find.text('Bamboo Misty Springs • Relax Mode'), findsOneWidget);
 
       final mascot = find.bySemanticsLabel(
-        RegExp(r'Ruby the Red Panda wearing aviator sunglasses'),
+        RegExp(r'Ruby the Red Panda reclining naturally'),
       );
       expect(mascot, findsOneWidget);
     });

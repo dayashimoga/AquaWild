@@ -36,15 +36,25 @@ void main() {
         bobOffset: 5.0,
         tiltAngle: 0.05,
         glintPhase: 0.2,
+        breathPhase: 0.1,
       );
 
       final painter2 = FloatingRedPandaPainter(
         bobOffset: 8.0,
         tiltAngle: 0.05,
         glintPhase: 0.2,
+        breathPhase: 0.1,
       );
 
       expect(painter1.shouldRepaint(painter2), isTrue);
+
+      final painter3 = FloatingRedPandaPainter(
+        bobOffset: 5.0,
+        tiltAngle: 0.05,
+        glintPhase: 0.2,
+        breathPhase: 0.5,
+      );
+      expect(painter1.shouldRepaint(painter3), isTrue);
     });
 
     test('PoolWaterSimulationPainter repaints when ripples or time changes', () {
@@ -72,7 +82,7 @@ void main() {
 
       // Find the Red Panda Semantics node
       final semanticsFinder = find.bySemanticsLabel(
-        RegExp(r'Ruby the Red Panda wearing aviator sunglasses'),
+        RegExp(r'Ruby the Red Panda reclining naturally'),
       );
       expect(semanticsFinder, findsOneWidget);
 

@@ -155,3 +155,22 @@
   3. **Automated Unit Testing**:
      * `test/domain/monetization_admin_models_test.dart` added covering all serialization, expiration calculations, catalog lookups, budget metrics, and environment switching.
 - **Sign-Off**: `solution-architect`, `backend-agent`, `product-agent`, `security-agent`, `qa-agent`, `release-devops-agent`.
+
+---
+
+## Entry 013 — 2026-11-22 (Stage 2: Subphase 2.1.1 — Anatomical Red Panda Vector Rig & Organic Water Caustics)
+- **Context**: Overhaul of launch screen mascot and water environment to eliminate unrealistic inflatable swim-tube balloon floating, repetitive $36\text{px}$ bubble grids, and obscuring sunglasses.
+- **Architectural Decisions & Deliverables**:
+  1. **Anatomical Red Panda Vector Rig (`FloatingRedPandaPainter`)**:
+     * Built authentic vector assembly of *Ailurus fulgens* reclining naturally in crystalline mineral water.
+     * Features multi-layered auburn fur coat with volumetric shading, pure white chest bib, and dark charcoal paws/underbelly.
+     * Handcrafted iconic plush cylindrical tail with 12 distinct alternating auburn and ochre bands and cream tip floating with water wave deflection.
+     * Rendered realistic facial anatomy: broad rounded cheeks, white facial mask, iconic reddish-brown tear tracks running from eyes to mouth, and triangular ears with dense white inner plumes.
+     * Removed obscuring sunglasses in favor of large, expressive almond-shaped eyes with hazel/espresso irises, dark pupils, and dual specular catchlights, with full eyelid blinking support (`blinkProgress`) and pupil tracking (`lookTarget`).
+  2. **Organic Water Caustics (`PoolWaterSimulationPainter`)**:
+     * Completely replaced uniform $36\text{px}$ circle grid with continuous undulating horizontal and diagonal caustic light ribbon networks distorted by water depth and wave velocity.
+     * Added natural caustic intersection nodes and soft ceramic tile refractive sway, removing the soap-bubble look.
+  3. **Natural Water Habitat Integration (`InteractivePoolView`)**:
+     * Updated semantics label to reflect Ruby reclining naturally in crystal-clear highland mineral water.
+     * Added natural breathing and tail wag phase bindings.
+- **Sign-Off**: `animation-agent`, `ux-ui-agent`, `solution-architect`, `qa-agent`, `release-devops-agent`.

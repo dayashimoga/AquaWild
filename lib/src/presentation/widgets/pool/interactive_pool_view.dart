@@ -160,7 +160,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                       ),
                     ),
 
-                  // Layer 3: Handcrafted Animated SVG Red Panda on Floating Tube
+                  // Layer 3: Anatomically Accurate Red Panda Reclining Naturally in Water
                   Positioned(
                     left: center.dx - 120,
                     top: center.dy - 120,
@@ -168,7 +168,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                     height: 240,
                     child: Semantics(
                       label:
-                          'Ruby the Red Panda wearing aviator sunglasses, relaxing in an inflatable tropical swim tube while drinking a citrus beverage over clear pool water. Tap to splash and create ripples.',
+                          'Ruby the Red Panda reclining naturally in crystal-clear highland mineral water. Tap anywhere to splash and create ripples.',
                       button: true,
                       child: CustomPaint(
                         size: const Size(240, 240),
@@ -176,6 +176,8 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                           bobOffset: totalBob,
                           tiltAngle: totalTilt,
                           glintPhase: glintPhase,
+                          breathPhase: _controller.value,
+                          tailWagPhase: t * 1.4,
                         ),
                       ),
                     ),

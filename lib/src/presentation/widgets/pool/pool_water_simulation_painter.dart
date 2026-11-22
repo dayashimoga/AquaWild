@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../core/theme/app_colors.dart';
 import 'ripple_emitter.dart';
 
-/// Hardware-accelerated CustomPainter rendering top-view procedural pool water:
-/// - Underwater ceramic tile grid with caustic refraction distortion
-/// - Dual-layer sinusoidal caustic lattices with specular sunlight glints
-/// - Dynamic interactive expanding ripple wavefield
+/// Hardware-accelerated CustomPainter rendering top-view organic pool water:
+/// - Underwater ceramic tile grid with gentle refractive wave sway
+/// - Continuous organic caustic ribbon networks (eliminating artificial bubble grids)
+/// - Interactive expanding concentric water ripples
 class PoolWaterSimulationPainter extends CustomPainter {
   final double time; // In seconds
   final List<WaterRipple> ripples;
@@ -14,19 +14,25 @@ class PoolWaterSimulationPainter extends CustomPainter {
 
   // Cached paints to eliminate per-frame allocations (120 FPS target)
   final Paint _tileGroutPaint = Paint()
-    ..color = const Color(0x2200E5FF)
-    ..strokeWidth = 1.5
+    ..color = const Color(0x1A00E5FF)
+    ..strokeWidth = 1.4
     ..style = PaintingStyle.stroke;
 
-  final Paint _causticPaint1 = Paint()
-    ..color = const Color(0x33B2EBF2)
-    ..strokeWidth = 2.5
-    ..style = PaintingStyle.stroke;
+  final Paint _causticRibbonPaint1 = Paint()
+    ..color = const Color(0x38B2EBF2)
+    ..strokeWidth = 2.4
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
 
-  final Paint _causticPaint2 = Paint()
-    ..color = const Color(0x22FFFFFF)
-    ..strokeWidth = 1.8
-    ..style = PaintingStyle.stroke;
+  final Paint _causticRibbonPaint2 = Paint()
+    ..color = const Color(0x28FFFFFF)
+    ..strokeWidth = 1.6
+    ..style = PaintingStyle.stroke
+    ..strokeCap = StrokeCap.round;
+
+  final Paint _causticNodePaint = Paint()
+    ..style = PaintingStyle.fill
+    ..color = const Color(0x44FFFFFF);
 
   final Paint _ripplePaint = Paint()
     ..style = PaintingStyle.stroke
@@ -47,7 +53,7 @@ class PoolWaterSimulationPainter extends CustomPainter {
     final Paint bgPaint = Paint()
       ..shader = const RadialGradient(
         center: Alignment(0.0, -0.1),
-        radius: 1.1,
+        radius: 1.15,
         colors: [
           Color(0xFF006064),
           Color(0xFF00363A),
@@ -56,12 +62,12 @@ class PoolWaterSimulationPainter extends CustomPainter {
       ).createShader(rect);
     canvas.drawRect(rect, bgPaint);
 
-    // 2. Underwater Ceramic Pool Tile Grid with Procedural Distortion
+    // 2. Underwater Ceramic Pool Tile Grid with Soft Wave Refraction
     _drawUnderwaterTiles(canvas, size, effectiveTime);
 
-    // 3. Dual-Layer Caustic Refraction Lines
+    // 3. Continuous Organic Caustic Ribbon Network (Zero bubble circles)
     if (!reducedMotion) {
-      _drawCaustics(canvas, size, effectiveTime);
+      _drawOrganicCaustics(canvas, size, effectiveTime);
     }
 
     // 4. Interactive Expanding Water Ripples
@@ -69,7 +75,7 @@ class PoolWaterSimulationPainter extends CustomPainter {
   }
 
   void _drawUnderwaterTiles(Canvas canvas, Size size, double t) {
-    const double tileSize = 48.0;
+    const double tileSize = 52.0;
     final int cols = (size.width / tileSize).ceil() + 1;
     final int rows = (size.height / tileSize).ceil() + 1;
 
@@ -79,8 +85,8 @@ class PoolWaterSimulationPainter extends CustomPainter {
     for (int i = 0; i <= cols; i++) {
       final double baseX = i * tileSize;
       gridPath.moveTo(baseX, 0);
-      for (double y = 0; y <= size.height; y += 16.0) {
-        final double waveOffset = math.sin((y / 40.0) + (t * 1.2)) * 2.5;
+      for (double y = 0; y <= size.height; y += 20.0) {
+        final double waveOffset = math.sin((y / 48.0) + (t * 1.1)) * 2.2;
         gridPath.lineTo(baseX + waveOffset, y);
       }
     }
@@ -89,8 +95,8 @@ class PoolWaterSimulationPainter extends CustomPainter {
     for (int j = 0; j <= rows; j++) {
       final double baseY = j * tileSize;
       gridPath.moveTo(0, baseY);
-      for (double x = 0; x <= size.width; x += 16.0) {
-        final double waveOffset = math.cos((x / 40.0) + (t * 1.4)) * 2.5;
+      for (double x = 0; x <= size.width; x += 20.0) {
+        final double waveOffset = math.cos((x / 48.0) + (t * 1.3)) * 2.2;
         gridPath.lineTo(x, baseY + waveOffset);
       }
     }
@@ -98,43 +104,77 @@ class PoolWaterSimulationPainter extends CustomPainter {
     canvas.drawPath(gridPath, _tileGroutPaint);
   }
 
-  void _drawCaustics(Canvas canvas, Size size, double t) {
-    final Path causticPath1 = Path();
-    final Path causticPath2 = Path();
+  void _drawOrganicCaustics(Canvas canvas, Size size, double t) {
+    final Path causticWeb1 = Path();
+    final Path causticWeb2 = Path();
+    final double w = size.width;
+    final double h = size.height;
 
-    const double step = 36.0;
-    final int numX = (size.width / step).ceil();
-    final int numY = (size.height / step).ceil();
+    // Layer 1: Horizontal undulating caustic ribbons
+    const double ribbonSpacing = 48.0;
+    final int ribbonCount = (h / ribbonSpacing).ceil() + 2;
 
-    for (int ix = 0; ix < numX; ix++) {
-      for (int iy = 0; iy < numY; iy++) {
-        final double x = ix * step;
-        final double y = iy * step;
+    for (int r = 0; r < ribbonCount; r++) {
+      final double baseY = (r - 1) * ribbonSpacing;
+      final double phase = (r * 1.4) + (t * 1.15);
 
-        // Primary caustic network nodes
-        final double dx1 = math.sin((x / 30.0) + (t * 1.5)) * 10.0;
-        final double dy1 = math.cos((y / 28.0) + (t * 1.2)) * 8.0;
-        final double r1 = 12.0 + math.sin(((x + y) / 45.0) + (t * 1.8)) * 6.0;
+      causticWeb1.moveTo(-20, baseY + math.sin(phase) * 12.0);
 
-        causticPath1.addOval(
-          Rect.fromCircle(center: Offset(x + dx1, y + dy1), radius: r1),
-        );
+      for (double x = 0; x <= w + 40; x += 48.0) {
+        final double wave1 = math.sin((x / 52.0) + phase) * 10.0;
+        final double wave2 = math.cos((x / 36.0) - (t * 1.4) + r) * 7.0;
+        final double waveY = baseY + wave1 + wave2;
 
-        // Secondary sharper glint nodes
-        if ((ix + iy) % 2 == 0) {
-          final double dx2 = math.cos((x / 34.0) - (t * 1.6)) * 8.0;
-          final double dy2 = math.sin((y / 32.0) + (t * 1.4)) * 10.0;
-          final double r2 = 7.0 + math.cos(((x - y) / 40.0) - (t * 2.0)) * 4.0;
-
-          causticPath2.addOval(
-            Rect.fromCircle(center: Offset(x + dx2, y + dy2), radius: r2),
-          );
-        }
+        final double ctrlX = x - 24.0;
+        final double ctrlY = baseY + math.sin((ctrlX / 42.0) + phase) * 14.0;
+        causticWeb1.quadraticBezierTo(ctrlX, ctrlY, x, waveY);
       }
     }
 
-    canvas.drawPath(causticPath1, _causticPaint1);
-    canvas.drawPath(causticPath2, _causticPaint2);
+    // Layer 2: Intersecting diagonal caustic light ribbons creating natural organic webs
+    const double diagSpacing = 64.0;
+    final int diagCount = ((w + h) / diagSpacing).ceil() + 2;
+
+    for (int d = 0; d < diagCount; d++) {
+      final double startX = (d * diagSpacing) - (h * 0.45);
+      final double phase = (d * 1.1) - (t * 1.25);
+
+      causticWeb2.moveTo(startX + math.sin(phase) * 8.0, -20);
+
+      for (double step = 0; step <= h + 40; step += 48.0) {
+        final double currentY = step;
+        final double currentX =
+            startX + (step * 0.55) + math.sin((step / 44.0) + phase) * 12.0;
+        final double ctrlX = startX +
+            ((step - 24.0) * 0.55) +
+            math.cos(((step - 24.0) / 38.0) + phase) * 14.0;
+        final double ctrlY = step - 24.0;
+        causticWeb2.quadraticBezierTo(ctrlX, ctrlY, currentX, currentY);
+      }
+    }
+
+    canvas.drawPath(causticWeb1, _causticRibbonPaint1);
+    canvas.drawPath(causticWeb2, _causticRibbonPaint2);
+
+    // Subtle natural caustic intersection highlights
+    final Path causticNodes = Path();
+    const double nodeStep = 80.0;
+    final int nx = (w / nodeStep).ceil() + 1;
+    final int ny = (h / nodeStep).ceil() + 1;
+
+    for (int ix = 0; ix < nx; ix++) {
+      for (int iy = 0; iy < ny; iy++) {
+        final double cx =
+            (ix * nodeStep) + math.sin((iy * 1.6) + (t * 1.3)) * 14.0;
+        final double cy =
+            (iy * nodeStep) + math.cos((ix * 1.3) - (t * 1.1)) * 12.0;
+        final double radius = 3.2 + math.sin((ix + iy) + (t * 2.0)) * 1.6;
+        causticNodes.addOval(
+          Rect.fromCircle(center: Offset(cx, cy), radius: radius),
+        );
+      }
+    }
+    canvas.drawPath(causticNodes, _causticNodePaint);
   }
 
   void _drawRipples(Canvas canvas, Size size, double t) {
