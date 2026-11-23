@@ -73,7 +73,7 @@ jobs:
         run: flutter build appbundle --release --android-skip-build-dependency-validation
 
       - name: Upload Android APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-android-apk
           path: build/app/outputs/flutter-apk/*.apk
@@ -81,7 +81,7 @@ jobs:
 
       - name: Upload Android AppBundle
         if: ${{ github.event.inputs.build_type != 'debug' }}
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-android-bundle
           path: build/app/outputs/bundle/release/*.aab
@@ -117,7 +117,7 @@ jobs:
           fi
 
       - name: Upload Web Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-web-bundle
           path: build/web
@@ -158,7 +158,7 @@ jobs:
           Compress-Archive -Path $buildDir -DestinationPath aquawild-windows-x64.zip
 
       - name: Upload Windows Desktop Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-windows-x64
           path: aquawild-windows-x64.zip
@@ -200,7 +200,7 @@ jobs:
           zip -r ../../../../../aquawild-macos.zip AquaWild.app
 
       - name: Upload macOS Desktop Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-macos-app
           path: aquawild-macos.zip
@@ -239,7 +239,7 @@ jobs:
           zip -r ../../../aquawild-ios.zip Runner.app
 
       - name: Upload iOS Build Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-ios-build
           path: aquawild-ios.zip
@@ -285,7 +285,7 @@ jobs:
           fi
 
       - name: Upload Linux Desktop Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: aquawild-linux-x64
           path: aquawild-linux-x64.tar.gz
