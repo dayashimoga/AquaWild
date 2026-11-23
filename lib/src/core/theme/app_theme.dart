@@ -12,6 +12,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      focusColor: const Color(0x6600E5FF),
       scaffoldBackgroundColor: AppColors.surfaceAbyssal,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.cyanPrimary,
@@ -53,6 +54,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      focusColor: const Color(0x6600E5FF),
       scaffoldBackgroundColor: const Color(0xFF0D1117),
       colorScheme: const ColorScheme.dark(
         primary: AppColors.cyanPrimary,
@@ -86,6 +88,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      focusColor: const Color(0x6600B0FF),
       scaffoldBackgroundColor: AppColors.surfaceLight,
       colorScheme: const ColorScheme.light(
         primary: AppColors.cyanDeep,
@@ -118,6 +121,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      focusColor: AppColors.highContrastForeground,
       scaffoldBackgroundColor: AppColors.highContrastBackground,
       colorScheme: const ColorScheme.dark(
         primary: AppColors.highContrastAccent,
@@ -151,6 +155,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      focusColor: const Color(0x8000F0FF),
       scaffoldBackgroundColor: const Color(0xFF050814),
       colorScheme: const ColorScheme.dark(
         primary: Color(0xFF00F0FF),
@@ -195,6 +200,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
+      focusColor: const Color(0x804A6B53),
       scaffoldBackgroundColor: const Color(0xFFF9F7F1),
       colorScheme: const ColorScheme.light(
         primary: Color(0xFF4A6B53),
@@ -239,6 +245,7 @@ class AppTheme {
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
+      focusColor: const Color(0x8000E5FF),
       scaffoldBackgroundColor: const Color(0xFF040B1A),
       colorScheme: const ColorScheme.dark(
         primary: Color(0xFF00E5FF),

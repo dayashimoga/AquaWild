@@ -1002,3 +1002,33 @@
      - Authored [input_parity_and_high_dpi_test.dart](file:///h:/water/test/presentation/screens/input_parity_and_high_dpi_test.dart) (9 tests).
      - Certified full project regression test suite: **271 / 271 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `animation-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
+
+
+---
+
+## Entry 039 — 2026-11-23 (Stage 8: Subphase 8.2.1 — WCAG 2.2 AA+ Accessibility, Semantics Tree & Reduced-Motion Physics Certification)
+- **Context**: Executing comprehensive WCAG 2.2 AA+ accessibility certification across the application: screen-reader semantics tree annotation, accessible status announcements (SC 4.1.3), logical keyboard focus traversal order (SC 2.4.3), visible focus rings (SC 2.4.11/2.4.13), 200% text scaling without layout degradation or clipping (SC 1.4.4), and complete reduced-motion physics modes across procedural water caustics and stratified fluid solvers (SC 2.3.3).
+- **Architectural Decisions & Deliverables**:
+  1. **Accessible Screen Reader Announcement Service (`AccessibilityAnnouncementService`)**:
+     - Created [accessibility_announcement_service.dart](file:///h:/water/lib/src/core/services/accessibility_announcement_service.dart).
+     - Integrated multi-window compatible `SemanticsService.sendAnnouncement` (with fallback to `SemanticsService.announce`) notifying VoiceOver, TalkBack, and Narrator whenever a drink is logged, deleted, or a daily goal is modified.
+     - Automatically announces: `"Logged 250 ml of Pure Spring Water. Net hydration is now 250 of 2500 ml (10%)."`
+  2. **Screen Reader Semantics Tree Audit & Enhancements**:
+     - [interactive_pool_view.dart](file:///h:/water/lib/src/presentation/widgets/pool/interactive_pool_view.dart): Verified descriptive semantics node for Ruby with interactive swimming and ripple action hints.
+     - [animal_fluid_habitat_view.dart](file:///h:/water/lib/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart): Upgraded habitat semantics to announce active companion, net hydration, total goal, percentage, and slosh hints; added explicit button semantics for "Open custom pour studio" and "Open precision numeric keypad".
+     - [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart): Upgraded `_buildNetHydrationCard` to interactive `InkWell` with explicit button semantics, opening predictive analytics and goal customization on double-tap or Enter/Space.
+     - [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart): Formally annotated all scroll buttons, custom beverage crafting, and quick-log drink cards with shortcut keys.
+     - [ai_coach_sheet.dart](file:///h:/water/lib/src/presentation/widgets/ai/ai_coach_sheet.dart): Added explicit accessible label to the AI suggested quick-log button with volume and beverage name.
+  3. **Logical Focus Traversal & High-Contrast Focus Appearance**:
+     - Configured `focusColor` across all themes in [app_theme.dart](file:///h:/water/lib/src/core/theme/app_theme.dart) ensuring compliant 3:1 focus contrast rings across Hydro-Glass, Dark, Light, High-Contrast (AAA), Neon, Minimal Zen, and Cyber Ocean themes.
+     - Wrapped Left Command Deck, Center Interaction Deck, and Right Telemetry Deck in `FocusTraversalGroup` with `ReadingOrderTraversalPolicy` in `ResponsiveHomeShell`, preventing focus skipping during keyboard tab navigation.
+  4. **200% High Text Scale Layout Hardening**:
+     - [launch_screen.dart](file:///h:/water/lib/src/presentation/screens/launch/launch_screen.dart): Refactored bottom Call-To-Action card into `LayoutBuilder` + `SingleChildScrollView` with `ConstrainedBox(minHeight: constraints.maxHeight)` and `IntrinsicHeight`, guaranteeing zero vertical RenderFlex overflow at 200% font scale.
+     - [responsive_home_shell.dart](file:///h:/water/lib/src/presentation/screens/home/responsive_home_shell.dart): Wrapped NavigationRail trailing action buttons in `SingleChildScrollView` and tightened mobile AppBar StreakBadgeChip width, preventing vertical and horizontal clipping.
+     - [quick_log_dock.dart](file:///h:/water/lib/src/presentation/widgets/beverages/quick_log_dock.dart): Styled desktop/mobile scroll controls with compact tap target sizes and `FittedBox` on keyboard shortcuts chip, eliminating horizontal flex overflows at 200% scale.
+  5. **Reduced-Motion Physics Mode Certification**:
+     - Formally verified `MediaQuery.disableAnimationsOf(context)` in `InteractivePoolView` (particle layer excluded, ear twitches/eye tracking halted, kinematic movement immediate) and `AnimalFluidHabitatView` (column height deltas bypassed, fill velocity zeroed, liquid layers rendered as tranquil menisci without sinusoidal sway or bubbles).
+  6. **Automated WCAG Accessibility Test Suite**:
+     - Authored [wcag_accessibility_and_semantics_test.dart](file:///h:/water/test/presentation/screens/wcag_accessibility_and_semantics_test.dart) (10 tests).
+     - Certified full project regression test suite: **281 / 281 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `mobile-agent`, `desktop-web-agent`, `animation-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.

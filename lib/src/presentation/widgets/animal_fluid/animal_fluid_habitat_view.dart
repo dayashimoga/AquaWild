@@ -175,7 +175,7 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                     },
                     child: Semantics(
                       label:
-                          '${activeAnimal.name} fluid container filled to ${hydrationState.goal.progressPercent} percent. Tap to slosh liquid waves.',
+                          '${activeAnimal.name} hydration container: ${hydrationState.goal.netHydrationMl.toInt()} of ${hydrationState.goal.effectiveGoalMl} ml consumed (${hydrationState.goal.progressPercent}%). Tap to slosh liquid waves.',
                       button: true,
                       child: SizedBox(
                         width: vesselWidth,
@@ -205,34 +205,42 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
                   spacing: 12,
                   runSpacing: 8,
                   children: [
-                    OutlinedButton.icon(
-                      onPressed: () => _openPourSheet(
-                        context,
-                        BeverageType.pureWater,
-                      ),
-                      icon: const Icon(Icons.water_drop, size: 16),
-                      label: const Text('Custom Pour'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: AppColors.cyanPrimary,
-                        side: const BorderSide(color: AppColors.cyanPrimary),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Semantics(
+                      button: true,
+                      label: 'Open custom pour studio',
+                      child: OutlinedButton.icon(
+                        onPressed: () => _openPourSheet(
+                          context,
+                          BeverageType.pureWater,
+                        ),
+                        icon: const Icon(Icons.water_drop, size: 16),
+                        label: const Text('Custom Pour'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: AppColors.cyanPrimary,
+                          side: const BorderSide(color: AppColors.cyanPrimary),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                     ),
                     const SizedBox(width: 12),
-                    OutlinedButton.icon(
-                      onPressed: () => _openKeypadModal(
-                        context,
-                        BeverageType.pureWater,
-                      ),
-                      icon: const Icon(Icons.dialpad, size: 16),
-                      label: const Text('Exact Keypad'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.white70,
-                        side: const BorderSide(color: Colors.white24),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                    Semantics(
+                      button: true,
+                      label: 'Open precision numeric keypad',
+                      child: OutlinedButton.icon(
+                        onPressed: () => _openKeypadModal(
+                          context,
+                          BeverageType.pureWater,
+                        ),
+                        icon: const Icon(Icons.dialpad, size: 16),
+                        label: const Text('Exact Keypad'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.white70,
+                          side: const BorderSide(color: Colors.white24),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
                         ),
                       ),
                     ),

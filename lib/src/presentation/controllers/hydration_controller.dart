@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../core/services/accessibility_announcement_service.dart';
 import '../../data/repositories/hydration_repository.dart';
 import '../../data/repositories/local_hydration_repository.dart';
 import '../../domain/models/beverage_type.dart';
@@ -96,6 +97,9 @@ class HydrationNotifier extends Notifier<HydrationState> {
 
     final updated = List<HydrationEntry>.from(state.entries)..add(entry);
     _recalculate(updated, state.goal.baseGoalMl, lastLogged: entry);
+    AccessibilityAnnouncementService.announce(
+      'Logged ${sanitizedVolume.toStringAsFixed(0)} ml of ${beverage.name}. Net hydration is now ${state.goal.netHydrationMl.toStringAsFixed(0)} of ${state.goal.effectiveGoalMl} ml (${state.goal.progressPercent}%).',
+    );
   }
 
   Future<void> removeEntry(String id) async {
@@ -103,6 +107,9 @@ class HydrationNotifier extends Notifier<HydrationState> {
     if (!ref.mounted) return;
     final updated = state.entries.where((e) => e.id != id).toList();
     _recalculate(updated, state.goal.baseGoalMl);
+    AccessibilityAnnouncementService.announce(
+      'Removed hydration entry. Net hydration is now ${state.goal.netHydrationMl.toStringAsFixed(0)} of ${state.goal.effectiveGoalMl} ml (${state.goal.progressPercent}%).',
+    );
   }
 
   Future<void> setBaseGoal(int goalMl) async {
@@ -110,6 +117,9 @@ class HydrationNotifier extends Notifier<HydrationState> {
     await _repository.setDailyBaseGoal(clamped);
     if (!ref.mounted) return;
     _recalculate(state.entries, clamped);
+    AccessibilityAnnouncementService.announce(
+      'Daily hydration goal updated to $clamped ml.',
+    );
   }
 
   Future<void> setWeatherBonus(int bonusMl) async {

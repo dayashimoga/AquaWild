@@ -2,6 +2,32 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.32.0] - 2026-11-23 — Stage 8: Subphase 8.2.1 — WCAG 2.2 AA+ Accessibility, Semantics Tree & Reduced-Motion Physics Certification
+### Added
+- **Accessible Screen Reader Announcement Service (`AccessibilityAnnouncementService`)**:
+  * Created `lib/src/core/services/accessibility_announcement_service.dart`.
+  * Integrated multi-window compatible `SemanticsService.sendAnnouncement` (with fallback to `SemanticsService.announce`) providing live status messages to TalkBack, VoiceOver, and Narrator whenever drinks are logged, deleted, or daily targets are modified (WCAG 4.1.3).
+- **Semantics Tree Annotations Across Custom Canvases & Controls**:
+  * Annotated `InteractivePoolView` with detailed Ruby companion description and interactive ripple/petting action hints.
+  * Enhanced `AnimalFluidHabitatView` with real-time volume, target, percentage, and slosh gestures; added explicit button semantics for Custom Pour and Precision Keypad buttons.
+  * Enhanced Net Hydration Card in `ResponsiveHomeShell` with double-tap/enter affordance to launch predictive analytics.
+  * Added explicit accessible labels to `QuickLogDock` scroll controls and beverage cards.
+  * Added accessible label to `AiCoachSheet` suggested drink quick-log button with volume and beverage name.
+- **Focus Traversal & High-Contrast Focus Appearance**:
+  * Added `focusColor` across all themes in `AppTheme` (`hydroGlassTheme`, `darkTheme`, `lightTheme`, `highContrastTheme`, `neonBioluminescenceTheme`, `minimalZenTheme`, `cyberOceanTheme`) fulfilling WCAG 2.4.11 / 2.4.13 focus contrast standards.
+  * Wrapped Left Command Deck, Center Interaction Deck, and Right Telemetry Deck in `FocusTraversalGroup(policy: ReadingOrderTraversalPolicy())` in `ResponsiveHomeShell`.
+- **200% High Text Scale Hardening**:
+  * Hardened `LaunchScreen` with `LayoutBuilder` + `SingleChildScrollView` + `ConstrainedBox(minHeight: constraints.maxHeight)` and `IntrinsicHeight`, eliminating bottom vertical clipping at 200% font scale.
+  * Hardened `ResponsiveHomeShell` NavigationRail trailing buttons with `SingleChildScrollView` and tightened mobile AppBar badge width.
+  * Hardened `QuickLogDock` with compact icon button tap target styles and `FittedBox` on keyboard shortcuts chip.
+- **Reduced-Motion Physics Mode Certification**:
+  * Formally certified `MediaQuery.disableAnimationsOf(context)` in `InteractivePoolView` and `AnimalFluidHabitatView`.
+- **WCAG 2.2 AA+ Accessibility Test Suite**:
+  * Created `test/presentation/screens/wcag_accessibility_and_semantics_test.dart` (10 tests).
+  * Certified full project test suite: **281 / 281 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.31.0] - 2026-11-23 — Stage 8: Subphase 8.1.2 — Multi-Platform Input Parity, Desktop Shortcuts & High-DPI Scaling Certification
 ### Added
 - **Complete Global Keyboard Navigation Matrix (`AquaWildShortcutsWrapper`)**:

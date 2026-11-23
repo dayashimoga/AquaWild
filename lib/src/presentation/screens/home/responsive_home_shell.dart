@@ -104,7 +104,7 @@ class ResponsiveHomeShell extends ConsumerWidget {
         ),
         actions: [
           const SizedBox(
-            width: 95,
+            width: 78,
             child: FittedBox(
               fit: BoxFit.scaleDown,
               child: StreakBadgeChip(),
@@ -252,32 +252,35 @@ class ResponsiveHomeShell extends ConsumerWidget {
                 ),
               ),
               trailing: Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const ThemeSwitcherButton(),
-                    IconButton(
-                      icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
-                      tooltip: 'AquaWild Pro Store',
-                      onPressed: () => PremiumStorefrontModal.show(context),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.widgets_outlined),
-                      tooltip: 'Widget Studio',
-                      onPressed: () => WidgetPreviewStudioModal.show(context),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.keyboard_outlined),
-                      tooltip: 'Shortcuts Guide',
-                      onPressed: () => KeyboardShortcutsModal.show(context),
-                    ),
-                    IconButton(
-                      icon: const Icon(Icons.admin_panel_settings_rounded, color: Colors.cyanAccent),
-                      tooltip: 'Admin Mission Control',
-                      onPressed: () => AdminPortalScreen.show(context),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
+                child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      const ThemeSwitcherButton(),
+                      IconButton(
+                        icon: const Icon(Icons.workspace_premium_rounded, color: Colors.amberAccent),
+                        tooltip: 'AquaWild Pro Store',
+                        onPressed: () => PremiumStorefrontModal.show(context),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.widgets_outlined),
+                        tooltip: 'Widget Studio',
+                        onPressed: () => WidgetPreviewStudioModal.show(context),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.keyboard_outlined),
+                        tooltip: 'Shortcuts Guide',
+                        onPressed: () => KeyboardShortcutsModal.show(context),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.admin_panel_settings_rounded, color: Colors.cyanAccent),
+                        tooltip: 'Admin Mission Control',
+                        onPressed: () => AdminPortalScreen.show(context),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
                 ),
               ),
               destinations: const [
@@ -617,23 +620,26 @@ class ResponsiveHomeShell extends ConsumerWidget {
             // Center Interaction Deck (Flex: 6, max 920px)
             Expanded(
               flex: 6,
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 920),
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 24,
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        _buildNetHydrationCard(context, ref),
-                        const SizedBox(height: 20),
-                        const AnimalFluidHabitatView(),
-                        const SizedBox(height: 24),
-                        const QuickLogDock(),
-                      ],
+              child: FocusTraversalGroup(
+                policy: ReadingOrderTraversalPolicy(),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 920),
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 24,
+                        vertical: 24,
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildNetHydrationCard(context, ref),
+                          const SizedBox(height: 20),
+                          const AnimalFluidHabitatView(),
+                          const SizedBox(height: 24),
+                          const QuickLogDock(),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -745,86 +751,91 @@ class ResponsiveHomeShell extends ConsumerWidget {
     final targetMl = goal.effectiveGoalMl;
 
     return Semantics(
+      button: true,
       label:
-          '${activeAnimal.name} hydration status: $netMl of $targetMl milliliters, $progressPct percent complete',
+          '${activeAnimal.name} hydration status: $netMl of $targetMl milliliters, $progressPct percent complete. Tap to view analytics.',
       child: Card(
         margin: EdgeInsets.zero,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Wrap(
-                      crossAxisAlignment: WrapCrossAlignment.center,
-                      spacing: 8,
-                      runSpacing: 4,
-                      children: [
-                        Text(
-                          'Net Hydration Today',
-                          style: TextStyle(color: Colors.white70),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(20),
+          onTap: () => PredictiveAnalyticsSheet.show(context),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 16.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Wrap(
+                        crossAxisAlignment: WrapCrossAlignment.center,
+                        spacing: 8,
+                        runSpacing: 4,
+                        children: [
+                          Text(
+                            'Net Hydration Today',
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          SyncStatusIndicator(),
+                        ],
+                      ),
+                      const SizedBox(height: 6),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          '$netMl / $targetMl ml',
+                          style: const TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.cyanPrimary,
+                          ),
                         ),
-                        SyncStatusIndicator(),
-                      ],
-                    ),
-                    const SizedBox(height: 6),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        '$netMl / $targetMl ml',
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        '${goal.remainingMl.toStringAsFixed(0)} ml remaining',
                         style: const TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                          color: Colors.white54,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Semantics(
+                  excludeSemantics: true,
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      SizedBox(
+                        width: 62,
+                        height: 62,
+                        child: CircularProgressIndicator(
+                          value: goal.progressFraction,
+                          strokeWidth: 5.5,
+                          backgroundColor: AppColors.oceanDeep,
                           color: AppColors.cyanPrimary,
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      '${goal.remainingMl.toStringAsFixed(0)} ml remaining',
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.white54,
+                      Text(
+                        '$progressPct%',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Semantics(
-                excludeSemantics: true,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 62,
-                      height: 62,
-                      child: CircularProgressIndicator(
-                        value: goal.progressFraction,
-                        strokeWidth: 5.5,
-                        backgroundColor: AppColors.oceanDeep,
-                        color: AppColors.cyanPrimary,
-                      ),
-                    ),
-                    Text(
-                      '$progressPct%',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

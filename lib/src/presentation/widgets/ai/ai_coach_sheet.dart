@@ -317,16 +317,22 @@ class _AiCoachSheetState extends ConsumerState<AiCoachSheet> {
 
   Widget _buildQuickLogButton(AiRecommendation advice) {
     final bev = BeverageType.findById(advice.suggestedBeverageId);
-    return ElevatedButton.icon(
-      icon: Text(bev.iconEmoji, style: const TextStyle(fontSize: 18)),
-      label: Text(
-        'Log Suggested ${advice.recommendedIntakeMl}ml ${bev.name}',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 15,
-          fontWeight: FontWeight.bold,
+    return Semantics(
+      button: true,
+      label: 'Log suggested ${advice.recommendedIntakeMl} milliliters of ${bev.name} per AI advice',
+      child: ElevatedButton.icon(
+        icon: Text(bev.iconEmoji, style: const TextStyle(fontSize: 18)),
+        label: FittedBox(
+          fit: BoxFit.scaleDown,
+          child: Text(
+            'Log Suggested ${advice.recommendedIntakeMl}ml ${bev.name}',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 15,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
-      ),
       style: ElevatedButton.styleFrom(
         backgroundColor: const Color(0xFF00B4D8),
         padding: const EdgeInsets.symmetric(vertical: 16),
@@ -353,8 +359,9 @@ class _AiCoachSheetState extends ConsumerState<AiCoachSheet> {
           ),
         );
       },
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSettingsTray(BuildContext context) {
     return Container(

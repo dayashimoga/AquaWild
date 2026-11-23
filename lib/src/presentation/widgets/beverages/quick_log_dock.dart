@@ -103,22 +103,25 @@ class _QuickLogDockState extends ConsumerState<QuickLogDock> {
                 overflow: TextOverflow.ellipsis,
               ),
             ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                borderRadius: BorderRadius.circular(6),
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+                  ),
                 ),
-              ),
-              child: Text(
-                'Keys [1-9]',
-                style: TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                  fontFamily: 'monospace',
+                child: Text(
+                  'Keys [1-9]',
+                  style: TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                    fontFamily: 'monospace',
+                  ),
                 ),
               ),
             ),
@@ -127,6 +130,11 @@ class _QuickLogDockState extends ConsumerState<QuickLogDock> {
               button: true,
               label: 'Craft Custom Beverage',
               child: IconButton(
+                style: IconButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.all(4),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
                 icon: const Icon(Icons.add_circle_outline, size: 20),
                 tooltip: 'Craft Custom Beverage',
                 onPressed: () => BeverageCustomizerModal.show(context),
@@ -137,6 +145,11 @@ class _QuickLogDockState extends ConsumerState<QuickLogDock> {
               button: true,
               label: 'Scroll Beverages Left',
               child: IconButton(
+                style: IconButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.all(4),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
                 icon: Icon(
                   Icons.chevron_left_rounded,
                   size: 22,
@@ -150,6 +163,11 @@ class _QuickLogDockState extends ConsumerState<QuickLogDock> {
               button: true,
               label: 'Scroll Beverages Right',
               child: IconButton(
+                style: IconButton.styleFrom(
+                  minimumSize: Size.zero,
+                  padding: const EdgeInsets.all(4),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
                 icon: Icon(
                   Icons.chevron_right_rounded,
                   size: 22,
