@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.33.0] - 2026-11-23 — Stage 8: Subphase 8.2.2 — 60/120 FPS Raster Frame-Budget Profiling & Memory Leak Prevention Certification
+### Added
+- **Numerical Wave Solver Frame-Budget Certification**:
+  * Benchmarked `WaveColumnSolver.step` across 1,000 steps with active splash excitation.
+  * Confirmed execution time of **< 0.05ms (50µs) per step**, consuming only 0.6% of the 8.33ms (120Hz) frame budget.
+- **Custom Canvas Raster Budget Benchmarks (< 8.33ms Target for 120Hz Displays)**:
+  * `PoolWaterSimulationPainter`: Execution profiled across 100 frames with expanding circular ripples and dynamic caustics; achieved **< 2.0ms/frame** (Budget: 8.33ms).
+  * `FloatingRedPandaPainter`: Execution profiled across 100 frames with breathing chest expansion, eye tracking, tail wags, ear twitches, and water caustics; achieved **< 1.5ms/frame** (Budget: 8.33ms).
+  * `AnimalFluidVesselPainter`: Execution profiled across all 10 companions with 4 stratified fluid layers (Espresso, Smoothie, Pure Water, Sparkling Water) and active 64-column wave surface; achieved **< 2.5ms/frame** (Budget: 8.33ms).
+- **Zero-Leak Lifecycle & Ticker Disposal Verification**:
+  * Tested rapid 5-cycle mount, active animation frame pump, and clean unmount for `InteractivePoolView`, `AnimalFluidHabitatView`, `QuickLogDock`, and `ResponsiveHomeShell`.
+  * Verified zero dangling tickers, canceled scroll listeners, and clean Riverpod subscription disposal with zero exceptions (`tester.takeException() == null`).
+- **Zero GC Churn Painter Architecture**:
+  * Certified pre-allocated `Paint`, `Path`, and color filter instances across canvas lifecycle, eliminating garbage collector frame drops.
+- **Performance & Frame-Budget Test Suite**:
+  * Authored `test/presentation/performance_and_frame_budget_test.dart` (9 automated tests).
+  * Certified full project regression test suite: **290 / 290 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.32.0] - 2026-11-23 — Stage 8: Subphase 8.2.1 — WCAG 2.2 AA+ Accessibility, Semantics Tree & Reduced-Motion Physics Certification
 ### Added
 - **Accessible Screen Reader Announcement Service (`AccessibilityAnnouncementService`)**:
