@@ -24,17 +24,17 @@ const MIME_TYPES = {
 const server = http.createServer((req, res) => {
   let reqPath = decodeURI(req.url.split('?')[0]);
   if (reqPath === '/') reqPath = '/index.html';
-  
+
   let filePath = path.join(ROOT, reqPath);
-  
+
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
       filePath = path.join(ROOT, 'index.html');
     }
-    
+
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-    
+
     fs.readFile(filePath, (readErr, data) => {
       if (readErr) {
         res.writeHead(500, { 'Content-Type': 'text/plain' });

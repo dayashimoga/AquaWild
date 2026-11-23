@@ -56,6 +56,8 @@ class ExoticAnimal {
         return '🐙';
       case 'snow_leopard':
         return '🐆';
+      case 'golden_lion_tamarin':
+        return '🐒';
       default:
         return '🐾';
     }

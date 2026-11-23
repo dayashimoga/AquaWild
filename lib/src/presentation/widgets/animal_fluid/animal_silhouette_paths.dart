@@ -29,6 +29,8 @@ class AnimalSilhouettePaths {
         return _buildOctopusPath(size);
       case 'snow_leopard':
         return _buildSnowLeopardPath(size);
+      case 'golden_lion_tamarin':
+        return _buildTamarinPath(size);
       default:
         return _buildRedPandaPath(size);
     }
@@ -464,6 +466,52 @@ class AnimalSilhouettePaths {
 
     // Front paws meeting base
     path.quadraticBezierTo(w * 0.32, h * 0.96, w * 0.26, h * 0.95);
+    path.close();
+
+    return path;
+  }
+
+  /// Sol the Golden Lion Tamarin silhouette (Arboreal primate contour:
+  /// radiant lion-like sunburst mane ruffs, alert ears, curved back, and long slender balancing tail)
+  static Path _buildTamarinPath(Size size) {
+    final Path path = Path();
+    final double w = size.width;
+    final double h = size.height;
+
+    // Start at rear paws base
+    path.moveTo(w * 0.35, h * 0.94);
+
+    // Ascend along slender torso
+    path.cubicTo(w * 0.28, h * 0.88, w * 0.24, h * 0.76, w * 0.22, h * 0.62);
+
+    // Left sunburst mane flares outward
+    path.cubicTo(w * 0.14, h * 0.58, w * 0.10, h * 0.44, w * 0.16, h * 0.34);
+    path.cubicTo(w * 0.12, h * 0.26, w * 0.18, h * 0.18, w * 0.26, h * 0.16);
+
+    // Left ear tuft
+    path.cubicTo(w * 0.28, h * 0.10, w * 0.36, h * 0.08, w * 0.42, h * 0.12);
+
+    // Crown mane dome
+    path.quadraticBezierTo(w * 0.50, h * 0.06, w * 0.58, h * 0.12);
+
+    // Right ear tuft
+    path.cubicTo(w * 0.64, h * 0.08, w * 0.72, h * 0.10, w * 0.74, h * 0.16);
+
+    // Right sunburst mane flares
+    path.cubicTo(w * 0.82, h * 0.18, w * 0.88, h * 0.26, w * 0.84, h * 0.34);
+    path.cubicTo(w * 0.90, h * 0.44, w * 0.86, h * 0.58, w * 0.78, h * 0.62);
+
+    // Slender back contour descending to tail root
+    path.cubicTo(w * 0.76, h * 0.74, w * 0.74, h * 0.84, w * 0.70, h * 0.90);
+
+    // Long slender prehensile balancing tail curling upwards
+    path.cubicTo(w * 0.78, h * 0.92, w * 0.92, h * 0.88, w * 0.95, h * 0.74);
+    path.cubicTo(w * 0.98, h * 0.60, w * 0.90, h * 0.52, w * 0.86, h * 0.55);
+    path.cubicTo(w * 0.82, h * 0.58, w * 0.88, h * 0.68, w * 0.85, h * 0.78);
+    path.cubicTo(w * 0.82, h * 0.88, w * 0.70, h * 0.94, w * 0.60, h * 0.95);
+
+    // Underbelly contour meeting front paws
+    path.cubicTo(w * 0.52, h * 0.88, w * 0.42, h * 0.88, w * 0.35, h * 0.94);
     path.close();
 
     return path;
