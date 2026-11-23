@@ -2,6 +2,26 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.34.0] - 2026-11-23 — Stage 9: Subphase 9.1.1 — Full OWASP MASVS Security Audit, Dependency/Secret Scan & Zero-Warning Gate
+### Added
+- **Centralized Security Hygiene & Sanitization Service (`SecuritySanitizationService`)**:
+  * Created `lib/src/core/security/security_sanitization_service.dart`.
+  * Implemented text sanitization with HTML tag and `<script>`/`<style>` block stripping, ASCII control character removal, and length bounds.
+  * Implemented numeric volume sanitization preventing `NaN`, `Infinity`, negative volumes, or out-of-range metric values.
+  * Implemented prompt injection mitigation in `sanitizePromptInput()` neutralizing LLM override directives.
+  * Implemented SSRF protection and HTTPS scheme enforcement in `isValidSecureUrl()`, blocking loopback, cloud metadata, and RFC 1918 private IP spaces.
+- **OWASP MASVS Storage & Backup Verification**:
+  * Hardened `DataBackupService` with schema validation, maximum byte limits (15MB), entry caps (50,000), and sanitized hydration entry reconstruction.
+- **AI Coach & Custom Beverage Studio Hardening**:
+  * Sanitized weather conditions, city names, and custom beverage titles.
+- **OWASP MASVS Technical Audit Document**:
+  * Published comprehensive security certification report in `docs/governance/SECURITY_AUDIT_MASVS.md`.
+- **MASVS Security Test Suite**:
+  * Authored `test/core/security_and_masvs_audit_test.dart` (12 automated tests).
+  * Certified full project regression test suite: **302 / 302 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.33.0] - 2026-11-23 — Stage 8: Subphase 8.2.2 — 60/120 FPS Raster Frame-Budget Profiling & Memory Leak Prevention Certification
 ### Added
 - **Numerical Wave Solver Frame-Budget Certification**:

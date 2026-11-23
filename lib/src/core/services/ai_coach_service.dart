@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../security/security_sanitization_service.dart';
 import 'package:aquawild/src/domain/models/activity_session.dart';
 import 'package:aquawild/src/domain/models/ai_recommendation.dart';
 import 'package:aquawild/src/domain/models/exotic_animal.dart';
@@ -292,8 +293,8 @@ Valid beverage IDs: pure_water, sparkling_water, coconut_water, green_tea, herba
         'temperatureC': weather.temperatureCelsius,
         'humidity': weather.humidityPercentage,
         'uvIndex': weather.uvIndex,
-        'condition': weather.description,
-        'city': weather.cityName,
+        'condition': SecuritySanitizationService.sanitizePromptInput(weather.description, maxLength: 80),
+        'city': SecuritySanitizationService.sanitizePromptInput(weather.cityName, maxLength: 60),
       },
       'activities': todayActivities
           .map((a) => {

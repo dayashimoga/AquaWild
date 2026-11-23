@@ -43,8 +43,8 @@
 | Stage 8 | Phase 8.1 | **Subphase 8.1.2** | Identical Visual, Pointer/Touch, Keyboard Shortcut & High-DPI Behavior Verification Across Android, iOS, Web, Windows, macOS & Linux | High | ✅ **Completed (Approved)** |
 | Stage 8 | **Phase 8.2: WCAG 2.2 AA+ Accessibility & Performance Certification** | **Subphase 8.2.1** | Complete Screen Reader Semantics Tree Audit, Focus Traversal Order, 200% Text Scaling & Reduced-Motion Physics Certification | High | ✅ **Completed (Approved)** |
 | Stage 8 | Phase 8.2 | **Subphase 8.2.2** | 60/120 FPS Raster Frame-Budget Profiling, Memory Leak Verification & Cross-Platform Golden/Widget Test Suite | High | ✅ **Completed (Approved)** |
-| **Stage 9: Production Readiness & Release Certification** | **Phase 9.1: Security, Store Compliance & Final Certification** | **Subphase 9.1.1** | Full OWASP MASVS Security Audit, Dependency/Secret Scan, 100% Test Pass Verification & Zero-Warning Static Analysis Gate | Critical | ⏳ Next Up |
-| Stage 9 | Phase 9.1 | **Subphase 9.1.2** | Production Web/Multi-Platform Release Build, Store Release Checklist, Changelog & Git Tag `v2.0.0` Certification | High | ⏳ Not Started |
+| **Stage 9: Production Readiness & Release Certification** | **Phase 9.1: Security, Store Compliance & Final Certification** | **Subphase 9.1.1** | Full OWASP MASVS Security Audit, Dependency/Secret Scan, 100% Test Pass Verification & Zero-Warning Static Analysis Gate | Critical | ✅ **Completed (Approved)** |
+| Stage 9 | Phase 9.1 | **Subphase 9.1.2** | Production Web/Multi-Platform Release Build, Store Release Checklist, Changelog & Git Tag `v2.0.0` Certification | High | ⏳ Next Up |
 
 ---
 

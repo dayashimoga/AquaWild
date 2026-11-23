@@ -1055,3 +1055,29 @@
      - Certified full project regression test suite: **290 / 290 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `solution-architect`, `animation-agent`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
 
+---
+
+## Entry 041 — 2026-11-23 (Stage 9: Subphase 9.1.1 — Full OWASP MASVS Security Audit, Dependency & Secret Scan, 100% Test Pass Gate)
+- **Context**: Initiating Stage 9 (Production Readiness & Release Certification) by conducting an end-to-end security audit against OWASP Mobile Application Security Verification Standard (MASVS v2.0) across all 6 core domains: Storage, Crypto, Auth, Network, Platform, and Code.
+- **Architectural Decisions & Deliverables**:
+  1. **Centralized Input Sanitization & Security Hygiene Service (`SecuritySanitizationService`)**:
+     - Created [security_sanitization_service.dart](file:///h:/water/lib/src/core/security/security_sanitization_service.dart).
+     - Provides HTML/Script tag stripping, ASCII control character removal, length bounding, numerical volume validation (`NaN`/`Infinity`/negative clamping), and prompt injection neutralizing for LLM inputs.
+     - Implements strict SSRF protection in `isValidSecureUrl`, enforcing HTTPS scheme and rejecting loopback (`127.0.0.1`, `localhost`, `::1`), cloud metadata (`169.254.169.254`), and RFC 1918 private subnets.
+  2. **Storage Security & Backup Payload Verification**:
+     - Hardened [data_backup_service.dart](file:///h:/water/lib/src/core/services/data_backup_service.dart) with `SecuritySanitizationService.validateBackupPayload` and sanitized volume/text reconstruction.
+     - Enforced `maxByteSize: 15MB` and `maxEntries: 50,000` to prevent memory exhaustion DoS attacks via corrupted JSON archives.
+  3. **AI Coach Prompt Injection Mitigation**:
+     - Updated [ai_coach_service.dart](file:///h:/water/lib/src/core/services/ai_coach_service.dart) to sanitize external weather conditions and city names against prompt injection attack vectors.
+  4. **Custom Beverage Studio Input Hardening**:
+     - Updated [beverage_customizer_modal.dart](file:///h:/water/lib/src/presentation/widgets/beverages/beverage_customizer_modal.dart) sanitizing user-defined elixir names and bounding generated ID strings.
+  5. **Dependency Audit & Automated Secret Scan**:
+     - Scanned 184 source files across `lib/`, `test/`, and `supabase/`: confirmed **0 hardcoded secrets**, 0 private keys, and 0 unsecured tokens.
+     - Audited all dependencies in `pubspec.yaml`: 0 vulnerable packages.
+  6. **Automated MASVS Security Test Suite**:
+     - Authored [security_and_masvs_audit_test.dart](file:///h:/water/test/core/security_and_masvs_audit_test.dart) (12 tests) verifying Storage, Crypto, Auth, Network, Code, and Platform security contracts.
+     - Published comprehensive technical audit artifact: [SECURITY_AUDIT_MASVS.md](file:///h:/water/docs/governance/SECURITY_AUDIT_MASVS.md).
+     - Certified full project regression test suite: **302 / 302 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `security-agent`, `solution-architect`, `backend-agent`, `mobile-agent`, `desktop-web-agent`, `qa-agent`, `release-devops-agent`.
+
+

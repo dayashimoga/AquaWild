@@ -4,7 +4,7 @@ class AppConstants {
 
   static const String appName = 'AquaWild';
   static const String appTagline = 'AI-Powered Hydration & Animal Habitat Ecosystem';
-  static const String appVersion = '1.0.0';
+  static const String appVersion = '2.0.0';
 
   // Hydration Defaults
   static const int defaultDailyGoalMl = 2500;

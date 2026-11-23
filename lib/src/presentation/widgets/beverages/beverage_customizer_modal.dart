@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../core/security/security_sanitization_service.dart';
 import '../../../core/services/audio_haptics_service.dart';
 import '../../../domain/models/beverage_type.dart';
 import '../../controllers/animal_habitat_controller.dart';
@@ -52,9 +53,12 @@ class _BeverageCustomizerModalState
   }
 
   void _saveAndLog() {
-    final name = _nameController.text.trim().isEmpty
-        ? 'Custom Elixir'
-        : _nameController.text.trim();
+    final rawName = _nameController.text;
+    final name = SecuritySanitizationService.sanitizeText(
+      rawName,
+      maxLength: 36,
+      fallback: 'Custom Elixir',
+    );
     final id =
         'custom_${name.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '_')}_${DateTime.now().millisecondsSinceEpoch % 10000}';
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import '../security/security_sanitization_service.dart';
 import '../../domain/models/beverage_type.dart';
 import '../../domain/models/hydration_entry.dart';
 
@@ -83,13 +84,14 @@ class DataBackupService {
     return csv.toString();
   }
 
-  /// Parses and validates a JSON backup snapshot
+  /// Parses and validates a JSON backup snapshot with OWASP MASVS payload verification
   static Map<String, dynamic>? validateAndParseBackup(String rawJson) {
     try {
+      if (!SecuritySanitizationService.validateBackupPayload(rawJson)) {
+        return null;
+      }
       final decoded = jsonDecode(rawJson);
       if (decoded is! Map<String, dynamic>) return null;
-      if (decoded['app'] != 'AquaWild') return null;
-      if (decoded['entries'] is! List) return null;
       return decoded;
     } catch (_) {
       return null;
@@ -105,14 +107,26 @@ class DataBackupService {
 
     for (final item in rawEntries) {
       if (item is Map<String, dynamic>) {
-        final id = item['id']?.toString() ??
-            DateTime.now().millisecondsSinceEpoch.toString();
+        final id = SecuritySanitizationService.sanitizeText(
+          item['id']?.toString(),
+          maxLength: 64,
+          fallback: DateTime.now().millisecondsSinceEpoch.toString(),
+        );
         final timestampStr = item['timestamp']?.toString();
         final timestamp = timestampStr != null
             ? DateTime.tryParse(timestampStr) ?? DateTime.now()
             : DateTime.now();
-        final bevId = item['beverage_id']?.toString() ?? 'pure_water';
-        final volume = (item['volume_ml'] as num?)?.toDouble() ?? 250.0;
+        final bevId = SecuritySanitizationService.sanitizeText(
+          item['beverage_id']?.toString(),
+          maxLength: 64,
+          fallback: 'pure_water',
+        );
+        final volume = SecuritySanitizationService.sanitizeVolume(
+          item['volume_ml'],
+          min: 1.0,
+          max: 10000.0,
+          fallback: 250.0,
+        );
         final beverage = BeverageType.findById(bevId);
 
         result.add(
