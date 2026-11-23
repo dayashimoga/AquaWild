@@ -8,9 +8,11 @@
 
 [![Flutter](https://img.shields.io/badge/Flutter-3.x%20%7C%20Dart%203.x-02569B?style=flat-square&logo=flutter)](https://flutter.dev)
 [![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-34A853?style=flat-square)](https://flutter.dev/multi-platform)
-[![Tests](https://img.shields.io/badge/Tests-87%20Passed%20%7C%20100%25-brightgreen?style=flat-square)](./test)
+[![Version](https://img.shields.io/badge/Version-2.0.0-00E5FF?style=flat-square)](./pubspec.yaml)
+[![Tests](https://img.shields.io/badge/Tests-302%20Passed%20%7C%20100%25-brightgreen?style=flat-square)](./test)
 [![Static Analysis](https://img.shields.io/badge/Analyze-0%20Issues%20%7C%20Fatal--Infos-4CAF50?style=flat-square)](./lib)
 [![Accessibility](https://img.shields.io/badge/WCAG%202.2-AA%2B%20Compliant-FF9800?style=flat-square)](./docs/governance)
+[![Security](https://img.shields.io/badge/OWASP-MASVS%20v2.0%20Certified-4CAF50?style=flat-square)](./docs/governance/SECURITY_AUDIT_MASVS.md)
 [![Backend](https://img.shields.io/badge/Supabase-Strict%20RLS%20%7C%20Deno%20Edge%20Functions-3ECF8E?style=flat-square&logo=supabase)](./supabase)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=flat-square)](./LICENSE)
 
@@ -48,10 +50,11 @@
 * **Tactile Tap Excitation**: Tapping the vessel canvas injects an instantaneous localized wave impulse and excites a decaying `interactionPulse` ($1.0 \to 0.0$).
 * **Meniscus Refraction & Effervescence**: Specular quadratic surface tension highlights and rising micro-bubbles.
 
-### 4. 🏊 Procedural Top-View Pool Caustics & Red Panda Float Physics
-* **Dual-Layer Caustic Lattice**: Procedural ceramic pool floor tiles with layered sinusoidal caustic glints.
-* **Harmonic Buoyancy Spring-Damper**: Harmonic bobbing, rocking tilt, and expanding circular ripple rings on tap.
-* **Detailed Mascot Assembly**: Reclining Red Panda with candy-striped swim ring, aviator sunglasses with specular shine sweep, and tropical drink.
+### 4. 🏊 Procedural Top-View Pool Caustics & Red Panda Kinematic Rig
+* **Dual-Layer Caustic Lattice**: Procedural ceramic pool floor tiles with layered sinusoidal caustic glints and tranquil water refraction.
+* **Harmonic Buoyancy Spring-Damper**: Realistic bobbing, momentum rocking tilt, and expanding circular ripple wave propagation on tap.
+* **Anatomical Red Panda Vector Rig (*Ailurus fulgens*)**: Handcrafted multi-layered SVG mascot with breathing chest expansion, blinking eyelids, multi-joint ringed tail wag, ear twitches, and real-time cursor/tap eye tracking.
+* **Tap-to-Move Kinematic Pathfinding**: Tap anywhere on the water surface to command Ruby to swim with anticipation crouch, cubic easing, velocity wake ripples, and landing bounce physics. Reduced-motion accessibility supported.
 
 ### 5. 🤖 OpenAI-Compatible AI Hydration Coach & Clinical Heuristic Fallback
 * **OpenAI API Client**: Direct connection to any OpenAI-compatible `/chat/completions` endpoint with prompt sanitization, model selection, and structured JSON schema response enforcement.
@@ -140,9 +143,13 @@ graph TD
 | **`B`** | Biomes & Companions | Opens exotic companion evolution & habitat biome switcher |
 | **`P`** | Predictive Analytics | Opens dehydration risk report, hourly curve & 7-day intake |
 | **`G`** | Achievements & XP | Opens habit streaks, streak freeze shield, and badges |
+| **`S`** | Storefront & Packs | Opens the glassmorphic premium subscription & unlock modal |
+| **`W`** | Widget Preview Studio | Opens the interactive home & lock screen widget simulator |
+| **`Ctrl+Shift+A`** / **`Cmd+Shift+A`** | Admin Command Portal | Launches the dedicated `/admin` God-Mode control center |
 | **`T`** | Cycle Theme | Cycles between Hydro-Glass, Dark, Light, and High Contrast |
 | **`V`** | Voice Logger | Opens natural language speech input simulation modal |
 | **`X`** | Data Backup & Export | Opens JSON/CSV export and backup restoration modal |
+| **`Esc`** | Dismiss Overlay | Contextually dismisses active sheets, modals, and dialogues |
 | **`?` / `F1`** | Shortcuts Guide | Displays keyboard accelerators cheat-sheet |
 
 ---
@@ -167,7 +174,7 @@ flutter pub get
 # 3. Run Static Analysis (Zero Warnings Policy)
 flutter analyze --fatal-infos --fatal-warnings
 
-# 4. Run Full Automated Test Suite (87 tests)
+# 4. Run Full Automated Test Suite (302 tests)
 flutter test
 
 # 5. Launch Application on your target platform
@@ -204,9 +211,15 @@ The project is governed under a strict 10-agent ownership matrix and mandatory 1
 * [ADR-003: 60/120 FPS Impeller Custom Fluid Shaders](./docs/adr/ADR-003-impeller-shaders-fluid-physics.md)
 * [ADR-004: Universal Multi-Platform Responsive Design](./docs/adr/ADR-004-universal-multi-platform-design.md)
 * [ADR-005: Multi-Agent Governance Protocol](./docs/adr/ADR-005-multi-agent-governance-protocol.md)
+* [ADR-006: Red Panda Kinematic Rig & Caustic Lattice](./docs/adr/ADR-006-red-panda-kinematic-rig.md)
+* [ADR-007: Zero-Gap Interfacial Wave Solver & Stratification](./docs/adr/ADR-007-zero-gap-wave-mesh.md)
+* [ADR-008: Monetization Entitlement Engine & IAP Security](./docs/adr/ADR-008-monetization-entitlement-engine.md)
+* [ADR-009: Out-of-App Widgets & Admin Command Portal](./docs/adr/ADR-009-out-of-app-widgets-admin-portal.md)
 * [Execution Plan & Status Tracker](./docs/governance/EXECUTION_PLAN.md)
 * [Decision Log & AI Course Corrections](./docs/governance/DECISION_LOG.md)
 * [Risks & Assumptions Registry](./docs/governance/RISKS_AND_ASSUMPTIONS.md)
+* [OWASP MASVS v2.0 Security Audit Report](./docs/governance/SECURITY_AUDIT_MASVS.md)
+* [App Store & Google Play Release Checklist](./docs/release/STORE_RELEASE_CHECKLIST.md)
 * [Changelog](./CHANGELOG.md)
 
 ---
