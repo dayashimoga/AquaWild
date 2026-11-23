@@ -2,6 +2,36 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [2.2.0] - 2026-11-23 — Post-Launch Expansion: Subphase 10.1.2 — Serengeti Savanna Oasis Plugin & Zara the Reticulated Giraffe
+### Added
+- **Serengeti Savanna Oasis Content Plugin (`SerengetiOasisPlugin`)**:
+  * Registered dynamic plugin `aquawild.serengeti_oasis` introducing Zara the Reticulated Giraffe (*Giraffa camelopardalis*), Sunset Acacia Oasis biome, and Organic Rooibos & Hibiscus Infusion.
+- **Anatomical Giraffe Silhouette Contour (`_buildGiraffePath`)**:
+  * Engineered handcrafted cubic Bezier vector path in `AnimalSilhouettePaths` with towering neck, dual ossicones, and tufted tail scaling to any screen resolution.
+- **Organic Rooibos & Hibiscus Infusion (`rooibos_hibiscus_tea`)**:
+  * Bioavailability index of $1.04\times$, caffeine-free, 28mg/100ml electrolytes, and ruby amber color tokens (`#D35400` / `#962D00`).
+- **4-Stage Evolution Progression**:
+  * *Acacia Calf* $\to$ *Savanna Strider* $\to$ *Crown Browser* $\to$ *Solar Horizon Sentinel*.
+- **Regression Test Certification**:
+  * Authored `test/core/serengeti_oasis_plugin_test.dart` (7 tests). Total project test suite: **316 / 316 passed (100%)**, **0 analyzer warnings**.
+
+---
+
+## [2.1.0] - 2026-11-23 — Post-Launch Expansion: Subphase 10.1.1 — Amazonian Rainforest Canopy Plugin & Sol the Golden Lion Tamarin
+### Added
+- **Amazonian Rainforest Canopy Content Plugin (`RainforestCanopyPlugin`)**:
+  * Registered dynamic plugin `aquawild.rainforest_canopy` introducing Sol the Golden Lion Tamarin (*Leontopithecus rosalia*), Bioluminescent Mangrove biome, and Golden Turmeric Botanical Elixir.
+- **Anatomical Tamarin Silhouette Contour (`_buildTamarinPath`)**:
+  * Handcrafted cubic Bezier vector path with sunburst mane ruffs and prehensile tail in `AnimalSilhouettePaths`.
+- **Golden Turmeric Botanical Elixir (`golden_turmeric_latte`)**:
+  * Bioavailability index of $1.08\times$, 45mg/100ml electrolytes, 0 caffeine, and turmeric gold tokens (`#FFB300` / `#FF8F00`).
+- **4-Stage Evolution Progression**:
+  * *Sunlit Sapling* $\to$ *Canopy Leaper* $\to$ *Golden Mane Protector* $\to$ *Solar Crown Monarch*.
+- **Regression Test Certification**:
+  * Authored `test/core/rainforest_canopy_plugin_test.dart` (7 tests). Total project test suite: **309 / 309 passed (100%)**, **0 analyzer warnings**.
+
+---
+
 ## [2.0.0] - 2026-11-23 — AquaWild 2.0.0 Production Release & Cross-Platform Certification
 ### Added
 - **Production Release Compilation (`flutter build web --release`)**:

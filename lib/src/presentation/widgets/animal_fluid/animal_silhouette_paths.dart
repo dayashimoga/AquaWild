@@ -31,6 +31,8 @@ class AnimalSilhouettePaths {
         return _buildSnowLeopardPath(size);
       case 'golden_lion_tamarin':
         return _buildTamarinPath(size);
+      case 'reticulated_giraffe':
+        return _buildGiraffePath(size);
       default:
         return _buildRedPandaPath(size);
     }
@@ -512,6 +514,56 @@ class AnimalSilhouettePaths {
 
     // Underbelly contour meeting front paws
     path.cubicTo(w * 0.52, h * 0.88, w * 0.42, h * 0.88, w * 0.35, h * 0.94);
+    path.close();
+
+    return path;
+  }
+
+  /// Zara the Reticulated Giraffe silhouette (Savanna sentry contour:
+  /// elegant elongated neck, ossicones crown, sloping shoulder withers, slender body, and tufted tail)
+  static Path _buildGiraffePath(Size size) {
+    final Path path = Path();
+    final double w = size.width;
+    final double h = size.height;
+
+    // Start at rear hooves base
+    path.moveTo(w * 0.58, h * 0.95);
+
+    // Rear leg ascending to hip
+    path.cubicTo(w * 0.62, h * 0.88, w * 0.66, h * 0.74, w * 0.68, h * 0.64);
+
+    // Tail root and slender tail with tufted brush
+    path.cubicTo(w * 0.78, h * 0.66, w * 0.86, h * 0.76, w * 0.82, h * 0.86);
+    path.cubicTo(w * 0.80, h * 0.92, w * 0.74, h * 0.88, w * 0.73, h * 0.80);
+    path.cubicTo(w * 0.72, h * 0.72, w * 0.68, h * 0.64, w * 0.66, h * 0.58);
+
+    // Sloping savanna back ascending to high shoulder withers
+    path.cubicTo(w * 0.60, h * 0.52, w * 0.54, h * 0.46, w * 0.48, h * 0.38);
+
+    // Back of long towering neck ascending to crown
+    path.cubicTo(w * 0.44, h * 0.28, w * 0.40, h * 0.16, w * 0.38, h * 0.08);
+
+    // Left ossicone (crowned horn)
+    path.cubicTo(w * 0.37, h * 0.04, w * 0.40, h * 0.02, w * 0.42, h * 0.04);
+    // Crest between ossicones
+    path.quadraticBezierTo(w * 0.44, h * 0.05, w * 0.46, h * 0.04);
+    // Right ossicone
+    path.cubicTo(w * 0.48, h * 0.02, w * 0.51, h * 0.04, w * 0.50, h * 0.08);
+
+    // Muzzle and chin
+    path.cubicTo(w * 0.48, h * 0.12, w * 0.44, h * 0.15, w * 0.38, h * 0.16);
+
+    // Front of long graceful neck descending to deep chest
+    path.cubicTo(w * 0.36, h * 0.26, w * 0.34, h * 0.38, w * 0.32, h * 0.50);
+
+    // Front chest to front hooves base
+    path.cubicTo(w * 0.30, h * 0.62, w * 0.26, h * 0.78, w * 0.28, h * 0.95);
+
+    // Ground line between front and rear hooves
+    path.quadraticBezierTo(w * 0.36, h * 0.96, w * 0.42, h * 0.95);
+
+    // Underbelly
+    path.cubicTo(w * 0.46, h * 0.78, w * 0.52, h * 0.78, w * 0.58, h * 0.95);
     path.close();
 
     return path;

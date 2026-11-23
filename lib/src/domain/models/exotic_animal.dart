@@ -58,6 +58,8 @@ class ExoticAnimal {
         return '🐆';
       case 'golden_lion_tamarin':
         return '🐒';
+      case 'reticulated_giraffe':
+        return '🦒';
       default:
         return '🐾';
     }
