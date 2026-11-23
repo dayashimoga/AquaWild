@@ -128,11 +128,11 @@ class AnimalSilhouettePaths {
     // Rear hind paw
     path.cubicTo(w * 0.85, h * 0.95, w * 0.78, h * 0.96, w * 0.74, h * 0.95);
 
-    // Chunky relaxed underbelly
-    path.cubicTo(w * 0.66, h * 0.84, w * 0.45, h * 0.84, w * 0.38, h * 0.92);
+    // Chunky grounded loaf underbelly (relaxed resting posture without table-leg arch)
+    path.cubicTo(w * 0.64, h * 0.93, w * 0.45, h * 0.93, w * 0.36, h * 0.94);
 
     // Front right paw meeting base
-    path.cubicTo(w * 0.34, h * 0.96, w * 0.28, h * 0.96, w * 0.24, h * 0.95);
+    path.cubicTo(w * 0.32, h * 0.96, w * 0.28, h * 0.96, w * 0.24, h * 0.95);
     path.close();
 
     return path;

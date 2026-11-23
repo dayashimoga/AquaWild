@@ -22,6 +22,7 @@ class FloatingRedPandaPainter extends CustomPainter {
   final double earTwitchAngle; // Radians for spontaneous ear twitch flick
   final double reactionPulse; // 0.0 to 1.0 for affectionate squint & smile flare
   final double verticalSquash; // Squash/stretch ratio for anticipation & landing (1.0 = normal)
+  final bool isFacingLeft; // Horizontal facing direction based on locomotion trajectory
 
   // Reusable paints to ensure 120 FPS performance with zero per-frame GC allocations
   final Paint _shadowPaint = Paint()
@@ -72,6 +73,7 @@ class FloatingRedPandaPainter extends CustomPainter {
     this.earTwitchAngle = 0.0,
     this.reactionPulse = 0.0,
     this.verticalSquash = 1.0,
+    this.isFacingLeft = false,
   });
 
   @override
@@ -86,6 +88,9 @@ class FloatingRedPandaPainter extends CustomPainter {
     canvas.save();
     canvas.translate(centerX, centerY + bobOffset);
     canvas.rotate(tiltAngle);
+    if (isFacingLeft) {
+      canvas.scale(-1.0, 1.0);
+    }
     if ((verticalSquash - 1.0).abs() > 0.005) {
       final double safeSquash = verticalSquash.clamp(0.80, 1.25);
       canvas.scale(1.0 / math.sqrt(safeSquash), safeSquash);
@@ -103,14 +108,14 @@ class FloatingRedPandaPainter extends CustomPainter {
     // 5. Reclining Auburn Torso & White Chest Fur Bib (With Breathing Expansion)
     _drawTorsoAndChest(canvas);
 
-    // 6. Forelimbs & Paws
+    // 6. Forelimbs & Natural Floating Water Paddling Paws
     _drawForelimbs(canvas);
 
     // 7. Anatomical Head, Ears, Facial Masks & Expressive Eyes
     _drawHeadAndFacialAnatomy(canvas);
 
-    // 8. Refreshing Mountain Spring Beverage Held in Paw
-    _drawSpringBeverage(canvas);
+    // 8. Natural Right Forelimb Resting in Water
+    _drawRightForelimb(canvas);
 
     canvas.restore();
   }
@@ -578,49 +583,27 @@ class FloatingRedPandaPainter extends CustomPainter {
     canvas.drawPath(mouthPath, _mouthPaint);
   }
 
-  void _drawSpringBeverage(Canvas canvas) {
-    // Right forepaw holding crystal tumbler with cold spring water
-    const Offset pawPos = Offset(36, 6);
-    canvas.drawCircle(pawPos, 9.0, _limbDarkPaint);
-
-    // Crystal tumbler
-    final Rect glassRect = Rect.fromCenter(
-      center: const Offset(46, -2),
-      width: 18,
-      height: 26,
+  void _drawRightForelimb(Canvas canvas) {
+    // Right forepaw resting naturally on the water surface with gentle ripples
+    const Offset pawPos = Offset(32, 10);
+    canvas.drawOval(
+      Rect.fromCenter(center: pawPos, width: 22, height: 18),
+      _limbDarkPaint,
     );
 
-    // Pure mountain spring water fill (Clear Cyan)
-    final Paint waterPaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topCenter,
-        colors: [Color(0xFF00B0FF), Color(0xFF80D8FF)],
-      ).createShader(glassRect);
+    // Right paw dark pad highlights
+    final Paint padPaint = Paint()..color = const Color(0xFF150D0A);
+    canvas.drawCircle(const Offset(32, 11), 3.5, padPaint);
 
-    final RRect waterRRect = RRect.fromRectAndRadius(
-      Rect.fromCenter(center: const Offset(46, 0), width: 15, height: 19),
-      const Radius.circular(3),
-    );
-    canvas.drawRRect(waterRRect, waterPaint);
-
-    // Glass reflection outline
-    final Paint glassOutline = Paint()
-      ..color = Colors.white.withValues(alpha: 0.7)
-      ..strokeWidth = 1.3
+    // Water surface tension rim around resting paw
+    final Paint pawRimPaint = Paint()
+      ..color = const Color(0x55B2EBF2)
+      ..strokeWidth = 1.8
       ..style = PaintingStyle.stroke;
-    canvas.drawRRect(
-      RRect.fromRectAndRadius(glassRect, const Radius.circular(4)),
-      glassOutline,
+    canvas.drawOval(
+      Rect.fromCenter(center: const Offset(32, 12), width: 26, height: 20),
+      pawRimPaint,
     );
-
-    // Fresh Green Bamboo Leaf Garnish
-    final Paint leafPaint = Paint()..color = const Color(0xFF00E676);
-    final Path leafPath = Path();
-    leafPath.moveTo(46, -12);
-    leafPath.quadraticBezierTo(54, -22, 50, -28);
-    leafPath.quadraticBezierTo(44, -20, 46, -12);
-    canvas.drawPath(leafPath, leafPaint);
   }
 
   @override
@@ -634,6 +617,7 @@ class FloatingRedPandaPainter extends CustomPainter {
         oldDelegate.lookTarget != lookTarget ||
         oldDelegate.earTwitchAngle != earTwitchAngle ||
         oldDelegate.reactionPulse != reactionPulse ||
-        oldDelegate.verticalSquash != verticalSquash;
+        oldDelegate.verticalSquash != verticalSquash ||
+        oldDelegate.isFacingLeft != isFacingLeft;
   }
 }

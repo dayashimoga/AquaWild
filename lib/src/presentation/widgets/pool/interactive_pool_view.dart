@@ -126,10 +126,10 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             MascotKinematicController(initialPosition: defaultCenter);
 
         final Rect poolBounds = Rect.fromLTRB(
-          120.0,
-          90.0,
-          math.max(120.0, size.width - 120.0),
-          math.max(90.0, size.height * 0.75 - 60.0),
+          60.0,
+          70.0,
+          math.max(60.0, size.width - 60.0),
+          math.max(70.0, size.height - 120.0),
         );
 
         return AnimatedBuilder(
@@ -261,6 +261,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                 _pointerPosition = null;
               },
               child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTapDown: (details) {
                   final Offset tapPos = details.localPosition;
                   final double distToMascot =
@@ -344,6 +345,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
                             earTwitchAngle: earTwitchAngle,
                             reactionPulse: _reactionPulse,
                             verticalSquash: kState.verticalSquash,
+                            isFacingLeft: kState.velocity.dx < -8.0,
                           ),
                         ),
                       ),

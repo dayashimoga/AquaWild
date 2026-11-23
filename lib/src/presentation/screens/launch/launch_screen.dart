@@ -18,164 +18,154 @@ class LaunchScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Interactive 60/120 FPS Procedural Pool Simulation & Red Panda Mascot
+          // 1. Interactive 60/120 FPS Procedural Pool Simulation & Red Panda Mascot (Receives all gestures across canvas)
           InteractivePoolView(
             onDiveInPressed: () => context.go('/home'),
           ),
 
-          // Modern-Futuristic Glassmorphic Controls Overlay
+          // 2. Top Status Pill (Non-blocking alignment)
           SafeArea(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  physics: const BouncingScrollPhysics(),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            // Top Status Pill
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                              decoration: BoxDecoration(
-                                color: AppColors.cardGlassDark,
-                                borderRadius: BorderRadius.circular(24),
-                                border: Border.all(
-                                  color: AppColors.cardGlassBorderDark,
-                                  width: 1,
-                                ),
-                              ),
-                              child: const Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(
-                                    Icons.waves_rounded,
-                                    size: 16,
-                                    color: AppColors.cyanPrimary,
-                                  ),
-                                  SizedBox(width: 8),
-                                  Flexible(
-                                    child: Text(
-                                      'Bamboo Misty Springs • Relax Mode',
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.cardGlassDark,
+                    borderRadius: BorderRadius.circular(24),
+                    border: Border.all(
+                      color: AppColors.cardGlassBorderDark,
+                      width: 1,
+                    ),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        Icons.waves_rounded,
+                        size: 16,
+                        color: AppColors.cyanPrimary,
+                      ),
+                      SizedBox(width: 8),
+                      Flexible(
+                        child: Text(
+                          'Bamboo Misty Springs • Relax Mode',
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
 
-                            const SizedBox(height: 16),
-                            const Spacer(),
-
-                            // Bottom Modern-Futuristic Call-To-Action Card (Constrained for 4K / Desktop)
-                            ConstrainedBox(
-                              constraints: const BoxConstraints(maxWidth: 560),
-                              child: Container(
-                                width: double.infinity,
-                                padding: const EdgeInsets.all(24.0),
-                                decoration: BoxDecoration(
-                                  color: AppColors.surfaceAbyssal.withValues(alpha: 0.85),
-                                  borderRadius: BorderRadius.circular(32),
-                                  border: Border.all(
-                                    color: AppColors.cardGlassBorderDark,
-                                    width: 1.5,
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: AppColors.cyanPrimary.withValues(alpha: 0.15),
-                                      blurRadius: 32,
-                                      offset: const Offset(0, 8),
-                                    ),
-                                  ],
+          // 3. Bottom Modern-Futuristic Call-To-Action Card (Non-blocking alignment)
+          SafeArea(
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 14.0),
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: 560),
+                  child: SingleChildScrollView(
+                    physics: const ClampingScrollPhysics(),
+                    child: Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 16.0),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceAbyssal.withValues(alpha: 0.85),
+                        borderRadius: BorderRadius.circular(32),
+                        border: Border.all(
+                          color: AppColors.cardGlassBorderDark,
+                          width: 1.5,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.cyanPrimary.withValues(alpha: 0.15),
+                            blurRadius: 32,
+                            offset: const Offset(0, 8),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            AppConstants.appName,
+                            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.2,
                                 ),
-                                child: SingleChildScrollView(
-                                  physics: const BouncingScrollPhysics(),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        AppConstants.appName,
-                                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.2,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 6),
-                                      Text(
-                                        'Track hydration, evolve exotic animal companions & restore living biomes.',
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                              color: Colors.white70,
-                                            ),
-                                      ),
-                                      const SizedBox(height: 20),
-                                      ConstrainedBox(
-                                        constraints: const BoxConstraints(minHeight: 54),
-                                        child: SizedBox(
-                                          width: double.infinity,
-                                          child: Semantics(
-                                            button: true,
-                                            label: 'Dive into hydration habitat',
-                                            child: ElevatedButton(
-                                              autofocus: true,
-                                              onPressed: () => context.go('/home'),
-                                              style: ElevatedButton.styleFrom(
-                                                backgroundColor: AppColors.cyanPrimary,
-                                                foregroundColor: AppColors.surfaceAbyssal,
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(28),
-                                                ),
-                                                elevation: 4,
-                                              ),
-                                              child: const FittedBox(
-                                                fit: BoxFit.scaleDown,
-                                                child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      'Dive Into Habitat',
-                                                      style: TextStyle(
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.bold,
-                                                        letterSpacing: 0.5,
-                                                      ),
-                                                    ),
-                                                    SizedBox(width: 8),
-                                                    Icon(Icons.arrow_forward_rounded, size: 20),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Track hydration, evolve exotic animal companions & restore living biomes.',
+                            textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  color: Colors.white70,
+                                ),
+                          ),
+                          const SizedBox(height: 14),
+                          ConstrainedBox(
+                            constraints: const BoxConstraints(minHeight: 52),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: Semantics(
+                                button: true,
+                                label: 'Dive into hydration habitat',
+                                child: ElevatedButton(
+                                  autofocus: true,
+                                  onPressed: () => context.go('/home'),
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.cyanPrimary,
+                                    foregroundColor: AppColors.surfaceAbyssal,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(28),
+                                    ),
+                                    elevation: 4,
+                                  ),
+                                  child: const FittedBox(
+                                    fit: BoxFit.scaleDown,
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          'Dive Into Habitat',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 0.5,
                                           ),
                                         ),
-                                      ),
-                                      const SizedBox(height: 10),
-                                      const Text(
-                                        'Tap pool to swim Ruby • Tap Ruby to pet • Move cursor to guide hazel gaze',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(fontSize: 11, color: Colors.white54),
-                                      ),
-                                    ],
+                                        SizedBox(width: 8),
+                                        Icon(Icons.arrow_forward_rounded, size: 20),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          const SizedBox(height: 8),
+                          const Text(
+                            'Tap pool to swim Ruby • Tap Ruby to pet • Move cursor to guide hazel gaze',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 11, color: Colors.white54),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-                );
-              },
+                ),
+              ),
             ),
           ),
         ],

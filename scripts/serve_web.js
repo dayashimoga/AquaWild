@@ -2,7 +2,6 @@ const http = require('http');
 const fs = require('fs');
 const path = require('path');
 
-const PORT = 8088;
 const ROOT = path.join(__dirname, '..', 'build', 'web');
 
 const MIME_TYPES = {
@@ -21,9 +20,9 @@ const MIME_TYPES = {
   '.woff2': 'font/woff2'
 };
 
-const server = http.createServer((req, res) => {
+function handleRequest(req, res) {
   let reqPath = decodeURI(req.url.split('?')[0]);
-  if (reqPath === '/') reqPath = '/index.html';
+  if (reqPath === '/' || reqPath === '') reqPath = '/index.html';
 
   let filePath = path.join(ROOT, reqPath);
 
@@ -43,14 +42,27 @@ const server = http.createServer((req, res) => {
       }
       res.writeHead(200, {
         'Content-Type': contentType,
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
         'Cross-Origin-Embedder-Policy': 'credentialless',
         'Cross-Origin-Opener-Policy': 'same-origin'
       });
       res.end(data);
     });
   });
-});
+}
 
-server.listen(PORT, '127.0.0.1', () => {
-  console.log(`AquaWild Web Server running at http://127.0.0.1:${PORT}`);
-});
+function listenPort(port) {
+  const server = http.createServer(handleRequest);
+  server.listen(port, '127.0.0.1', () => {
+    console.log(`AquaWild Web Server listening at http://127.0.0.1:${port}`);
+  });
+  server.on('error', (err) => {
+    console.warn(`Port ${port} unavailable: ${err.message}`);
+  });
+  return server;
+}
+
+listenPort(8080);
+listenPort(8088);
