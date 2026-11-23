@@ -60,6 +60,8 @@ class ExoticAnimal {
         return '🐒';
       case 'reticulated_giraffe':
         return '🦒';
+      case 'arctic_narwhal':
+        return '🐋';
       default:
         return '🐾';
     }

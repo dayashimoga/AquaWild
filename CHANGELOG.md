@@ -2,6 +2,21 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [2.3.0] - 2026-11-23 — Post-Launch Expansion: Subphase 10.1.3 — Nordic Glacial Fjord Plugin & Finneas the Arctic Narwhal
+### Added
+- **Nordic Glacial Fjord Content Plugin (`NordicFjordPlugin`)**:
+  * Registered dynamic plugin `aquawild.nordic_fjord` introducing Finneas the Arctic Narwhal (*Monodon monoceros*), Glacial Fjord Sanctuary biome, and Nordic Lingonberry & Chaga Adaptogenic Elixir.
+- **Anatomical Arctic Narwhal Silhouette Contour (`_buildNarwhalPath`)**:
+  * Engineered handcrafted cubic Bezier vector path in `AnimalSilhouettePaths` with iconic spiraled ivory tusk, melon forehead, scalloped dorsal ridge, and caudal flukes.
+- **Nordic Lingonberry & Chaga Adaptogenic Elixir (`lingonberry_chaga_brew`)**:
+  * Bioavailability index of $1.06\times$, caffeine-free, 34mg/100ml electrolytes, and frosted crimson/purple color tokens (`#880E4F` / `#4A148C`).
+- **4-Stage Evolution Progression**:
+  * *Fjord Calf* $\to$ *Pack Ice Diver* $\to$ *Glacial Sovereign* $\to$ *Aurora Ocean Leviathan*.
+- **Regression Test Certification**:
+  * Authored `test/core/nordic_fjord_plugin_test.dart` (7 tests). Total project test suite: **323 / 323 passed (100%)**, **0 analyzer warnings**.
+
+---
+
 ## [2.2.0] - 2026-11-23 — Post-Launch Expansion: Subphase 10.1.2 — Serengeti Savanna Oasis Plugin & Zara the Reticulated Giraffe
 ### Added
 - **Serengeti Savanna Oasis Content Plugin (`SerengetiOasisPlugin`)**:

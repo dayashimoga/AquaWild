@@ -33,6 +33,8 @@ class AnimalSilhouettePaths {
         return _buildTamarinPath(size);
       case 'reticulated_giraffe':
         return _buildGiraffePath(size);
+      case 'arctic_narwhal':
+        return _buildNarwhalPath(size);
       default:
         return _buildRedPandaPath(size);
     }
@@ -566,6 +568,52 @@ class AnimalSilhouettePaths {
     path.cubicTo(w * 0.46, h * 0.78, w * 0.52, h * 0.78, w * 0.58, h * 0.95);
     path.close();
 
+    return path;
+  }
+
+  /// Finneas the Arctic Narwhal silhouette (Subpolar cetacean contour:
+  /// iconic spiral ivory tusk, rounded melon head, scalloped dorsal ridge, spatulate flippers, and broad caudal flukes)
+  static Path _buildNarwhalPath(Size size) {
+    final Path path = Path();
+    final double w = size.width;
+    final double h = size.height;
+
+    // Start at caudal fluke central notch
+    path.moveTo(w * 0.85, h * 0.88);
+
+    // Lower caudal fluke lobe
+    path.cubicTo(w * 0.88, h * 0.92, w * 0.94, h * 0.96, w * 0.92, h * 0.97);
+    path.cubicTo(w * 0.88, h * 0.96, w * 0.82, h * 0.90, w * 0.78, h * 0.84);
+
+    // Ventral peduncle leading to smooth belly
+    path.cubicTo(w * 0.70, h * 0.82, w * 0.54, h * 0.80, w * 0.42, h * 0.74);
+
+    // Spatulate pectoral flipper
+    path.cubicTo(w * 0.36, h * 0.78, w * 0.28, h * 0.84, w * 0.24, h * 0.82);
+    path.cubicTo(w * 0.22, h * 0.76, w * 0.26, h * 0.68, w * 0.30, h * 0.60);
+
+    // Deep chest and throat ascending to rostrum
+    path.cubicTo(w * 0.28, h * 0.52, w * 0.24, h * 0.44, w * 0.22, h * 0.36);
+
+    // Gentle mouthline and rostrum
+    path.cubicTo(w * 0.20, h * 0.32, w * 0.18, h * 0.28, w * 0.16, h * 0.26);
+
+    // Spiral ivory tusk erupting upward-forward
+    path.cubicTo(w * 0.12, h * 0.18, w * 0.08, h * 0.10, w * 0.03, h * 0.02);
+    path.quadraticBezierTo(w * 0.01, h * 0.01, w * 0.04, h * 0.04);
+    path.cubicTo(w * 0.08, h * 0.12, w * 0.14, h * 0.20, w * 0.19, h * 0.26);
+
+    // Bulbous rounded melon head
+    path.cubicTo(w * 0.22, h * 0.22, w * 0.28, h * 0.20, w * 0.35, h * 0.22);
+
+    // Neck and dorsal ridge traversing back
+    path.cubicTo(w * 0.45, h * 0.26, w * 0.56, h * 0.36, w * 0.68, h * 0.50);
+
+    // Caudal peduncle leading to upper fluke lobe
+    path.cubicTo(w * 0.76, h * 0.62, w * 0.84, h * 0.72, w * 0.94, h * 0.74);
+    path.cubicTo(w * 0.96, h * 0.76, w * 0.92, h * 0.82, w * 0.85, h * 0.88);
+
+    path.close();
     return path;
   }
 }

@@ -9,7 +9,7 @@
 [![Flutter](https://img.shields.io/badge/Flutter-3.x%20%7C%20Dart%203.x-02569B?style=flat-square&logo=flutter)](https://flutter.dev)
 [![Platforms](https://img.shields.io/badge/Platforms-Android%20%7C%20iOS%20%7C%20Web%20%7C%20Windows%20%7C%20macOS%20%7C%20Linux-34A853?style=flat-square)](https://flutter.dev/multi-platform)
 [![Version](https://img.shields.io/badge/Version-2.0.0-00E5FF?style=flat-square)](./pubspec.yaml)
-[![Tests](https://img.shields.io/badge/Tests-316%20Passed%20%7C%20100%25-brightgreen?style=flat-square)](./test)
+[![Tests](https://img.shields.io/badge/Tests-323%20Passed%20%7C%20100%25-brightgreen?style=flat-square)](./test)
 [![Static Analysis](https://img.shields.io/badge/Analyze-0%20Issues%20%7C%20Fatal--Infos-4CAF50?style=flat-square)](./lib)
 [![Accessibility](https://img.shields.io/badge/WCAG%202.2-AA%2B%20Compliant-FF9800?style=flat-square)](./docs/governance)
 [![Security](https://img.shields.io/badge/OWASP-MASVS%20v2.0%20Certified-4CAF50?style=flat-square)](./docs/governance/SECURITY_AUDIT_MASVS.md)
@@ -24,13 +24,13 @@
 
 ## 🌟 Key Highlights & Innovations
 
-### 1. 🧪 Bioavailability-Engineered Beverage Science (18 Beverages)
-* **Physiological Hydration Indices**: Unlike naive water trackers, every liquid features an empirical hydration index (e.g., Pure Water: 1.0, Coconut Water: 1.15, Electrolyte Drink: 1.25, Skim Milk: 1.20, Golden Turmeric Elixir: 1.08, Rooibos Hibiscus Infusion: 1.04).
+### 1. 🧪 Bioavailability-Engineered Beverage Science (19 Beverages)
+* **Physiological Hydration Indices**: Unlike naive water trackers, every liquid features an empirical hydration index (e.g., Pure Water: 1.0, Coconut Water: 1.15, Electrolyte Drink: 1.25, Skim Milk: 1.20, Golden Turmeric Elixir: 1.08, Rooibos Hibiscus Infusion: 1.04, Nordic Lingonberry Chaga Elixir: 1.06).
 * **Caffeine Diuretic Offsetting**: High-potency caffeine drinks (Espresso, Cold Brew) dynamically apply mild diuretic volume deductions based on mg of caffeine per 100ml.
 * **Density & Viscosity Physical Stratification**: Stacked beverage strata sort dynamically by physical density (e.g. dense honey smoothie sinks below light pure water).
 
-### 2. 🐾 12 Handcrafted Exotic Companions & 4 Evolution Stages
-* **12 Companion Species**: Ruby the Red Panda, Cappy the Capybara, Lottie the Axolotl, Ollie the Sea Otter, Luna the Andean Llama, Freya the Arctic Fox, Percy the Emperor Penguin, Echo the Dolphin, Octavia the Blue-Ringed Octopus, Kira the Snow Leopard, Sol the Golden Lion Tamarin, and Zara the Reticulated Giraffe.
+### 2. 🐾 13 Handcrafted Exotic Companions & 4 Evolution Stages
+* **13 Companion Species**: Ruby the Red Panda, Cappy the Capybara, Lottie the Axolotl, Ollie the Sea Otter, Luna the Andean Llama, Freya the Arctic Fox, Percy the Emperor Penguin, Echo the Dolphin, Octavia the Blue-Ringed Octopus, Kira the Snow Leopard, Sol the Golden Lion Tamarin, Zara the Reticulated Giraffe, and Finneas the Arctic Narwhal.
 * **Handcrafted Vector Silhouettes**: Continuous cubic Bezier vector clipping boundaries (`AnimalSilhouettePaths`) scaling to any viewport without raster pixelation.
 * **Dynamic Species Physics & Overlays**:
   * *Capybara*: Buoyant Yuzu citrus fruits bobbing with harmonic wave physics, rising thermal onsen steam trails, oscillating zen folded head towel.
@@ -44,6 +44,7 @@
   * *Snow Leopard*: Alpine rosettes along flank and tail.
   * *Tamarin*: Radiant golden-orange sunburst mane ruff and agile prehensile tail.
   * *Giraffe*: Towering slender neck with dual ossicones and savanna acacia canopy browse posture.
+  * *Narwhal*: Majestic spiraled ivory tusk, hydrodynamic cetacean melon head, and broad polar caudal flukes.
 * **4 Evolution Tiers**: *Hatchling* $\to$ *Explorer* $\to$ *Guardian* $\to$ *Mythic Spirit* with unlockable titles and cosmetic stage perks.
 * **`CompanionEvolutionModal`**: Radiant 12-second sunburst aura celebration modal with audio/haptic fanfare.
 
