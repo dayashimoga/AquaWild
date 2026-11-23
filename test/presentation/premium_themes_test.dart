@@ -17,7 +17,6 @@ import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  GoogleFonts.config.allowRuntimeFetching = false;
 
   group('Premium Themes & Visual Tokens Tests', () {
     test('AppThemeMode contains all 8 themes with proper premium metadata', () {
