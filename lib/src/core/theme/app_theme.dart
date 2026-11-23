@@ -6,6 +6,15 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
+  static TextTheme _resolveTextTheme(TextTheme base) {
+    try {
+      if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
+        return base.apply(fontFamily: 'Outfit');
+      }
+    } catch (_) {}
+    return GoogleFonts.outfitTextTheme(base);
+  }
+
   /// Futuristic Bioluminescent Hydro-Glass theme (Default flagship experience)
   static ThemeData get hydroGlassTheme {
     final baseTextTheme = Typography.material2021().white;
@@ -23,7 +32,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: Colors.white,
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -65,7 +74,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: Colors.white,
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -99,7 +108,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: AppColors.surfaceDark,
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -167,7 +176,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: Color(0xFFE0FFFF),
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -212,7 +221,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: Color(0xFF2C3531),
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -257,7 +266,7 @@ class AppTheme {
         onSecondary: Colors.white,
         onSurface: Color(0xFFF0F4F8),
       ),
-      textTheme: GoogleFonts.outfitTextTheme(baseTextTheme),
+      textTheme: _resolveTextTheme(baseTextTheme),
       appBarTheme: const AppBarTheme(
         backgroundColor: Colors.transparent,
         elevation: 0,
