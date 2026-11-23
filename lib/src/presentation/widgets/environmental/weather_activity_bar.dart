@@ -177,20 +177,23 @@ class WeatherActivityBar extends ConsumerWidget {
               const SizedBox(height: 16),
               ...WeatherActivityService.environmentalPresets.map((preset) {
                 final offset = preset.weatherHydrationOffsetMl;
-                return ListTile(
-                  title: Text(
-                    '${preset.cityName} (${preset.temperatureCelsius.toStringAsFixed(0)}°C)',
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                return Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    title: Text(
+                      '${preset.cityName} (${preset.temperatureCelsius.toStringAsFixed(0)}°C)',
+                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    ),
+                    subtitle: Text(
+                      '${preset.description} • Offset: +${offset}ml',
+                      style: const TextStyle(color: Color(0xFF00E5FF), fontSize: 12),
+                    ),
+                    onTap: () {
+                      AudioHapticsService.playTap();
+                      ref.read(weatherActivityNotifierProvider.notifier).setWeather(preset);
+                      Navigator.of(context).pop();
+                    },
                   ),
-                  subtitle: Text(
-                    '${preset.description} • Offset: +${offset}ml',
-                    style: const TextStyle(color: Color(0xFF00E5FF), fontSize: 12),
-                  ),
-                  onTap: () {
-                    AudioHapticsService.playTap();
-                    ref.read(weatherActivityNotifierProvider.notifier).setWeather(preset);
-                    Navigator.of(context).pop();
-                  },
                 );
               }),
             ],

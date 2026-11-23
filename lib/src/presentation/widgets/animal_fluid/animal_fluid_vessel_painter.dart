@@ -158,6 +158,12 @@ class AnimalFluidVesselPainter extends CustomPainter {
     ..style = PaintingStyle.stroke
     ..strokeCap = StrokeCap.round;
 
+  // Pre-allocated anatomical underlay paints for 60/120 FPS raster efficiency
+  final Paint _underlayBodyPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _underlayDepthPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _underlayAccentPaint = Paint()..style = PaintingStyle.fill;
+  final Paint _underlayPawPaint = Paint()..style = PaintingStyle.fill;
+
   AnimalFluidVesselPainter({
     required this.animalId,
     required this.fillFraction,
@@ -252,31 +258,29 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final double h = size.height;
 
     // 1. Warm highland auburn fur body gradient
-    final Paint furPaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFFE64A19), // Highland auburn red
-          Color(0xFFD84315),
-          Color(0xFFBF360C),
-          Color(0xFF3E2723), // Dark espresso belly / limb base
-        ],
-        stops: [0.0, 0.35, 0.70, 1.0],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, furPaint);
+    _underlayBodyPaint.shader = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xFFE64A19), // Highland auburn red
+        Color(0xFFD84315),
+        Color(0xFFBF360C),
+        Color(0xFF3E2723), // Dark espresso belly / limb base
+      ],
+      stops: [0.0, 0.35, 0.70, 1.0],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayBodyPaint);
 
     // 2. Volumetric depth vignette
-    final Paint depthPaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(0.0, -0.2),
-        radius: 0.85,
-        colors: [
-          Colors.transparent,
-          Colors.black.withValues(alpha: 0.28),
-        ],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, depthPaint);
+    _underlayDepthPaint.shader = RadialGradient(
+      center: const Alignment(0.0, -0.2),
+      radius: 0.85,
+      colors: [
+        Colors.transparent,
+        Colors.black.withValues(alpha: 0.28),
+      ],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayDepthPaint);
 
     // 3. Fluffy Cream-White Chest Bib
     final Path chestBib = Path()
@@ -284,41 +288,40 @@ class AnimalFluidVesselPainter extends CustomPainter {
       ..cubicTo(w * 0.32, h * 0.44, w * 0.34, h * 0.60, w * 0.50, h * 0.68)
       ..cubicTo(w * 0.66, h * 0.60, w * 0.68, h * 0.44, w * 0.62, h * 0.36)
       ..close();
-    final Paint bibPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xFFFFF8E1),
-          const Color(0xFFFFECB3).withValues(alpha: 0.85),
-        ],
-      ).createShader(chestBib.getBounds());
-    canvas.drawPath(chestBib, bibPaint);
+    _underlayAccentPaint.shader = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        const Color(0xFFFFF8E1),
+        const Color(0xFFFFECB3).withValues(alpha: 0.85),
+      ],
+    ).createShader(chestBib.getBounds());
+    canvas.drawPath(chestBib, _underlayAccentPaint);
 
     // 4. Charcoal/Espresso Hind Limbs & Paws at bottom
-    final Paint limbPaint = Paint()..color = const Color(0xFF211510);
+    _underlayPawPaint.shader = null;
+    _underlayPawPaint.color = const Color(0xFF211510);
     canvas.drawOval(
       Rect.fromCenter(center: Offset(w * 0.28, h * 0.90), width: w * 0.18, height: h * 0.12),
-      limbPaint,
+      _underlayPawPaint,
     );
     canvas.drawOval(
       Rect.fromCenter(center: Offset(w * 0.74, h * 0.90), width: w * 0.18, height: h * 0.12),
-      limbPaint,
+      _underlayPawPaint,
     );
 
     // 5. Plush Ringed Tail auburn/ochre underlay on left
     final Rect tailRect = Rect.fromLTWH(0, h * 0.36, w * 0.30, h * 0.52);
-    final Paint tailBasePaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topRight,
-        end: Alignment.bottomLeft,
-        colors: [
-          Color(0xFFBF360C),
-          Color(0xFFD84315),
-          Color(0xFFE64A19),
-        ],
-      ).createShader(tailRect);
-    canvas.drawRect(tailRect, tailBasePaint);
+    _underlayBodyPaint.shader = const LinearGradient(
+      begin: Alignment.topRight,
+      end: Alignment.bottomLeft,
+      colors: [
+        Color(0xFFBF360C),
+        Color(0xFFD84315),
+        Color(0xFFE64A19),
+      ],
+    ).createShader(tailRect);
+    canvas.drawRect(tailRect, _underlayBodyPaint);
   }
 
   void _drawCapybaraAnatomicalUnderlay(Canvas canvas, Size size, Rect bounds) {
@@ -326,19 +329,18 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final double h = size.height;
 
     // 1. Warm earthy chestnut/caramel fur body gradient
-    final Paint furPaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: [
-          Color(0xFF8D6E63), // Warm golden brown crown & back
-          Color(0xFF6D4C41),
-          Color(0xFF5D4037),
-          Color(0xFF3E2723), // Deep earthy flank & paw base
-        ],
-        stops: [0.0, 0.30, 0.65, 1.0],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, furPaint);
+    _underlayBodyPaint.shader = const LinearGradient(
+      begin: Alignment.topLeft,
+      end: Alignment.bottomRight,
+      colors: [
+        Color(0xFF8D6E63), // Warm golden brown crown & back
+        Color(0xFF6D4C41),
+        Color(0xFF5D4037),
+        Color(0xFF3E2723), // Deep earthy flank & paw base
+      ],
+      stops: [0.0, 0.30, 0.65, 1.0],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayBodyPaint);
 
     // 2. Soft golden-buff throat & under-chin patch
     final Path throatPatch = Path()
@@ -346,39 +348,38 @@ class AnimalFluidVesselPainter extends CustomPainter {
       ..cubicTo(w * 0.22, h * 0.40, w * 0.28, h * 0.48, w * 0.26, h * 0.62)
       ..cubicTo(w * 0.18, h * 0.64, w * 0.14, h * 0.52, w * 0.14, h * 0.38)
       ..close();
-    final Paint throatPaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          const Color(0xFFA1887F),
-          const Color(0xFF8D6E63).withValues(alpha: 0.6),
-        ],
-      ).createShader(throatPatch.getBounds());
-    canvas.drawPath(throatPatch, throatPaint);
+    _underlayAccentPaint.shader = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        const Color(0xFFA1887F),
+        const Color(0xFF8D6E63).withValues(alpha: 0.6),
+      ],
+    ).createShader(throatPatch.getBounds());
+    canvas.drawPath(throatPatch, _underlayAccentPaint);
 
     // 3. Grounded loaf paw shading at base
-    final Paint pawPaint = Paint()..color = const Color(0xFF2E1C14);
+    _underlayPawPaint.shader = null;
+    _underlayPawPaint.color = const Color(0xFF2E1C14);
     canvas.drawOval(
       Rect.fromCenter(center: Offset(w * 0.26, h * 0.94), width: w * 0.14, height: h * 0.06),
-      pawPaint,
+      _underlayPawPaint,
     );
     canvas.drawOval(
       Rect.fromCenter(center: Offset(w * 0.78, h * 0.94), width: w * 0.16, height: h * 0.06),
-      pawPaint,
+      _underlayPawPaint,
     );
 
     // 4. Ambient depth shadow along rump & underbelly
-    final Paint shadowPaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(0.2, 0.4),
-        radius: 0.9,
-        colors: [
-          Colors.transparent,
-          Colors.black.withValues(alpha: 0.25),
-        ],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, shadowPaint);
+    _underlayDepthPaint.shader = RadialGradient(
+      center: const Alignment(0.2, 0.4),
+      radius: 0.9,
+      colors: [
+        Colors.transparent,
+        Colors.black.withValues(alpha: 0.25),
+      ],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayDepthPaint);
   }
 
   void _drawAxolotlAnatomicalUnderlay(Canvas canvas, Size size, Rect bounds) {
@@ -386,18 +387,17 @@ class AnimalFluidVesselPainter extends CustomPainter {
     final double h = size.height;
 
     // 1. Soft pearlescent rose aquatic body gradient
-    final Paint bodyPaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFFFCE4EC), // Pearl white-pink head
-          Color(0xFFF8BBD0), // Soft rose torso
-          Color(0xFFF48FB1), // Vibrant axolotl pink tail
-        ],
-        stops: [0.0, 0.5, 1.0],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, bodyPaint);
+    _underlayBodyPaint.shader = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xFFFCE4EC), // Pearl white-pink head
+        Color(0xFFF8BBD0), // Soft rose torso
+        Color(0xFFF48FB1), // Vibrant axolotl pink tail
+      ],
+      stops: [0.0, 0.5, 1.0],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayBodyPaint);
 
     // 2. Soft translucent pale belly highlight
     final Rect bellyRect = Rect.fromCenter(
@@ -405,55 +405,51 @@ class AnimalFluidVesselPainter extends CustomPainter {
       width: w * 0.44,
       height: h * 0.45,
     );
-    final Paint bellyPaint = Paint()
-      ..shader = RadialGradient(
-        colors: [
-          Colors.white.withValues(alpha: 0.45),
-          Colors.transparent,
-        ],
-      ).createShader(bellyRect);
-    canvas.drawOval(bellyRect, bellyPaint);
+    _underlayAccentPaint.shader = RadialGradient(
+      colors: [
+        Colors.white.withValues(alpha: 0.45),
+        Colors.transparent,
+      ],
+    ).createShader(bellyRect);
+    canvas.drawOval(bellyRect, _underlayAccentPaint);
   }
 
   void _drawSeaOtterAnatomicalUnderlay(Canvas canvas, Size size, Rect bounds) {
-    final Paint furPaint = Paint()
-      ..shader = const LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          Color(0xFFD7CCC8), // Pale blonde face
-          Color(0xFF6D4C41), // Rich brown chest
-          Color(0xFF3E2723), // Deep sea-otter espresso body
-        ],
-        stops: [0.0, 0.30, 0.80],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, furPaint);
+    _underlayBodyPaint.shader = const LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        Color(0xFFD7CCC8), // Pale blonde face
+        Color(0xFF6D4C41), // Rich brown chest
+        Color(0xFF3E2723), // Deep sea-otter espresso body
+      ],
+      stops: [0.0, 0.30, 0.80],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayBodyPaint);
   }
 
   void _drawGenericCompanionUnderlay(Canvas canvas, Size size, Rect bounds) {
-    final Paint basePaint = Paint()
-      ..shader = LinearGradient(
-        begin: Alignment.topCenter,
-        end: Alignment.bottomCenter,
-        colors: [
-          accentColor.withValues(alpha: 0.40),
-          accentColor.withValues(alpha: 0.22),
-          const Color(0xFF1A1A2E).withValues(alpha: 0.60),
-        ],
-        stops: const [0.0, 0.6, 1.0],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, basePaint);
+    _underlayBodyPaint.shader = LinearGradient(
+      begin: Alignment.topCenter,
+      end: Alignment.bottomCenter,
+      colors: [
+        accentColor.withValues(alpha: 0.40),
+        accentColor.withValues(alpha: 0.22),
+        const Color(0xFF1A1A2E).withValues(alpha: 0.60),
+      ],
+      stops: const [0.0, 0.6, 1.0],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayBodyPaint);
 
-    final Paint depthPaint = Paint()
-      ..shader = RadialGradient(
-        center: const Alignment(0.0, -0.1),
-        radius: 0.85,
-        colors: [
-          Colors.white.withValues(alpha: 0.12),
-          Colors.transparent,
-        ],
-      ).createShader(bounds);
-    canvas.drawRect(bounds, depthPaint);
+    _underlayDepthPaint.shader = RadialGradient(
+      center: const Alignment(0.0, -0.1),
+      radius: 0.85,
+      colors: [
+        Colors.white.withValues(alpha: 0.12),
+        Colors.transparent,
+      ],
+    ).createShader(bounds);
+    canvas.drawRect(bounds, _underlayDepthPaint);
   }
 
   List<Offset> _computeSurfacePoints(Size size) {

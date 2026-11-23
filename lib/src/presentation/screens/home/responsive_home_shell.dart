@@ -717,27 +717,30 @@ class ResponsiveHomeShell extends ConsumerWidget {
     required String shortcut,
     required VoidCallback onTap,
   }) {
-    return ListTile(
-      dense: true,
-      contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      leading: Icon(icon, size: 20),
-      title: Text(title, style: const TextStyle(fontSize: 13)),
-      trailing: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-        decoration: BoxDecoration(
-          color: Colors.white10,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          shortcut,
-          style: const TextStyle(
-            fontSize: 10,
-            fontFamily: 'monospace',
-            fontWeight: FontWeight.bold,
+    return Material(
+      color: Colors.transparent,
+      child: ListTile(
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        leading: Icon(icon, size: 20),
+        title: Text(title, style: const TextStyle(fontSize: 13)),
+        trailing: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.white10,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Text(
+            shortcut,
+            style: const TextStyle(
+              fontSize: 10,
+              fontFamily: 'monospace',
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
+        onTap: onTap,
       ),
-      onTap: onTap,
     );
   }
 
@@ -1015,22 +1018,25 @@ class ResponsiveHomeShell extends ConsumerWidget {
           itemBuilder: (BuildContext context, int index) {
             final HydrationEntry entry = hydrationState.entries[index];
             final bev = entry.beverage;
-            return ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: CircleAvatar(
-                backgroundColor: bev.primaryColor.withValues(alpha: 0.2),
-                child:
-                    Icon(Icons.water_drop, color: bev.primaryColor, size: 18),
-              ),
-              title: Text(bev.name),
-              subtitle: Text(
-                '${entry.volumeMl.toStringAsFixed(0)}ml • Net: ${entry.netHydrationMl.toStringAsFixed(0)}ml',
-              ),
-              trailing: IconButton(
-                icon: const Icon(Icons.delete_outline, size: 18),
-                onPressed: () {
-                  ref.read(hydrationProvider.notifier).removeEntry(entry.id);
-                },
+            return Material(
+              color: Colors.transparent,
+              child: ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: CircleAvatar(
+                  backgroundColor: bev.primaryColor.withValues(alpha: 0.2),
+                  child:
+                      Icon(Icons.water_drop, color: bev.primaryColor, size: 18),
+                ),
+                title: Text(bev.name),
+                subtitle: Text(
+                  '${entry.volumeMl.toStringAsFixed(0)}ml • Net: ${entry.netHydrationMl.toStringAsFixed(0)}ml',
+                ),
+                trailing: IconButton(
+                  icon: const Icon(Icons.delete_outline, size: 18),
+                  onPressed: () {
+                    ref.read(hydrationProvider.notifier).removeEntry(entry.id);
+                  },
+                ),
               ),
             );
           },

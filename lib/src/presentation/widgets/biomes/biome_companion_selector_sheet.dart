@@ -269,7 +269,10 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
                 width: isSelected ? 1.5 : 1.0,
               ),
             ),
-            child: ListTile(
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(18),
+              child: ListTile(
               onTap: isUnlocked
                   ? () {
                       unawaited(AudioHapticsService.playTap());
@@ -337,6 +340,7 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
                             style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                           ),
                         )),
+              ),
             ),
           );
         }),
@@ -553,44 +557,48 @@ class BiomeCompanionSelectorSheet extends ConsumerWidget {
                 width: isSelected ? 1.5 : 1.0,
               ),
             ),
-            child: ListTile(
-              leading: Container(
-                width: 44,
-                height: 44,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: b.skyGradient,
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-              ),
-              title: Text(
-                b.name,
-                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              subtitle: Text(
-                b.description,
-                style: const TextStyle(color: Colors.white60, fontSize: 11),
-              ),
-              trailing: isSelected
-                  ? const Chip(
-                      label: Text('Current', style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold)),
-                      backgroundColor: Color(0xFF00E5FF),
-                    )
-                  : ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A5F),
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                      ),
-                      onPressed: () {
-                        AudioHapticsService.playTap();
-                        ref.read(biomeProvider.notifier).selectBiome(b.id);
-                      },
-                      child: const Text('Travel', style: TextStyle(fontSize: 11)),
+            child: Material(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(18),
+              child: ListTile(
+                leading: Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: b.skyGradient,
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
                     ),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                title: Text(
+                  b.name,
+                  style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                subtitle: Text(
+                  b.description,
+                  style: const TextStyle(color: Colors.white60, fontSize: 11),
+                ),
+                trailing: isSelected
+                    ? const Chip(
+                        label: Text('Current', style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.bold)),
+                        backgroundColor: Color(0xFF00E5FF),
+                      )
+                    : ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF1E3A5F),
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                        ),
+                        onPressed: () {
+                          AudioHapticsService.playTap();
+                          ref.read(biomeProvider.notifier).selectBiome(b.id);
+                        },
+                        child: const Text('Travel', style: TextStyle(fontSize: 11)),
+                      ),
+              ),
             ),
           );
         }),

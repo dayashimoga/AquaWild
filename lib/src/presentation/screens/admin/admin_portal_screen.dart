@@ -484,36 +484,39 @@ class _AdminPortalScreenState extends ConsumerState<AdminPortalScreen> {
                   const Divider(height: 1, color: Color(0xFF1F2937)),
               itemBuilder: (context, index) {
                 final sku = kpis.skuBreakdown[index];
-                return ListTile(
-                  title: Text(
-                    sku.productName,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
+                return Material(
+                  color: Colors.transparent,
+                  child: ListTile(
+                    title: Text(
+                      sku.productName,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  subtitle: Text(
-                    'SKU: ${sku.sku} • Active Subs: ${sku.activeSubscriberCount}',
-                    style: const TextStyle(color: Colors.white60, fontSize: 12),
-                  ),
-                  trailing: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        '\$${sku.grossRevenueUsd.toStringAsFixed(2)}',
-                        style: const TextStyle(
-                          color: Colors.greenAccent,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 15,
+                    subtitle: Text(
+                      'SKU: ${sku.sku} • Active Subs: ${sku.activeSubscriberCount}',
+                      style: const TextStyle(color: Colors.white60, fontSize: 12),
+                    ),
+                    trailing: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          '\$${sku.grossRevenueUsd.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: Colors.greenAccent,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                         ),
-                      ),
-                      Text(
-                        '${sku.totalUnitsSold} units sold',
-                        style:
-                            const TextStyle(color: Colors.white60, fontSize: 11),
-                      ),
-                    ],
+                        Text(
+                          '${sku.totalUnitsSold} units sold',
+                          style:
+                              const TextStyle(color: Colors.white60, fontSize: 11),
+                        ),
+                      ],
+                    ),
                   ),
                 );
               },
