@@ -1158,6 +1158,26 @@
      - Certified full project regression test suite: **323 / 323 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
 - **Sign-Off**: `product-agent`, `ux-ui-agent`, `animation-agent`, `solution-architect`, `qa-agent`, `release-devops-agent`.
 
+---
+
+## Entry 046 — 2026-11-23 (CI/CD Streamlining & Multi-Platform Release Consolidation)
+- **Context**: Resolving workflow bloat, excessive runner minute consumption, and Dependabot queue congestion on GitHub Actions by consolidating 8 redundant workflows into two focused workflows: a lightweight CI test pipeline and an on-demand selective multi-platform release builder.
+- **Architectural Decisions & Deliverables**:
+  1. **Consolidated Single-Job CI Workflow (`.github/workflows/ci.yml`)**:
+     - Replaces individual platform CI triggers with a unified, lightweight pipeline running on `ubuntu-latest`.
+     - Executes `flutter analyze --fatal-infos --fatal-warnings`, OWASP MASVS secret scan, and `flutter test --coverage`.
+     - Fast concurrency management (`cancel-in-progress: true`) on `main` and `develop`.
+  2. **On-Demand Multi-Platform Release Matrix (`.github/workflows/release.yml`)**:
+     - Engineered parameter-driven `workflow_dispatch` pipeline allowing on-demand compilation for any specific target (`android`, `web`, `windows`, `macos`, `ios`, `linux`, or `all`) and build mode (`release` or `debug`).
+     - Maps each target platform strictly to its required host OS runner (`windows-latest`, `macos-latest`, `ubuntu-latest`), eliminating unnecessary cross-runner executions.
+     - Automatically attaches built binaries to GitHub Releases when triggered by tag `v*.*.*`.
+  3. **Obsolete Workflow Decommissioning**:
+     - Permanently removed legacy bloated files: `android.yml`, `ios.yml`, `linux.yml`, `macos.yml`, `windows.yml`, `web.yml`, and `build-all.yml`.
+  4. **Dependabot Queue Throttling (`.github/dependabot.yml`)**:
+     - Configured `open-pull-requests-limit: 0` and monthly check interval to prevent automated PR spam from flooding GitHub Actions runners.
+- **Sign-Off**: `release-devops-agent`, `solution-architect`, `security-agent`, `qa-agent`.
+
+
 
 
 

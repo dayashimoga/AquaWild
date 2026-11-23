@@ -1,0 +1,329 @@
+name: Release Build Matrix
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: 'Target platform / OS to build'
+        required: true
+        type: choice
+        default: 'all'
+        options:
+          - 'all'
+          - 'android'
+          - 'web'
+          - 'windows'
+          - 'macos'
+          - 'ios'
+          - 'linux'
+      build_type:
+        description: 'Build configuration mode'
+        required: true
+        type: choice
+        default: 'release'
+        options:
+          - 'release'
+          - 'debug'
+  push:
+    tags:
+      - 'v*.*.*'
+
+concurrency:
+  group: release-${{ github.ref }}-${{ github.event.inputs.platform || 'tag' }}
+  cancel-in-progress: true
+
+jobs:
+  # =========================================================================
+  # 1. ANDROID BUILD (APK & AAB)
+  # =========================================================================
+  build_android:
+    name: Build Android (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'android' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Android APK
+        run: |
+          BUILD_MODE="${{ github.event.inputs.build_type || 'release' }}"
+          if [ "$BUILD_MODE" = "debug" ]; then
+            flutter build apk --debug
+          else
+            flutter build apk --release
+          fi
+
+      - name: Build Android AppBundle (AAB)
+        if: ${{ github.event.inputs.build_type != 'debug' }}
+        run: flutter build appbundle --release
+
+      - name: Upload Android APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-android-apk
+          path: build/app/outputs/flutter-apk/*.apk
+          retention-days: 30
+
+      - name: Upload Android AppBundle
+        if: ${{ github.event.inputs.build_type != 'debug' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-android-bundle
+          path: build/app/outputs/bundle/release/*.aab
+          retention-days: 30
+
+  # =========================================================================
+  # 2. WEB BUILD
+  # =========================================================================
+  build_web:
+    name: Build Web (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'web' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Web Application
+        run: |
+          BUILD_MODE="${{ github.event.inputs.build_type || 'release' }}"
+          if [ "$BUILD_MODE" = "debug" ]; then
+            flutter build web --debug
+          else
+            flutter build web --release
+          fi
+
+      - name: Upload Web Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-web-bundle
+          path: build/web
+          retention-days: 30
+
+  # =========================================================================
+  # 3. WINDOWS DESKTOP BUILD
+  # =========================================================================
+  build_windows:
+    name: Build Windows (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'windows' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: windows-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Windows Desktop Target
+        run: flutter config --enable-windows-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Windows Desktop
+        run: |
+          $mode = if ("${{ github.event.inputs.build_type }}" -eq "debug") { "--debug" } else { "--release" }
+          flutter build windows $mode
+
+      - name: Package Windows Binary Zip
+        shell: pwsh
+        run: |
+          $buildDir = if ("${{ github.event.inputs.build_type }}" -eq "debug") { "build\windows\x64\runner\Debug\*" } else { "build\windows\x64\runner\Release\*" }
+          Compress-Archive -Path $buildDir -DestinationPath aquawild-windows-x64.zip
+
+      - name: Upload Windows Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-windows-x64
+          path: aquawild-windows-x64.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 4. MACOS DESKTOP BUILD
+  # =========================================================================
+  build_macos:
+    name: Build macOS (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'macos' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable macOS Desktop Target
+        run: flutter config --enable-macos-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build macOS Desktop
+        run: |
+          BUILD_MODE="${{ github.event.inputs.build_type || 'release' }}"
+          if [ "$BUILD_MODE" = "debug" ]; then
+            flutter build macos --debug
+            cd build/macos/Build/Products/Debug
+          else
+            flutter build macos --release
+            cd build/macos/Build/Products/Release
+          fi
+          zip -r ../../../../../aquawild-macos.zip AquaWild.app
+
+      - name: Upload macOS Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-macos-app
+          path: aquawild-macos.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 5. IOS BUILD
+  # =========================================================================
+  build_ios:
+    name: Build iOS (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'ios' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: macos-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build iOS Payload
+        run: |
+          BUILD_MODE="${{ github.event.inputs.build_type || 'release' }}"
+          if [ "$BUILD_MODE" = "debug" ]; then
+            flutter build ios --debug --no-codesign
+            cd build/ios/iphoneos
+          else
+            flutter build ios --release --no-codesign
+            cd build/ios/iphoneos
+          fi
+          zip -r ../../../aquawild-ios.zip Runner.app
+
+      - name: Upload iOS Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-ios-build
+          path: aquawild-ios.zip
+          retention-days: 30
+
+  # =========================================================================
+  # 6. LINUX DESKTOP BUILD
+  # =========================================================================
+  build_linux:
+    name: Build Linux (${{ github.event.inputs.build_type || 'release' }})
+    if: github.event.inputs.platform == 'all' || github.event.inputs.platform == 'linux' || startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Install Linux Build Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang cmake ninja-build pkg-config libgtk-3-dev liblzma-dev libstdc++-12-dev
+
+      - name: Setup Flutter Engine
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+          cache: true
+
+      - name: Enable Linux Desktop Target
+        run: flutter config --enable-linux-desktop
+
+      - name: Fetch Dependencies
+        run: flutter pub get
+
+      - name: Build Linux Desktop
+        run: |
+          BUILD_MODE="${{ github.event.inputs.build_type || 'release' }}"
+          if [ "$BUILD_MODE" = "debug" ]; then
+            flutter build linux --debug
+            tar -czvf aquawild-linux-x64.tar.gz -C build/linux/x64/debug/bundle .
+          else
+            flutter build linux --release
+            tar -czvf aquawild-linux-x64.tar.gz -C build/linux/x64/release/bundle .
+          fi
+
+      - name: Upload Linux Desktop Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: aquawild-linux-x64
+          path: aquawild-linux-x64.tar.gz
+          retention-days: 30
+
+  # =========================================================================
+  # 7. AUTOMATED GITHUB RELEASE (TAG TRIGGERS ONLY)
+  # =========================================================================
+  publish_release:
+    name: Publish Tagged GitHub Release
+    needs:
+      - build_android
+      - build_web
+      - build_windows
+      - build_macos
+      - build_ios
+      - build_linux
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Download Built Platform Artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+
+      - name: Create GitHub Release with Artifacts
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            release-artifacts/aquawild-android-apk/*.apk
+            release-artifacts/aquawild-android-bundle/*.aab
+            release-artifacts/aquawild-ios-build/*.zip
+            release-artifacts/aquawild-windows-x64/*.zip
+            release-artifacts/aquawild-macos-app/*.zip
+            release-artifacts/aquawild-linux-x64/*.tar.gz
+          draft: false
+          prerelease: false
+          generate_release_notes: true
