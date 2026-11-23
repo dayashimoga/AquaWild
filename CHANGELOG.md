@@ -2,6 +2,28 @@
 
 All notable changes to the **AquaWild (HydroFauna)** Cross-Platform AI-Powered Hydration Ecosystem are documented in this file.
 
+## [1.31.0] - 2026-11-23 — Stage 8: Subphase 8.1.2 — Multi-Platform Input Parity, Desktop Shortcuts & High-DPI Scaling Certification
+### Added
+- **Complete Global Keyboard Navigation Matrix (`AquaWildShortcutsWrapper`)**:
+  * Upgraded `lib/src/presentation/widgets/shortcuts/aqua_wild_shortcuts_wrapper.dart` with comprehensive desktop and web accelerators.
+  * Added `KeyS` shortcut to open the Glassmorphic Premium Storefront modal directly from the keyboard.
+  * Added `KeyW` shortcut to open the Widget & Live Activity Preview Studio.
+  * Added `Cmd+Shift+A` (`meta: true, shift: true`) shortcut for macOS parity to open the God-Mode Admin Portal alongside Windows/Linux `Ctrl+Shift+A`.
+  * Added `Shift+/` (`?`) shortcut to display the visual Keyboard Shortcuts cheat-sheet modal.
+  * Added `Escape` contextual key binding to dismiss active modal dialogs, bottom sheets, or pop-ups via `Navigator.of(context).maybePop()`.
+- **Keyboard Shortcuts Cheat Sheet Modal (`KeyboardShortcutsModal`)**:
+  * Updated `lib/src/presentation/widgets/shortcuts/keyboard_shortcuts_modal.dart` documenting `S`, `W`, `Cmd+Shift+A`, and `Esc` for complete user discoverability.
+- **Pointer & Mouse Ergonomics (`SystemMouseCursors.click`)**:
+  * Added clickable mouse cursor affordance to `InteractivePoolView` and `AnimalFluidHabitatView`, providing desktop and web users immediate feedback that habitats are interactive for tap-to-move and fluid sloshing.
+  * Ensured multi-pointer drag parity across mouse, touch, stylus, and trackpad for all scrollable views and fluid interaction surfaces.
+- **High-DPI Display Scaling & Anti-Aliasing Certification**:
+  * Formally verified procedural shaders and custom vector painters (`PoolWaterSimulationPainter`, `FloatingRedPandaPainter`, `AnimalFluidVesselPainter`) across DPR 1.0 (Standard Desktop), DPR 1.5 (Windows 150% scaling), DPR 2.0 (macOS Retina / iOS), and DPR 3.0 (Android flagships).
+- **Multi-Platform Input Parity & High-DPI Test Suite**:
+  * Created `test/presentation/screens/input_parity_and_high_dpi_test.dart` (9 tests) verifying global shortcuts, pointer hover/click interactions, and High-DPI rendering across DPR 1.0, 1.5, 2.0, and 3.0.
+  * Certified full project test suite: **271 / 271 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+
+---
+
 ## [1.30.0] - 2026-11-22 — Stage 8: Subphase 8.1.1 — Viewport Layout Fixes, Foldables & Breakpoint Certification
 ### Added
 - **Quick-Log Beverage Dock Component (`QuickLogDock`)**:

@@ -12,8 +12,10 @@ import '../analytics/predictive_analytics_sheet.dart';
 import '../backup/data_backup_modal.dart';
 import '../biomes/biome_companion_selector_sheet.dart';
 import '../gamification/achievements_gallery_sheet.dart';
+import '../monetization/premium_storefront_modal.dart';
 import '../reminders/smart_reminders_sheet.dart';
 import '../voice/voice_command_modal.dart';
+import '../widgets_preview/widget_preview_studio_modal.dart';
 import 'keyboard_shortcuts_modal.dart';
 
 /// Wraps widgets with global keyboard accelerators for desktop, web, and hardware keyboards
@@ -111,12 +113,25 @@ class AquaWildShortcutsWrapper extends ConsumerWidget {
             VoiceCommandModal.show(context),
         const SingleActivator(LogicalKeyboardKey.keyX): () =>
             DataBackupModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.keyS): () =>
+            PremiumStorefrontModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.keyW): () =>
+            WidgetPreviewStudioModal.show(context),
         const SingleActivator(LogicalKeyboardKey.keyA, control: true, shift: true):
+            () => AdminPortalScreen.show(context),
+        const SingleActivator(LogicalKeyboardKey.keyA, meta: true, shift: true):
             () => AdminPortalScreen.show(context),
         const SingleActivator(LogicalKeyboardKey.slash): () =>
             KeyboardShortcutsModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.slash, shift: true): () =>
+            KeyboardShortcutsModal.show(context),
         const SingleActivator(LogicalKeyboardKey.f1): () =>
             KeyboardShortcutsModal.show(context),
+        const SingleActivator(LogicalKeyboardKey.escape): () {
+          if (Navigator.of(context).canPop()) {
+            Navigator.of(context).pop();
+          }
+        },
       },
       child: Focus(
         autofocus: true,

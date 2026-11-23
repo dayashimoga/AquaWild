@@ -253,6 +253,7 @@ class _InteractivePoolViewState extends State<InteractivePoolView>
             }
 
             return MouseRegion(
+              cursor: SystemMouseCursors.click,
               onHover: (event) {
                 _pointerPosition = event.localPosition;
               },

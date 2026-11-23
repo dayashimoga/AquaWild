@@ -66,12 +66,15 @@ class SmartRemindersSheet extends ConsumerWidget {
           const SizedBox(height: 18),
           const Row(
             children: [
-              Text(
-                '🔔 Circadian Hydration Timeline',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+              Expanded(
+                child: Text(
+                  '🔔 Circadian Hydration Timeline',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
@@ -124,15 +127,19 @@ class SmartRemindersSheet extends ConsumerWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Text(
-                                  r.title,
-                                  style: TextStyle(
-                                    color: r.isCompleted ? Colors.white60 : Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                    decoration: r.isCompleted ? TextDecoration.lineThrough : null,
+                                Expanded(
+                                  child: Text(
+                                    r.title,
+                                    style: TextStyle(
+                                      color: r.isCompleted ? Colors.white60 : Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 14,
+                                      decoration: r.isCompleted ? TextDecoration.lineThrough : null,
+                                    ),
+                                    overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
+                                const SizedBox(width: 8),
                                 Text(
                                   r.targetTime.format(context),
                                   style: const TextStyle(

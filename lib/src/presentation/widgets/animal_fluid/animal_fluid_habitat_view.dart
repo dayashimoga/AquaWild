@@ -163,32 +163,35 @@ class _AnimalFluidHabitatViewState extends ConsumerState<AnimalFluidHabitatView>
             return Column(
               children: [
                 // Animal Fluid Silhouette Vessel Canvas
-                GestureDetector(
-                  onTapDown: (details) {
-                    final int col = ((details.localPosition.dx / vesselWidth) * 64)
-                        .floor()
-                        .clamp(0, 63);
-                    _triggerSplash(progressFraction, col);
-                    _interactionPulse = 1.0;
-                  },
-                  child: Semantics(
-                    label:
-                        '${activeAnimal.name} fluid container filled to ${hydrationState.goal.progressPercent} percent. Tap to slosh liquid waves.',
-                    button: true,
-                    child: SizedBox(
-                      width: vesselWidth,
-                      height: vesselHeight,
-                      child: CustomPaint(
-                        size: Size(vesselWidth, vesselHeight),
-                        painter: AnimalFluidVesselPainter(
-                          animalId: activeAnimal.id,
-                          fillFraction: _displayedFillFraction,
-                          stratifiedLayers: hydrationState.stratifiedLayers,
-                          waveSolver: _waveSolver,
-                          time: _timeSeconds,
-                          accentColor: activeAnimal.accentColor,
-                          reducedMotion: reducedMotion,
-                          interactionPulse: _interactionPulse,
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTapDown: (details) {
+                      final int col = ((details.localPosition.dx / vesselWidth) * 64)
+                          .floor()
+                          .clamp(0, 63);
+                      _triggerSplash(progressFraction, col);
+                      _interactionPulse = 1.0;
+                    },
+                    child: Semantics(
+                      label:
+                          '${activeAnimal.name} fluid container filled to ${hydrationState.goal.progressPercent} percent. Tap to slosh liquid waves.',
+                      button: true,
+                      child: SizedBox(
+                        width: vesselWidth,
+                        height: vesselHeight,
+                        child: CustomPaint(
+                          size: Size(vesselWidth, vesselHeight),
+                          painter: AnimalFluidVesselPainter(
+                            animalId: activeAnimal.id,
+                            fillFraction: _displayedFillFraction,
+                            stratifiedLayers: hydrationState.stratifiedLayers,
+                            waveSolver: _waveSolver,
+                            time: _timeSeconds,
+                            accentColor: activeAnimal.accentColor,
+                            reducedMotion: reducedMotion,
+                            interactionPulse: _interactionPulse,
+                          ),
                         ),
                       ),
                     ),

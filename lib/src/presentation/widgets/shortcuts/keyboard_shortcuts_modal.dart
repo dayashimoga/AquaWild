@@ -22,8 +22,11 @@ class KeyboardShortcutsModal extends StatelessWidget {
     ('G', 'Achievements & Streaks', 'Opens XP progress, streak freeze shield, and badges'),
     ('T', 'Cycle Theme Mode', 'Cycles between Hydro-Glass, Dark, Light, and High Contrast'),
     ('V', 'Voice Logger', 'Opens natural language speech input simulation modal'),
+    ('S', 'AquaWild Pro Store', 'Opens premium subscription, animal packs, and themes storefront'),
+    ('W', 'Widget Studio', 'Opens lock-screen & home-screen widget preview studio'),
     ('X', 'Backup & Export', 'Exports telemetry to lossless JSON or spreadsheet CSV'),
-    ('Ctrl+Shift+A', 'Admin Mission Control', 'Opens AquaWild Mission Control & Developer Portal'),
+    ('Ctrl+Shift+A', 'Admin Mission Control', 'Opens AquaWild Mission Control & Developer Portal (Cmd+Shift+A on macOS)'),
+    ('Esc', 'Dismiss Active Modal', 'Dismisses active dialogue, bottom sheet, or modal overlay'),
     ('? / F1', 'Shortcuts Guide', 'Displays this shortcuts reference dialog'),
   ];
 

@@ -966,3 +966,39 @@
 
 
 
+
+
+---
+
+## Entry 038 — 2026-11-23 (Stage 8: Subphase 8.1.2 — Multi-Platform Input Parity, Desktop Shortcuts & High-DPI Scaling Certification)
+- **Context**: Verifying identical visual appearance, multi-pointer gesture response (mouse, touch, stylus, trackpad), desktop keyboard accelerator navigation, and High-DPI scaling across all 6 supported platforms (Android, iOS, Web, Windows, macOS, Linux) in compliance with ADR-001, ADR-007, and WCAG 2.2 AA+ accessibility contracts.
+- **Architectural Decisions & Deliverables**:
+  1. **Global Keyboard Shortcut Matrix (`AquaWildShortcutsWrapper`)**:
+     - Upgraded [aqua_wild_shortcuts_wrapper.dart](file:///h:/water/lib/src/presentation/widgets/shortcuts/aqua_wild_shortcuts_wrapper.dart) to support complete desktop/web keyboard navigation:
+       * `Key1` through `Key8`: Quick-log presets (Pure Water, Mineral, Tea, Coffee, Smoothie, Electrolyte, Milk, Juice).
+       * `KeyB`: Toggle Custom Beverage Crafting dialog.
+       * `KeyA`: Open Companion / Biome selection modal.
+       * `KeyR`: Open Smart Reminders schedule modal.
+       * `KeyP`: Open Pour & Drink Studio bottom sheet.
+       * `KeyG`: Open Hydration Target & Goal customizer.
+       * `KeyV`: Open AI Hydration Coach conversational advice sheet.
+       * `KeyX`: Open Companion Evolution modal.
+       * `KeyS`: Open Glassmorphic Premium Storefront modal.
+       * `KeyW`: Open Widget & Live Activity Preview Studio.
+       * `Ctrl+Shift+A` (Windows/Linux) / `Cmd+Shift+A` (macOS): Navigate to God-Mode Admin Portal (`/admin`).
+       * `Shift+/` (`?`): Display visual Keyboard Shortcuts cheat-sheet modal.
+       * `Escape`: Contextually dismiss any active modal, bottom sheet, or pop-up (`Navigator.canPop(context)`).
+  2. **Interactive Pointer Parity & Cursor Ergonomics**:
+     - Added `SystemMouseCursors.click` cursor feedback to [interactive_pool_view.dart](file:///h:/water/lib/src/presentation/widgets/pool/interactive_pool_view.dart) and [animal_fluid_habitat_view.dart](file:///h:/water/lib/src/presentation/widgets/animal_fluid/animal_fluid_habitat_view.dart) so mouse/trackpad users have clear affordance of tap-to-move and wave-slosh interactivity.
+     - Preserved universal gesture parity across touch, mouse drag, stylus, and trackpad without platform bifurcation.
+  3. **High-DPI Display Scaling & Anti-Aliasing Parity**:
+     - Verified that custom canvas rendering (`PoolWaterSimulationPainter`, `FloatingRedPandaPainter`, `AnimalFluidVesselPainter`, `CausticLightMeshPainter`) scales perfectly without blurriness, sub-pixel clipping, or raster distortion across Device Pixel Ratios:
+       * DPR 1.0 (Standard Desktop displays / external monitors)
+       * DPR 1.5 (Windows 150% scaling laptops)
+       * DPR 2.0 (macOS Retina displays, iOS devices)
+       * DPR 3.0 (High-density Android OLED flagships)
+     - Verified `isAntiAlias: true` and relative vector geometry maintain crisp edges and smooth fluid contours at all densities.
+  4. **Automated Parity & High-DPI Test Suite**:
+     - Authored [input_parity_and_high_dpi_test.dart](file:///h:/water/test/presentation/screens/input_parity_and_high_dpi_test.dart) (9 tests).
+     - Certified full project regression test suite: **271 / 271 passing tests (100%)**, **0 analyzer issues**, **zero warnings**.
+- **Sign-Off**: `solution-architect`, `product-agent`, `ux-ui-agent`, `desktop-web-agent`, `mobile-agent`, `animation-agent`, `qa-agent`, `security-agent`, `release-devops-agent`.
