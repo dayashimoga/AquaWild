@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
@@ -6,12 +7,24 @@ import 'app_colors.dart';
 class AppTheme {
   AppTheme._();
 
+  /// Flag to force system font fallback in headless test environments (prevents GoogleFonts network timeouts)
+  static bool useSystemFonts = false;
+
   static TextTheme _resolveTextTheme(TextTheme base) {
+    if (useSystemFonts) {
+      return base.apply(fontFamily: 'Outfit');
+    }
     try {
-      if (WidgetsBinding.instance.runtimeType.toString().contains('Test')) {
+      final bindingStr = WidgetsBinding.instance.runtimeType.toString().toLowerCase();
+      if (bindingStr.contains('test')) {
         return base.apply(fontFamily: 'Outfit');
       }
-    } catch (_) {}
+      if (Zone.current[#test.declarer] != null) {
+        return base.apply(fontFamily: 'Outfit');
+      }
+    } catch (_) {
+      return base.apply(fontFamily: 'Outfit');
+    }
     return GoogleFonts.outfitTextTheme(base);
   }
 
