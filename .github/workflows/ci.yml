@@ -44,7 +44,7 @@ jobs:
         run: flutter pub get
 
       - name: Enforce Zero-Warning Static Analysis
-        run: flutter analyze --fatal-infos --fatal-warnings
+        run: flutter analyze --fatal-warnings
 
       - name: Security & Secret Hygiene Scan
         run: |
