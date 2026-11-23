@@ -4,7 +4,7 @@ description: "AquaWild (HydroFauna) — The World-Class Cross-Platform AI-Powere
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.6.0+160
+version: 2.0.0+200
 
 environment:
   sdk: ^3.10.3
